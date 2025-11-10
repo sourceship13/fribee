@@ -1,3 +1,33 @@
+/**
+ * Business Subscription Screen
+ * 
+ * Handles In-App Purchase subscription before business creation.
+ * Supports both sandbox testing and production IAP.
+ * 
+ * CONFIGURATION:
+ * - FORCE_DEV_MODE: Set to true to bypass IAP (simulated purchases)
+ * - USE_SANDBOX: Set to true for App Store Connect sandbox testing
+ * 
+ * TESTING MODES:
+ * 1. Local Development: FORCE_DEV_MODE=true, USE_SANDBOX=true
+ *    - Simulated purchases, no App Store required
+ * 
+ * 2. Sandbox Testing: FORCE_DEV_MODE=false, USE_SANDBOX=true
+ *    - Real IAP flow with sandbox accounts
+ *    - Requires App Store Connect product setup
+ *    - See SANDBOX_SETUP.md for complete setup guide
+ * 
+ * 3. Production: FORCE_DEV_MODE=false, USE_SANDBOX=false
+ *    - Real IAP with production accounts
+ *    - Only for production builds
+ * 
+ * PRODUCT IDs:
+ * - iOS: com.nolimitsera.monthly.subscription.premium
+ * - Android: com.nolimitsera.monthly.subscription
+ * 
+ * For detailed sandbox setup instructions, see: /SANDBOX_SETUP.md
+ */
+
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -17,18 +47,18 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import apiService from '../../../services/api.service';
 import * as RNIap from 'react-native-iap';
 
-
-// We'll use react-native-iap for in-app purchases
-// import * as RNIap from 'react-native-iap';
-
 // Subscription product IDs (configure these in App Store Connect / Google Play Console)
 const SUBSCRIPTION_SKUS = Platform.select({
   ios: ['com.nolimitsera.monthly.subscription.premium'],
   android: ['com.nolimitsera.monthly.subscription'],
 }) as string[];
 
-// Development mode flag - set to true to bypass IAP during testing
-const DEV_MODE = __DEV__; // Automatically true in development builds
+// Sandbox mode configuration
+// Set FORCE_DEV_MODE to true to simulate purchases without real IAP
+// Set to false to test with App Store Connect sandbox accounts
+const FORCE_DEV_MODE = false; // Change to true to bypass IAP entirely
+const USE_SANDBOX = true; // Always true for testing with sandbox accounts
+
 
 interface SubscriptionPlan {
   id: string;
@@ -75,10 +105,13 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
     // Set up purchase listeners
     const purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
       async (purchase) => {
-        console.log('Purchase updated:', purchase);
+        console.log('✅ Purchase updated (sandbox):', purchase);
+        console.log('📱 Transaction ID:', purchase.transactionId);
+        console.log('📱 Product ID:', purchase.productId);
         
         try {
           // Verify the purchase with backend
+          console.log('🔵 Verifying purchase with backend...');
           const response = await apiService.verifySubscription({
             platform: Platform.OS,
             purchaseToken: purchase.transactionId || purchase.purchaseToken || '',
@@ -89,12 +122,15 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
           });
 
           if (response.success) {
+            console.log('✅ Purchase verified successfully');
             // Finish the transaction
             await RNIap.finishTransaction({ purchase });
             
             Alert.alert(
-              'Subscription Activated!',
-              'Your subscription is now active. Let\'s complete your business setup.',
+              USE_SANDBOX ? 'Sandbox Purchase Successful!' : 'Subscription Activated!',
+              USE_SANDBOX 
+                ? 'Test purchase completed successfully! Your subscription is now active. Let\'s complete your business setup.'
+                : 'Your subscription is now active. Let\'s complete your business setup.',
               [
                 {
                   text: 'Continue',
@@ -106,8 +142,25 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
             throw new Error('Verification failed');
           }
         } catch (error) {
-          console.error('Purchase verification failed:', error);
-          Alert.alert('Error', 'Failed to verify purchase. Please contact support.');
+          console.error('❌ Purchase verification failed:', error);
+          Alert.alert(
+            'Verification Error',
+            'Failed to verify purchase with backend. The purchase may still be valid.\n\nWould you like to continue anyway?',
+            [
+              {
+                text: 'Continue',
+                onPress: async () => {
+                  // Finish the transaction anyway
+                  await RNIap.finishTransaction({ purchase });
+                  proceedToFinalStep();
+                },
+              },
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+            ]
+          );
         } finally {
           setIsPurchasing(false);
           setSelectedPlan(null);
@@ -117,13 +170,23 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
 
     const purchaseErrorSubscription = RNIap.purchaseErrorListener(
       (error) => {
-        console.error('Purchase error:', error);
+        console.error('❌ Purchase error:', error);
+        console.error('Error code:', error.code);
+        console.error('Error message:', error.message);
         
         // Check error code (cast to string for comparison)
         if (String(error.code) === 'E_USER_CANCELLED') {
           Alert.alert('Purchase Cancelled', 'You cancelled the purchase.');
         } else {
-          Alert.alert('Purchase Failed', 'Something went wrong. Please try again.');
+          Alert.alert(
+            'Purchase Failed',
+            `Error: ${error.message || 'Unknown error'}\nCode: ${error.code}\n\nMake sure:\n• Signed in with sandbox test account\n• Product exists in App Store Connect\n• Network connection is stable`,
+            [
+              {
+                text: 'OK',
+              },
+            ]
+          );
         }
         
         setIsPurchasing(false);
@@ -168,13 +231,13 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
     setIsPurchasing(true);
     setSelectedPlan(planId);
 
-    // Development mode bypass
-    if (DEV_MODE) {
-      console.log('🛠️ DEV MODE: Simulating purchase for testing');
+    // Check if we should bypass IAP entirely (for local development)
+    if (FORCE_DEV_MODE) {
+      console.log('🛠️ FORCE DEV MODE: Simulating purchase for testing');
       setTimeout(() => {
         Alert.alert(
           'Development Mode',
-          'Subscription simulated successfully! (IAP disabled in dev mode)\n\nTo test real purchases:\n1. Create product in App Store Connect\n2. Use sandbox test account\n3. Build in Release mode',
+          'Subscription simulated successfully! (IAP disabled)\n\nTo test with sandbox:\n1. Set FORCE_DEV_MODE = false\n2. Create product in App Store Connect\n3. Use sandbox test account',
           [
             {
               text: 'Continue',
@@ -190,8 +253,11 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
     }
 
     try {
+      console.log('🔵 Initiating sandbox purchase for:', SUBSCRIPTION_SKUS[0]);
+      console.log('🔵 Sandbox mode enabled:', USE_SANDBOX);
+      
       // Request subscription purchase with correct react-native-iap v12+ API
-      // The purchase result will be handled by the purchaseUpdatedListener
+      // This will work with App Store Connect sandbox accounts
       const purchaseRequest = Platform.OS === 'ios'
         ? {
             type: 'subs' as const,
@@ -212,30 +278,51 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
 
       await RNIap.requestPurchase(purchaseRequest as any);
       
-      console.log('Purchase request sent successfully');
+      console.log('✅ Purchase request sent - waiting for App Store response');
+      console.log('📱 Make sure you\'re signed in with a sandbox test account in Settings > App Store');
       // Purchase will be handled by listeners set up in useEffect
       
     } catch (error: any) {
-      console.error('Purchase request failed:', error);
+      console.error('❌ Purchase request failed:', error);
       
       // Check if it's a "product not found" error
       if (error.message?.includes('sku not found') || error.code === 'unknown') {
         Alert.alert(
-          'Product Not Configured',
-          'The subscription product hasn\'t been set up in App Store Connect yet.\n\nProduct ID: ' + SUBSCRIPTION_SKUS[0] + '\n\nFor testing, the app is running in development mode with simulated purchases.',
+          'Product Not Found in Sandbox',
+          `The subscription product hasn't been configured in App Store Connect.\n\nProduct ID: ${SUBSCRIPTION_SKUS[0]}\n\nSetup Steps:\n1. Go to App Store Connect\n2. Create subscription product with this ID\n3. Submit for review (or use in sandbox)\n4. Sign in with sandbox test account\n\nOr set FORCE_DEV_MODE = true to bypass IAP.`,
           [
             {
-              text: 'Skip for Now',
+              text: 'Skip for Testing',
               onPress: () => {
                 setIsPurchasing(false);
                 setSelectedPlan(null);
-                skipForNow();
+                proceedToFinalStep();
+              },
+            },
+            {
+              text: 'Cancel',
+              style: 'cancel',
+              onPress: () => {
+                setIsPurchasing(false);
+                setSelectedPlan(null);
               },
             },
           ]
         );
       } else {
-        Alert.alert('Error', 'Failed to start purchase. Please try again.');
+        Alert.alert(
+          'Purchase Error',
+          `Failed to start purchase.\n\nError: ${error.message || 'Unknown error'}\n\nMake sure:\n• You're signed in with a sandbox test account\n• Product is created in App Store Connect\n• App is properly configured for IAP`,
+          [
+            {
+              text: 'Try Again',
+              onPress: () => {
+                setIsPurchasing(false);
+                setSelectedPlan(null);
+              },
+            },
+          ]
+        );
       }
       
       setIsPurchasing(false);
@@ -301,6 +388,26 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
       />
       
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
+        {/* Sandbox Mode Indicator */}
+        {(USE_SANDBOX || FORCE_DEV_MODE) && (
+          <View style={[styles.sandboxBanner, { 
+            backgroundColor: FORCE_DEV_MODE ? '#FFF3CD' : '#D1ECF1' 
+          }]}>
+            <Icon 
+              name={FORCE_DEV_MODE ? "developer-mode" : "science"} 
+              size={20} 
+              color={FORCE_DEV_MODE ? "#856404" : "#0C5460"} 
+            />
+            <Text style={[styles.sandboxText, { 
+              color: FORCE_DEV_MODE ? "#856404" : "#0C5460" 
+            }]}>
+              {FORCE_DEV_MODE 
+                ? "Development Mode: IAP Disabled" 
+                : "Sandbox Mode: Testing with App Store Connect"}
+            </Text>
+          </View>
+        )}
+        
         <View style={styles.header}>
           <Icon name="stars" size={48} color={colors.primary} />
           <Text style={[styles.title, { color: colors.text }]}>
@@ -406,6 +513,19 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 16,
     fontSize: 16,
+  },
+  sandboxBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    gap: 8,
+  },
+  sandboxText: {
+    fontSize: 14,
+    fontWeight: '600',
+    flex: 1,
   },
   header: {
     alignItems: 'center',
