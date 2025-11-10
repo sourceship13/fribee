@@ -257,6 +257,29 @@ class ApiService {
       throw error;
     }
   }
+
+  async verifySubscription(data: {
+    platform: string;
+    purchaseToken: string;
+    productId: string;
+    transactionReceipt?: string;
+  }): Promise<ApiResponse> {
+    console.log('🔐 Verifying subscription purchase:', {
+      platform: data.platform,
+      productId: data.productId,
+    });
+    
+    try {
+      return await this.makeRequest('/subscriptions/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch (error) {
+      console.error(`💥 Subscription Verification Error:`, error);
+      throw error;
+    }
+  }
 }
 
 export default new ApiService();

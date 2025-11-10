@@ -81,8 +81,8 @@ const BusinessCreationScreen3 = ({ navigation, route }: any) => {
       Alert.alert('Missing Image 2', 'Please upload your business image 2 before continuing');
       return;
     }
-    // Navigate to Screen4 with all data
-    navigation.navigate('BusinessCreationScreen4', {
+    // Navigate to Subscription Screen with all data
+    navigation.navigate('BusinessSubscriptionScreen', {
       // Data from Screen1
       businessName,
       description,

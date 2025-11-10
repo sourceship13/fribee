@@ -24,6 +24,7 @@ import RedemptionScreen from './screens/Redemption/RedemptionScreen';
 import BusinessCreationScreen1 from './screens/Business/BusinessCreation/BusinessCreationScreen1';
 import BusinessCreationScreen2 from './screens/Business/BusinessCreation/BusinessCreationScreen2';
 import BusinessCreationScreen3 from './screens/Business/BusinessCreation/BusinessCreationScreen3';
+import BusinessSubscriptionScreen from './screens/Business/BusinessCreation/BusinessSubscriptionScreen';
 import BusinessCreationScreen4 from './screens/Business/BusinessCreation/BusinessCreationScreen4';
 import { Colors } from './libs/colors';
 import BusinessProfile from './screens/Profile/BusinessProfile';
@@ -215,6 +216,7 @@ const AppNavigator = () => {
             <Stack.Screen name="BusinessCreationScreen1" component={BusinessCreationScreen1} />
             <Stack.Screen name="BusinessCreationScreen2" component={BusinessCreationScreen2} />
             <Stack.Screen name="BusinessCreationScreen3" component={BusinessCreationScreen3} />
+            <Stack.Screen name="BusinessSubscriptionScreen" component={BusinessSubscriptionScreen} />
             <Stack.Screen name="BusinessCreationScreen4" component={BusinessCreationScreen4} />
             <Stack.Screen name="BusinessDeals" component={BusinessDeals} />
             <Stack.Screen name="CreateDeal" component={CreateDeal} />
