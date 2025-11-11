@@ -56,7 +56,7 @@ const SUBSCRIPTION_SKUS = Platform.select({
 // Sandbox mode configuration
 // Set FORCE_DEV_MODE to true to simulate purchases without real IAP
 // Set to false to test with App Store Connect sandbox accounts
-const FORCE_DEV_MODE = false; // Change to true to bypass IAP entirely
+const FORCE_DEV_MODE = true; // TRUE = Bypass IAP, FALSE = Real IAP with sandbox
 const USE_SANDBOX = true; // Always true for testing with sandbox accounts
 
 

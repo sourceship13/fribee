@@ -31,18 +31,33 @@ import BusinessProfile from './screens/Profile/BusinessProfile';
 import BusinessDeals from './screens/Business/BusinessDeals';
 import CreateDeal from './screens/Business/CreateDeal';
 import AboutBusiness from './screens/Business/AboutBusiness';
+import DealPostPurchaseScreen from './screens/Business/DealPostPurchaseScreen';
 import FontDebug from './screens/FontDebug/FontDebug';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// Dynamic Profile Screen wrapper that reacts to account_type changes
+const DynamicProfileScreen = ({ navigation, route }: any) => {
+  const { user } = useAuth();
+  
+  console.log('🔄 DynamicProfileScreen rendering - account_type:', user?.account_type);
+  
+  // This will re-render whenever user changes
+  // Pass navigation and route props to the child components
+  if (user?.account_type === 'business') {
+    console.log('✅ Loading BusinessProfile');
+    return <BusinessProfile navigation={navigation} route={route} />;
+  }
+  
+  console.log('✅ Loading ProfileScreen');
+  return <ProfileScreen navigation={navigation} route={route} />;
+};
+
 // Bottom Tab Navigator for main app screens
 const MainTabNavigator = () => {
   const { isDarkMode, user, refreshDeals } = useAuth();
   const colors = getColors(isDarkMode);
-
-  // Determine which profile screen to show based on account type
-  const ProfileComponent = user?.account_type === 'business' ? BusinessProfile : ProfileScreen;
 
   return (
     <Tab.Navigator
@@ -137,7 +152,7 @@ const MainTabNavigator = () => {
       />
       <Tab.Screen 
         name="ProfileTab" 
-        component={ProfileComponent}
+        component={DynamicProfileScreen}
         options={{ tabBarLabel: 'PROFILE' }}
         listeners={{
           tabPress: () => {
@@ -219,6 +234,7 @@ const AppNavigator = () => {
             <Stack.Screen name="BusinessSubscriptionScreen" component={BusinessSubscriptionScreen} />
             <Stack.Screen name="BusinessCreationScreen4" component={BusinessCreationScreen4} />
             <Stack.Screen name="BusinessDeals" component={BusinessDeals} />
+            <Stack.Screen name="DealPostPurchase" component={DealPostPurchaseScreen} />
             <Stack.Screen name="CreateDeal" component={CreateDeal} />
             <Stack.Screen name="AboutBusiness" component={AboutBusiness} />
           </>

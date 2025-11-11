@@ -277,7 +277,7 @@ const BusinessDeals = ({ navigation }: any) => {
       </Text>
       <TouchableOpacity
         style={[styles.createButton, { backgroundColor: colors.primary }]}
-        onPress={() => navigation.navigate('CreateDeal')}
+        onPress={() => navigation.navigate('DealPostPurchase')}
       >
         <Icon name="add" size={20} color={colors.background} style={{ marginRight: 8 }} />
         <Text style={[iOSUIKit.body, { color: colors.background, fontWeight: '600' }]}>
@@ -366,7 +366,7 @@ const BusinessDeals = ({ navigation }: any) => {
       {businessDeals.length > 0 && (
         <TouchableOpacity
           style={[styles.fab, { backgroundColor: colors.primary }]}
-          onPress={() => navigation.navigate('CreateDeal')}
+          onPress={() => navigation.navigate('DealPostPurchase')}
         >
           <Icon name="add" size={28} color="#FFFFFF" />
         </TouchableOpacity>
