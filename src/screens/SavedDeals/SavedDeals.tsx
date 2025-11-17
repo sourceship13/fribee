@@ -24,25 +24,28 @@ const SavedDealsScreen = ({ navigation }: any) => {
   console.log('💾 SavedDeals: allSavedDeals:', allSavedDeals);
 
 
-    // Filter from SAVED deals only (not all deals) and strictly filter by redemption_status
-    const readyToRedeemDeals = allSavedDeals.filter(
-      deal => deal.redemption_status && deal.redemption_status.toLowerCase() === 'ready to redeem'
-    );
+  // Filter from SAVED deals only (not all deals) and strictly filter by redemption_status
+  const readyToRedeemDeals = allSavedDeals.filter(
+    deal => deal.redemption_status && deal.redemption_status.toLowerCase() === 'ready to redeem'
+  );
 
-    const redeemedDeals = allSavedDeals.filter(
-      deal => deal.redemption_status && deal.redemption_status.toLowerCase() === 'redeemed'
-    );
+  const redeemedDeals = allSavedDeals.filter(
+    deal => deal.redemption_status && deal.redemption_status.toLowerCase() === 'redeemed'
+  );
 
-    const almostRedeemedDeals = allSavedDeals.filter(
-      deal => deal.redemption_status && deal.redemption_status.toLowerCase() === 'almost there, a few more shares!'
-    );
-    
-    // Deals that are hearted but don't have a redemption status yet (newly hearted)
-    const newlyHeartedDeals = allSavedDeals.filter(
-      deal => !deal.redemption_status || deal.redemption_status.toLowerCase() === ''
-    );
-
-    // Debug: log allSavedDeals and redeemedDeals
+  const almostRedeemedDeals = allSavedDeals.filter(
+    deal => {
+      if (!deal.redemption_status) return false;
+      const status = deal.redemption_status.toLowerCase();
+      return status === 'almost there, a few more shares!' || 
+             status === 'not enough shares';
+    }
+  );
+  
+  // Deals that are hearted but don't have a redemption status yet (newly hearted)
+  const newlyHeartedDeals = allSavedDeals.filter(
+    deal => !deal.redemption_status || deal.redemption_status.toLowerCase() === ''
+  );    // Debug: log allSavedDeals and redeemedDeals
     React.useEffect(() => {
       console.log('allSavedDeals:', allSavedDeals);
       console.log('redeemedDeals:', redeemedDeals);
