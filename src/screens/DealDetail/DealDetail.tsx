@@ -107,6 +107,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
     heartedDeals,
     isDealHearted,
     toggleHeartDeal,
+    deals
   } = useAuth();
   const colors = getColors(isDarkMode);
 
@@ -163,8 +164,16 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
     }
   }, [shareProgress?.canRedeem, dealId, isSaved, toggleHeartDeal, deal]);
 
-  const handleRedeem = () => {
-    navigation.navigate('Redemption', { deal });
+  const handleRedeem = () => {  
+    const heartedDealIds = new Set((heartedDeals || []).map(d => d.deal_id || d.id));
+    const allSavedDeals = deals.filter(deal => heartedDealIds.has(deal.id || deal.deal_id));
+    const readyToRedeemDeals = allSavedDeals.filter(
+    deal => {
+      deal.redemption_status && deal.redemption_status.toLowerCase() === 'ready to redeem'
+      navigation.navigate('Redemption', { deal });
+    }
+  );
+    
   };
 
   // Handle missing navigation or deal
