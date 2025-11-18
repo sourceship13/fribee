@@ -14,6 +14,7 @@ import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
 import { iOSUIKit } from 'react-native-typography';
+import VersionFooter from '../../components/VersionFooter';
 
 const PLACEHOLDER_DEAL = {
   id: 0,
@@ -398,7 +399,8 @@ const SwipeScreen = ({ navigation }: any) => {
           )}
         </Animated.View>
       </PanGestureHandler>
-    </View>
+      <VersionFooter />
+    </View>t
   );
 };
 

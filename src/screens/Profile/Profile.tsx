@@ -4,6 +4,7 @@ import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
+import VersionFooter from '../../components/VersionFooter';
 
 const ProfileScreen = ({ navigation }: any) => {
   const { isDarkMode, user } = useAuth();
@@ -109,6 +110,7 @@ const ProfileScreen = ({ navigation }: any) => {
         </TouchableOpacity>
 
       </View>
+      <VersionFooter />
     </View>
   );
 };

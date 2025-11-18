@@ -11,6 +11,7 @@ import {
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import { iOSUIKit } from 'react-native-typography';
+import VersionFooter from '../../components/VersionFooter';
 
 const SavedDealsScreen = ({ navigation }: any) => {
   const { isDarkMode, deals, heartedDeals } = useAuth();
@@ -261,6 +262,7 @@ const SavedDealsScreen = ({ navigation }: any) => {
           />
         )}
       </ScrollView>
+      <VersionFooter />
     </View>
   );
 };

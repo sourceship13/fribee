@@ -166,6 +166,7 @@ const FontDebug: React.FC<FontDebugProps> = ({ navigation }) => {
 
         <View style={{ height: 100 }} />
       </ScrollView>
+      <VersionFooter />
     </View>
   );
 };

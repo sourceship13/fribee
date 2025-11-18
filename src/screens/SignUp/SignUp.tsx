@@ -285,6 +285,7 @@ const SignUpScreen = ({ navigation }: any) => {
           </View>
         </View>
       </ScrollView>
+      <VersionFooter />
     </KeyboardAvoidingView>
   );
 };

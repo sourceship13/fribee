@@ -311,6 +311,7 @@ const NetworkDebugScreen = ({ navigation }: any) => {
           <Text style={[styles.refreshButtonText, { color: colors.text }]}>🔄 Refresh Config</Text>
         </TouchableOpacity>
       </ScrollView>
+      <VersionFooter />
     </View>
   );
 };

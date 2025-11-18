@@ -261,6 +261,7 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
           )}
         </View>
       </ScrollView>
+      <VersionFooter />
     </View>
   );
 };

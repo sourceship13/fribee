@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthService from '../../services/auth.service';
 import ApiService from '../../services/api.service';
 import { iOSUIKit } from 'react-native-typography';
+import VersionFooter from '../../components/VersionFooter';
 
 const DebugScreen = ({ navigation }: any) => {
   const { isDarkMode } = useAuth();
@@ -220,6 +221,7 @@ const DebugScreen = ({ navigation }: any) => {
           </View>
         ))}
       </ScrollView>
+      <VersionFooter />
     </View>
   );
 };

@@ -33,6 +33,7 @@ import CreateDeal from './screens/Business/CreateDeal';
 import AboutBusiness from './screens/Business/AboutBusiness';
 import DealPostPurchaseScreen from './screens/Business/DealPostPurchaseScreen';
 import FontDebug from './screens/FontDebug/FontDebug';
+import VersionFooter from './components/VersionFooter';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -240,6 +241,9 @@ const AppNavigator = () => {
           </>
         )}
       </Stack.Navigator>
+      
+      {/* Global Version Footer - appears on all screens */}
+      <VersionFooter />
     </NavigationContainer>
   );
 };

@@ -44,6 +44,7 @@ import { getColors } from '../../../libs/colors';
 import Toolbar from '../../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import VersionFooter from '../../../components/VersionFooter';
 import apiService from '../../../services/api.service';
 import * as RNIap from 'react-native-iap';
 
@@ -608,6 +609,7 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
           </Text>
         </View>
       </ScrollView>
+      <VersionFooter />
     </View>
   );
 };

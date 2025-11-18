@@ -4,6 +4,7 @@ import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
+import VersionFooter from '../../components/VersionFooter';
 
 const SettingsScreen = ({ navigation }: any) => {
   const { isDarkMode, setDarkMode, categories, setCategories, logout, refreshCategories, availableCategories } = useAuth();
@@ -169,6 +170,7 @@ const SettingsScreen = ({ navigation }: any) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <VersionFooter />
     </View>
   );
 };

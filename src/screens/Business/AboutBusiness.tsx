@@ -6,6 +6,7 @@ import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import VersionFooter from '../../components/VersionFooter';
 
 // Dark mode map style for Google Maps
 const darkMapStyle = [
@@ -503,6 +504,7 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
           )}
         </View>
       </ScrollView>
+      <VersionFooter />
     </View>
   );
 };

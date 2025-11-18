@@ -12,6 +12,7 @@ import { getColors } from '../../libs/colors';
 import { useAuth } from '../../libs/hooks/useAuth';
 import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
+import VersionFooter from '../../components/VersionFooter';
 import {
   BarcodeCreatorView,
   BarcodeFormat,

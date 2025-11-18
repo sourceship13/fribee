@@ -7,6 +7,7 @@ import { iOSUIKit } from 'react-native-typography';
 import { launchImageLibrary, Asset } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ProfileScreen from '../../Profile/Profile';
+import VersionFooter from '../../../components/VersionFooter';
 
 const BusinessCreationScreen2 = ({ navigation, route }: any) => {
   const { isDarkMode } = useAuth();

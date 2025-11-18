@@ -5,6 +5,7 @@ import { getColors } from '../../../libs/colors';
 import Toolbar from '../../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
 import { TextInput } from 'react-native-gesture-handler';
+import VersionFooter from '../../../components/VersionFooter';
 
 const BusinessCreationScreen1 = ({ navigation }: any) => {
   const { isDarkMode } = useAuth();
@@ -187,6 +188,7 @@ const BusinessCreationScreen1 = ({ navigation }: any) => {
           Next Step
         </Text>
       </TouchableOpacity>
+      <VersionFooter />
     </View>
   );
 };

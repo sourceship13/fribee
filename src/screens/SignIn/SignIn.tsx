@@ -6,6 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import { iOSUIKit } from 'react-native-typography';
+import VersionFooter from '../../components/VersionFooter';
 
 const SignInScreen = ({ navigation }: any) => {
   const { isDarkMode, login } = useAuth();
@@ -125,6 +126,7 @@ const SignInScreen = ({ navigation }: any) => {
           <Text style={[styles.socialText, { color: colors.background }]}>Sign in with Apple</Text>
         </TouchableOpacity>
       </View>
+      <VersionFooter />
     </View>
   );
 };

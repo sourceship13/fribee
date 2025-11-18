@@ -225,6 +225,7 @@ const BusinessCreationScreen4 = ({ navigation, route }: any) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <VersionFooter />
     </View>
   );
 };

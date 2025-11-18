@@ -1,6 +1,6 @@
 {
   "name": "nolimitseradeals",
-  "version": "0.0.1",
+  "version": "0.0.624",
   "private": true,
   "scripts": {
     "android": "react-native run-android",

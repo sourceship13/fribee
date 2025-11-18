@@ -416,6 +416,7 @@ const BusinessDeals = ({ navigation }: any) => {
           </View>
         </View>
       </Modal>
+      <VersionFooter />
     </View>
   );
 };

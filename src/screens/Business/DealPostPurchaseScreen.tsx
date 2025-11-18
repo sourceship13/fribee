@@ -430,6 +430,7 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
           </Text>
         </View>
       </ScrollView>
+      <VersionFooter />
     </View>
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { Platform } from 'react-native';
+import VersionFooter from '../components/VersionFooter';
 
 const PermissionTestScreen = () => {
   const checkContactsPermission = async () => {
@@ -102,6 +103,7 @@ const PermissionTestScreen = () => {
         Platform: {Platform.OS}{'\n'}
         This screen tests if react-native-permissions is properly linked.
       </Text>
+      <VersionFooter />
     </View>
   );
 };

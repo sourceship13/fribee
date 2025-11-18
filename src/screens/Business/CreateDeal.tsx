@@ -516,6 +516,7 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
           </View>
         </TouchableOpacity>
       </Modal>
+      <VersionFooter />
     </View>
   );
 };

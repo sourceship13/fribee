@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button } from 'react-native';
+import VersionFooter from '../../components/VersionFooter';
 
 const HomeScreen = ({ navigation }: any) => {
   return (
@@ -7,6 +8,7 @@ const HomeScreen = ({ navigation }: any) => {
       <Text style={styles.title}>Welcome to NoLimitSera Deals!</Text>
       <Text style={styles.subtitle}>Your one-stop shop for amazing offers.</Text>
       <Button title="View Deals" onPress={() => navigation?.navigate('Deals')} />
+      <VersionFooter />
     </View>
   );
 };

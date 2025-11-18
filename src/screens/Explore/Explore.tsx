@@ -524,6 +524,7 @@ const ExploreScreen = ({ navigation }: any) => {
           </>
         )}
       </View>
+      <VersionFooter />
     </View>
   );
 };
