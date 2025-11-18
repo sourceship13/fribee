@@ -45,19 +45,9 @@ const SavedDealsScreen = ({ navigation }: any) => {
   // Deals that are hearted but don't have a redemption status yet (newly hearted)
   const newlyHeartedDeals = allSavedDeals.filter(
     deal => !deal.redemption_status || deal.redemption_status.toLowerCase() === ''
-  );    // Debug: log allSavedDeals and redeemedDeals
-    React.useEffect(() => {
-      console.log('allSavedDeals:', allSavedDeals);
-      console.log('redeemedDeals:', redeemedDeals);
-      console.log('readyToRedeemDeals:', readyToRedeemDeals);
-      console.log('almostRedeemedDeals:', almostRedeemedDeals);
-      console.log('newlyHeartedDeals:', newlyHeartedDeals);
-    }, [allSavedDeals, redeemedDeals, readyToRedeemDeals, almostRedeemedDeals, newlyHeartedDeals]);
-
-  // Show empty state if no saved deals at all
+  );
+  // Show empty state if no saved deals
   if (allSavedDeals.length === 0) {
-    console.log('💾 SavedDeals: No saved deals found for user.');
-    console.debug('💾 SavedDeals: heartedDeals:', heartedDeals);
     return (
       <View style={{ flex: 1, backgroundColor: colors.background }}>
         <View
