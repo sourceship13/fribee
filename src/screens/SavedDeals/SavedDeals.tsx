@@ -54,6 +54,41 @@ const SavedDealsScreen = ({ navigation }: any) => {
       console.log('newlyHeartedDeals:', newlyHeartedDeals);
     }, [allSavedDeals, redeemedDeals, readyToRedeemDeals, almostRedeemedDeals, newlyHeartedDeals]);
 
+  // Show empty state if no saved deals at all
+  if (allSavedDeals.length === 0) {
+    console.log('💾 SavedDeals: No saved deals found for user.');
+    console.debug('💾 SavedDeals: heartedDeals:', heartedDeals);
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
+        <View
+          style={[
+            styles.header,
+            { backgroundColor: colors.surface, borderBottomColor: colors.border },
+          ]}
+        >
+          <Text style={[styles.headerTitle, { color: colors.text }]}> 
+            Saved
+          </Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Settings')}
+            style={styles.settingsButton}
+          >
+            <Text style={[iOSUIKit.title3, { color: colors.primary }]}>⚙️</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+          <Text style={{ fontSize: 64, marginBottom: 16 }}>💖</Text>
+          <Text style={[iOSUIKit.title3Emphasized, { color: colors.text, textAlign: 'center', marginBottom: 8 }]}>
+            No Saved Deals Yet
+          </Text>
+          <Text style={[iOSUIKit.body, { color: colors.textSecondary, textAlign: 'center', paddingHorizontal: 40 }]}>
+            Heart deals you love to save them here. Swipe through deals and tap the heart icon!
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <View
