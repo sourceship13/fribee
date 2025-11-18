@@ -49,14 +49,14 @@ import * as RNIap from 'react-native-iap';
 
 // Subscription product IDs (configure these in App Store Connect / Google Play Console)
 const SUBSCRIPTION_SKUS = Platform.select({
-  ios: ['com.nolimitsera.monthly.subscription.premium'],
-  android: ['com.nolimitsera.monthly.subscription'],
+  ios: ['com.nolimitsera.monthly.subscription.premium.staging'],
+  android: ['com.nolimitsera.monthly.subscription.premium.staging'],
 }) as string[];
 
 // Sandbox mode configuration
 // Set FORCE_DEV_MODE to true to simulate purchases without real IAP
 // Set to false to test with App Store Connect sandbox accounts
-const FORCE_DEV_MODE = true; // TRUE = Bypass IAP, FALSE = Real IAP with sandbox
+const FORCE_DEV_MODE = false; // TRUE = Bypass IAP, FALSE = Real IAP with sandbox
 const USE_SANDBOX = true; // Always true for testing with sandbox accounts
 
 
@@ -206,23 +206,65 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
     try {
       setIsLoading(true);
       
+      console.log('🔵 Initializing IAP...');
+      console.log('🔵 Platform:', Platform.OS);
+      console.log('🔵 Looking for SKUs:', SUBSCRIPTION_SKUS);
+      console.log('🔵 FORCE_DEV_MODE:', FORCE_DEV_MODE);
+      console.log('🔵 USE_SANDBOX:', USE_SANDBOX);
+      
       // Initialize IAP connection
       const result = await RNIap.initConnection();
-      console.log('IAP connection result:', result);
+      console.log('✅ IAP connection result:', result);
       
       // Fetch available subscriptions using the correct API
+      console.log('🔵 Fetching products for SKUs:', SUBSCRIPTION_SKUS);
       const products = await RNIap.fetchProducts({
         skus: SUBSCRIPTION_SKUS,
         type: 'subs',
       });
-      console.log('Available subscriptions:', products);
-      setSubscriptions(products || []);
       
+      console.log('📦 Products returned:', products?.length || 0);
+      if (products && products.length > 0) {
+        console.log('✅ Available subscriptions:', JSON.stringify(products, null, 2));
+        products.forEach(p => {
+          const productId = 'productId' in p ? p.productId : ('productID' in p ? (p as any).productID : 'unknown');
+          const price = 'localizedPrice' in p ? p.localizedPrice : ('price' in p ? (p as any).price : 'N/A');
+          console.log(`  - ${productId}: ${p.title} - ${price}`);
+        });
+      } else {
+        console.warn('⚠️ No products found!');
+        console.warn('⚠️ Make sure products are created in App Store Connect with exact SKU:', SUBSCRIPTION_SKUS[0]);
+        console.warn('⚠️ Products must be "Ready to Submit" or "Approved" status');
+        console.warn('⚠️ Sign out and sign in with sandbox test account in Settings > App Store');
+      }
+      
+      setSubscriptions(products || []);
       setIsLoading(false);
       
     } catch (error: any) {
-      console.error('Failed to initialize IAP:', error);
-      Alert.alert('Error', 'Failed to load subscription plans. Please try again.');
+      console.error('❌ Failed to initialize IAP:', error);
+      console.error('❌ Error code:', error.code);
+      console.error('❌ Error message:', error.message);
+      
+      const troubleshooting = `\n\nTroubleshooting:\n• Check App Store Connect has product: ${SUBSCRIPTION_SKUS[0]}\n• Product must be "Ready to Submit" or "Approved"\n• Sign in with sandbox test account\n• Check Agreements, Tax, and Banking are complete`;
+      
+      Alert.alert(
+        'IAP Initialization Failed', 
+        `${error.message || 'Unknown error'}${troubleshooting}`,
+        [
+          {
+            text: 'Skip for Testing',
+            onPress: () => {
+              setIsLoading(false);
+              // Show hardcoded plans as fallback
+            }
+          },
+          {
+            text: 'Retry',
+            onPress: () => initializeIAP()
+          }
+        ]
+      );
       setIsLoading(false);
     }
   };
@@ -408,6 +450,21 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
           </View>
         )}
         
+        {/* Debug Info - Show if no products loaded */}
+        {!isLoading && subscriptions.length === 0 && (
+          <View style={[styles.debugBanner, { backgroundColor: '#FFF3CD', borderColor: '#856404' }]}>
+            <Icon name="warning" size={24} color="#856404" />
+            <View style={{ flex: 1, marginLeft: 12 }}>
+              <Text style={[styles.debugTitle, { color: '#856404' }]}>No Products Found</Text>
+              <Text style={[styles.debugText, { color: '#856404' }]}>SKU: {SUBSCRIPTION_SKUS[0]}</Text>
+              <Text style={[styles.debugText, { color: '#856404', fontSize: 12, marginTop: 4 }]}>Check App Store Connect:</Text>
+              <Text style={[styles.debugText, { color: '#856404', fontSize: 11 }]}>• Product created with exact SKU</Text>
+              <Text style={[styles.debugText, { color: '#856404', fontSize: 11 }]}>• Status: "Ready to Submit"</Text>
+              <Text style={[styles.debugText, { color: '#856404', fontSize: 11 }]}>• Signed in with sandbox account</Text>
+            </View>
+          </View>
+        )}
+        
         <View style={styles.header}>
           <Icon name="stars" size={48} color={colors.primary} />
           <Text style={[styles.title, { color: colors.text }]}>
@@ -418,7 +475,66 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
           </Text>
         </View>
 
-        {plans.map((plan) => (
+        {/* Show actual IAP products if available, otherwise show hardcoded plans */}
+        {subscriptions.length > 0 ? (
+          // Display actual IAP products
+          subscriptions.map((product) => (
+            <TouchableOpacity
+              key={product.productId}
+              style={[
+                styles.planCard,
+                {
+                  backgroundColor: colors.surface,
+                  borderColor: colors.primary,
+                  borderWidth: 2,
+                },
+              ]}
+              onPress={() => handlePurchase(product.productId)}
+              disabled={isPurchasing}
+            >
+              <View style={[styles.recommendedBadge, { backgroundColor: colors.primary }]}>
+                <Text style={styles.recommendedText}>FROM APP STORE</Text>
+              </View>
+              
+              <Text style={[styles.planTitle, { color: colors.text }]}>
+                {product.title || 'Premium Subscription'}
+              </Text>
+              <Text style={[styles.planPrice, { color: colors.primary }]}>
+                {product.localizedPrice || product.price || '$1.99/month'}
+              </Text>
+              <Text style={[styles.planDescription, { color: colors.disabled }]}>
+                {product.description || 'Unlock all premium features for your business'}
+              </Text>
+
+              <View style={styles.featuresContainer}>
+                {[
+                  'Unlimited deals creation',
+                  'Analytics dashboard',
+                  'Push notifications',
+                  'Email support',
+                  'Business profile customization',
+                ].map((feature, index) => (
+                  <View key={index} style={styles.featureRow}>
+                    <Icon name="check-circle" size={20} color="#4CAF50" />
+                    <Text style={[styles.featureText, { color: colors.text }]}>
+                      {feature}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+
+              {isPurchasing && selectedPlan === product.productId ? (
+                <ActivityIndicator size="small" color={colors.primary} style={styles.purchaseLoader} />
+              ) : (
+                <View style={[styles.subscribeButton, { backgroundColor: colors.primary }]}>
+                  <Text style={styles.subscribeButtonText}>Subscribe Now</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          ))
+        ) : (
+          // Fallback to hardcoded plans if IAP products not loaded
+          plans.map((plan) => (
           <TouchableOpacity
             key={plan.id}
             style={[
@@ -467,7 +583,8 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
               </View>
             )}
           </TouchableOpacity>
-        ))}
+        ))
+        )}
 
         <TouchableOpacity
           style={styles.skipButton}
@@ -526,6 +643,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     flex: 1,
+  },
+  debugBanner: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
+    borderWidth: 1,
+  },
+  debugTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  debugText: {
+    fontSize: 13,
+    lineHeight: 18,
   },
   header: {
     alignItems: 'center',
