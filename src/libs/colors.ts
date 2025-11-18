@@ -22,7 +22,7 @@ export const Colors = {
     google: '#EA4335',
     facebook: '#1877F3',
     instagram: '#E1306C',
-    apple: '#000',
+    apple:'red',
     disabled: '#888',
     placeholder: '#000'
   },

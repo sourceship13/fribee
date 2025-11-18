@@ -21,7 +21,7 @@ import { useAuth, getColors } from './libs/hooks/useAuth';
 import { ActivityIndicator, View } from 'react-native';
 import { iOSUIKit } from 'react-native-typography';
 import RedemptionScreen from './screens/Redemption/RedemptionScreen';
-import BusinessCreationScreen1 from './screens/Business/BusinessCreation/BusinessCreationScreen1';
+import BusinessCreationScreen1 from './screens/Business/BusinessCreation/BusinessSubscriptionScreen';
 import BusinessCreationScreen2 from './screens/Business/BusinessCreation/BusinessCreationScreen2';
 import BusinessCreationScreen3 from './screens/Business/BusinessCreation/BusinessCreationScreen3';
 import BusinessSubscriptionScreen from './screens/Business/BusinessCreation/BusinessSubscriptionScreen';
@@ -29,7 +29,7 @@ import BusinessCreationScreen4 from './screens/Business/BusinessCreation/Busines
 import { Colors } from './libs/colors';
 import BusinessProfile from './screens/Profile/BusinessProfile';
 import BusinessDeals from './screens/Business/BusinessDeals';
-import CreateDeal from './screens/Business/CreateDeal';
+import CreateDeal from './screens/Business/CreateDeal'; 
 import AboutBusiness from './screens/Business/AboutBusiness';
 import DealPostPurchaseScreen from './screens/Business/DealPostPurchaseScreen';
 import FontDebug from './screens/FontDebug/FontDebug';
