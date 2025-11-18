@@ -81,8 +81,8 @@ const MainTabNavigator = () => {
 
           return <IconComponent name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: isDarkMode ? '#FFFFFF' : '#000000', // White for dark mode, black for light mode
-        tabBarInactiveTintColor: isDarkMode ? '#9CA3AF' : '#6B7280', // Light gray for dark mode, darker gray for light mode  
+        tabBarActiveTintColor: '#FFFFFF', // White for both dark and light mode
+        tabBarInactiveTintColor: '#FFFFFF', // White for both dark and light mode
         tabBarStyle: {
           backgroundColor: Colors.dark.surface, // More visible dark gray with opacity
           borderTopColor: 'transparent',
@@ -109,7 +109,7 @@ const MainTabNavigator = () => {
           iOSUIKit.largeTitleEmphasized,
           {
             fontSize: 12, // Override the large title size for tab bar
-            color: isDarkMode ? '#FFFFFF' : '#000000', // White for dark mode, black for light mode
+            color: '#FFFFFF', // White for both dark and light mode
             marginTop: -12, // Reduce space between icon and label
           }
         ],
