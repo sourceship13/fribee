@@ -12,6 +12,7 @@ import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import ApiConfig from '../../libs/utils/api.utils';
 import { iOSUIKit } from 'react-native-typography';
+import VersionFooter from '../../components/VersionFooter';
 
 const ExploreScreen = ({ navigation }: any) => {
   const {
