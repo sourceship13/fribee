@@ -400,7 +400,7 @@ const SwipeScreen = ({ navigation }: any) => {
         </Animated.View>
       </PanGestureHandler>
       <VersionFooter />
-    </View>t
+    </View>
   );
 };
 
