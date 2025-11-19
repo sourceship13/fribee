@@ -30,6 +30,7 @@ import Toolbar from '../../components/Toolbar';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import apiService from '../../services/api.service';
 import * as RNIap from 'react-native-iap';
+import VersionFooter from '../../components/VersionFooter';
 
 // Product IDs for deal post purchase
 const DEAL_POST_SKUS = Platform.select({

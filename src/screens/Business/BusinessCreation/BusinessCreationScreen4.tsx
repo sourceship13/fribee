@@ -6,6 +6,7 @@ import Toolbar from '../../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ApiService from '../../../services/api.service';
+import VersionFooter from '../../../components/VersionFooter';
 
 const BusinessCreationScreen4 = ({ navigation, route }: any) => {
   const { isDarkMode, refreshDeals } = useAuth();

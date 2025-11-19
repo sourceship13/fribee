@@ -20,6 +20,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import AuthService from '../../services/auth.service';
 import ApiConfig from '../../libs/utils/api.utils';
 import { launchImageLibrary } from 'react-native-image-picker';
+import VersionFooter from '../../components/VersionFooter';
 
 interface CreateDealProps {
   navigation: any;

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import VersionFooter from '../../components/VersionFooter';
 
 interface FontDebugProps {
   navigation: any;

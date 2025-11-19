@@ -17,6 +17,7 @@ import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ApiService from '../../services/api.service';
+import VersionFooter from '../../components/VersionFooter';
 
 interface Deal {
   deal_id: string;

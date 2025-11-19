@@ -5,6 +5,7 @@ import { getColors } from '../../libs/colors';
 import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import VersionFooter from '../../components/VersionFooter';
 
 interface AboutBusinessProps {
   navigation: any;

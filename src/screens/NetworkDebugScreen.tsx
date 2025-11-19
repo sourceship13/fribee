@@ -4,6 +4,7 @@ import { apiConfig, switchEnvironment, forcePhysicalDevice, getDeviceDetectionSt
 import { useAuth, getColors } from '../libs/hooks/useAuth';
 import Toolbar from '../components/Toolbar';
 import MacIPDetector from '../libs/utils/macIPDetector';
+import VersionFooter from '../components/VersionFooter';
 
 const NetworkDebugScreen = ({ navigation }: any) => {
   const { isDarkMode } = useAuth();
