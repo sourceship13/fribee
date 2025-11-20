@@ -183,7 +183,6 @@ const SwipeScreen = ({ navigation }: any) => {
         >
           DEALZ
         </Text>
-        <Button title='Try!' onPress={ () => { Sentry.captureException(new Error('First error')) }}/>
 
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}
