@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Keychain from 'react-native-keychain';
 import ApiConfig from '../libs/utils/api.utils';
-import { getDeviceId } from '../libs/utils/deviceInfo';
+import { getDeviceId, getDeviceInfo, DeviceInfoData } from '../libs/utils/deviceInfo';
 
 const API_BASE_URL = ApiConfig.apiURL;
 
@@ -390,14 +390,21 @@ class AuthService {
         
         console.log('📤 Sending refresh request with token length:', refreshToken.length);
         
-        const deviceId = await getDeviceId();
+        // Get device information for refresh request
+        const deviceInfo = await getDeviceInfo();
+        
         const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-device-id': deviceId,
           },
-          body: JSON.stringify({ refreshToken }),
+          body: JSON.stringify({ 
+            refreshToken,
+            deviceInfo: {
+              platform: deviceInfo.platform,
+              appVersion: deviceInfo.appVersion,
+            },
+          }),
         });
         
         if (!response.ok) {
@@ -587,22 +594,46 @@ class AuthService {
       username?: string;
       password: string;
     },
-    deviceId?: string
+    pushToken?: string
   ): Promise<User> {
     try {
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
+      // Get device information
+      const deviceInfo = await getDeviceInfo(pushToken);
+      const deviceId = await getDeviceId();
+
+      // Prepare the request payload
+      const payload = {
+        ...credentials,
+        deviceInfo,
       };
 
-      if (deviceId) {
-        headers['X-Device-ID'] = deviceId;
-      }
+      console.log('📤 Sending login request with device info:', {
+        hasEmail: !!credentials.email,
+        hasPhone: !!credentials.phone_number,
+        hasUsername: !!credentials.username,
+        platform: deviceInfo.platform,
+        deviceName: deviceInfo.deviceName,
+        osVersion: deviceInfo.osVersion,
+        appVersion: deviceInfo.appVersion,
+        hasPushToken: !!deviceInfo.pushToken,
+        deviceId,
+      });
+
+      // Log the full payload being sent
+      console.log('📦 Full login payload:', JSON.stringify(payload, null, 2));
+      console.log('🌐 API endpoint:', `${API_BASE_URL}/auth/login`);
 
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
-        headers,
-        body: JSON.stringify(credentials),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-device-id': deviceId,
+        },
+        body: JSON.stringify(payload),
       });
+
+      console.log('📥 Login response status:', response.status);
+      console.log('📥 Login response headers:', JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2));
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -619,6 +650,8 @@ class AuthService {
       }
 
       const result = await response.json();
+      console.log('📦 Full login response body:', JSON.stringify(result, null, 2));
+      
       const { user, accessToken, refreshToken, sessionToken } = result;
 
       console.log('📥 Login response received:', {
