@@ -9,12 +9,14 @@ import {
   ImageBackground,
   Dimensions,
   Platform,
+  Button,
 } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
 import { iOSUIKit } from 'react-native-typography';
 import VersionFooter from '../../components/VersionFooter';
+import * as Sentry from "@sentry/react-native";
 
 const PLACEHOLDER_DEAL = {
   id: 0,
@@ -181,6 +183,8 @@ const SwipeScreen = ({ navigation }: any) => {
         >
           DEALZ
         </Text>
+        <Button title='Try!' onPress={ () => { Sentry.captureException(new Error('First error')) }}/>
+
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}
           style={styles.settingsButton}
