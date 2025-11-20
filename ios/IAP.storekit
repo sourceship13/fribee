@@ -1,0 +1,104 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "CFB08658",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "0FB71169",
+      "localizations" : [
+
+      ],
+      "name" : "subscriptions",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "1.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "E0D2C5CB",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Regular Business Account",
+              "displayName" : "Regular Business Account",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.nolimitsera.monthly.subscription.regular.staging",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Regular Business Monthly Subscription",
+          "subscriptionGroupID" : "0FB71169",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "1.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "8E31ED41",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Premium Monthly Business Subscription",
+              "displayName" : "Premium Monthly Business Subscription",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.nolimitsera.monthly.subscription.premium.staging",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Premium Business Monthly Subscription",
+          "subscriptionGroupID" : "0FB71169",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

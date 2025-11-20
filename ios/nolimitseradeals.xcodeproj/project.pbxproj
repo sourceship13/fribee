@@ -126,9 +126,11 @@
 		DA7DC203915241779130E807 /* Roboto_Condensed-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7EF3C5FAF6684302888DD99C /* Roboto_Condensed-Italic.ttf */; };
 		DA86D462C5EB427E98C9C73F /* Roboto-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 914BBDBA8CED4B028518C4E2 /* Roboto-ExtraBoldItalic.ttf */; };
 		DD2A480AC46742AFA8D72F1A /* Roboto-Italic-VariableFont_wdth,wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDC33941D233400096A623D3 /* Roboto-Italic-VariableFont_wdth,wght.ttf */; };
+		DE15BF702ECD9AC400704938 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE15BF6F2ECD9AC400704938 /* StoreKit.framework */; };
+		DE15BF732ECDDED300704938 /* IAP.storekit in Resources */ = {isa = PBXBuildFile; fileRef = DE15BF722ECDDED300704938 /* IAP.storekit */; };
+		DE15BF742ECDDED300704938 /* IAP.storekit in Resources */ = {isa = PBXBuildFile; fileRef = DE15BF722ECDDED300704938 /* IAP.storekit */; };
 		DE3EEA9AFE9F4EB785E2250C /* Roboto_SemiCondensed-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD2465494F304F4B9269390E /* Roboto_SemiCondensed-Medium.ttf */; };
 		DE5A5613B3FA44909C0252BF /* Roboto-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 442A52827A1D4B138C78ED0A /* Roboto-ExtraLight.ttf */; };
-		DE65EF552EC1D10F006F13A9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE65EF542EC1D10F006F13A9 /* StoreKit.framework */; };
 		DE8B204EF79F47E9A4AAE393 /* Roboto-VariableFont_wdth,wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9564D79325204B96B91623CE /* Roboto-VariableFont_wdth,wght.ttf */; };
 		DEAE9F642E9E27570041BB64 /* info-staging.plist in Resources */ = {isa = PBXBuildFile; fileRef = DEAE9F632E9E27570041BB64 /* info-staging.plist */; };
 		DEAE9F652E9E27570041BB64 /* info-staging.plist in Resources */ = {isa = PBXBuildFile; fileRef = DEAE9F632E9E27570041BB64 /* info-staging.plist */; };
@@ -288,7 +290,8 @@
 		D247F59B651C47EDAF00F695 /* Roboto-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-SemiBold.ttf"; path = "../assets/fonts/Roboto/Roboto-SemiBold.ttf"; sourceTree = "<group>"; };
 		D7A5FB67150E419EAC07BE23 /* Montserrat-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-BlackItalic.ttf"; path = "../assets/fonts/Montserrat/static/Montserrat-BlackItalic.ttf"; sourceTree = "<group>"; };
 		D94A191C578547DDB9487DFA /* Roboto_Condensed-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_Condensed-MediumItalic.ttf"; path = "../assets/fonts/Roboto/Roboto_Condensed-MediumItalic.ttf"; sourceTree = "<group>"; };
-		DE65EF542EC1D10F006F13A9 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		DE15BF6F2ECD9AC400704938 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		DE15BF722ECDDED300704938 /* IAP.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = IAP.storekit; sourceTree = "<group>"; };
 		DEAE9F632E9E27570041BB64 /* info-staging.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "info-staging.plist"; sourceTree = "<group>"; };
 		DEE363152E98730100B65285 /* nolimitseradeals-prod.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nolimitseradeals-prod.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0BD020738944023956E281F /* Barlow-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-Medium.ttf"; path = "../assets/fonts/Barlow/Barlow-Medium.ttf"; sourceTree = "<group>"; };
@@ -323,7 +326,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E5E6E93653F2B70198C42BA /* libPods-nolimitseradeals-staging.a in Frameworks */,
-				DE65EF552EC1D10F006F13A9 /* StoreKit.framework in Frameworks */,
+				DE15BF702ECD9AC400704938 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -497,7 +500,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DE65EF542EC1D10F006F13A9 /* StoreKit.framework */,
+				DE15BF6F2ECD9AC400704938 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				AF9633CC697833AEFA76A851 /* libPods-nolimitseradeals-prod.a */,
 				F935C9D93CD3104F894A5B73 /* libPods-nolimitseradeals-staging.a */,
@@ -515,6 +518,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				DE15BF722ECDDED300704938 /* IAP.storekit */,
 				13B07FAE1A68108700A75B9A /* nolimitseradeals */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -713,6 +717,7 @@
 				FB8F74480A434ED99D8D5331 /* OpenSans_SemiCondensed-Regular.ttf in Resources */,
 				0DE91EDECD8E4D05B4C636E5 /* OpenSans_SemiCondensed-SemiBold.ttf in Resources */,
 				0CEA1E080FFF481596C84BFD /* OpenSans_SemiCondensed-SemiBoldItalic.ttf in Resources */,
+				DE15BF732ECDDED300704938 /* IAP.storekit in Resources */,
 				DD2A480AC46742AFA8D72F1A /* Roboto-Italic-VariableFont_wdth,wght.ttf in Resources */,
 				DE8B204EF79F47E9A4AAE393 /* Roboto-VariableFont_wdth,wght.ttf in Resources */,
 				754EEB1DF30B402CA4C0E308 /* OFL.txt in Resources */,
@@ -782,6 +787,7 @@
 			files = (
 				DEAE9F642E9E27570041BB64 /* info-staging.plist in Resources */,
 				DEE3630A2E98730100B65285 /* LaunchScreen.storyboard in Resources */,
+				DE15BF742ECDDED300704938 /* IAP.storekit in Resources */,
 				DEE3630B2E98730100B65285 /* Images.xcassets in Resources */,
 				DEE3630C2E98730100B65285 /* PrivacyInfo.xcprivacy in Resources */,
 			);
