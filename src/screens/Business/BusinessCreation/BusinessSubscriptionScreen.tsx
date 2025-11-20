@@ -49,7 +49,7 @@ import * as RNIap from 'react-native-iap';
 
 // Subscription product IDs (configure these in App Store Connect / Google Play Console)
 const SUBSCRIPTION_SKUS = Platform.select({
-  ios: ['com.nolimitsera.monthly.subscription.premium.staging'],
+  ios: ['com.nolimitsera.monthly.subscription.premium.staging', 'com.nolimitsera.monthly.subscription.regular.staging'],
   android: ['com.nolimitsera.monthly.subscription.premium.staging'],
 }) as string[];
 
@@ -81,22 +81,37 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
   const businessData = route.params;
 
   // Hardcoded plans for fallback (will be replaced with actual IAP products)
-  const plans: SubscriptionPlan[] = [
-    {
-      id: 'monthly',
-      title: 'Monthly Subscription',
-      price: '$1.99/month',
-      description: 'Perfect for getting started',
-      features: [
-        'Unlimited deals creation',
-        'Analytics dashboard',
-        'Push notifications',
-        'Email support',
-        'Business profile customization',
-      ],
-      recommended: true,
-    },
-  ];
+  // Hardcoded plans for fallback
+const plans: SubscriptionPlan[] = [
+  {
+    id: 'com.nolimitsera.monthly.subscription.regular.staging',
+    title: 'Regular Business',
+    price: '$0.99/month',
+    description: 'Essential features for small businesses',
+    features: [
+      'Up to 4 deals per month',
+      'Basic analytics',
+      'Email support',
+      'Business profile',
+    ],
+    recommended: false,
+  },
+  {
+    id: 'com.nolimitsera.monthly.subscription.premium.staging',
+    title: 'Premium Business',
+    price: '$1.99/month',
+    description: 'Full-featured for growing businesses',
+    features: [
+      'Up to 8 deals per month',
+      'Advanced analytics dashboard',
+      'Push notifications',
+      'Priority email support',
+      'Business profile customization',
+      'Featured placement',
+    ],
+    recommended: true,
+  },
+];
 
   useEffect(() => {
     initializeIAP();
