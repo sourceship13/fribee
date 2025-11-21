@@ -204,6 +204,18 @@ jobs:
               find Pods -name "hermes.framework" -type d
             fi
       - run:
+          name: Patch React Native bundler to disable Sentry
+          command: |
+            # Patch the react-native-xcode.sh script to disable Sentry
+            if [ -f "node_modules/react-native/scripts/react-native-xcode.sh" ]; then
+              sed -i '' '1i\
+              export SENTRY_DISABLE_AUTO_UPLOAD=true\
+              ' node_modules/react-native/scripts/react-native-xcode.sh
+                      echo "✅ Patched react-native-xcode.sh to disable Sentry"
+                    else
+                      echo "⚠️ react-native-xcode.sh not found"
+                    fi
+      - run:
           name: Build and upload to TestFlight (Staging)
           command: |
             cd ios
@@ -308,6 +320,18 @@ jobs:
               echo "⚠️ Hermes framework not found at expected location"
               find Pods -name "hermes.framework" -type d
             fi
+      - run:
+          name: Patch React Native bundler to disable Sentry
+          command: |
+            # Patch the react-native-xcode.sh script to disable Sentry
+            if [ -f "node_modules/react-native/scripts/react-native-xcode.sh" ]; then
+              sed -i '' '1i\
+              export SENTRY_DISABLE_AUTO_UPLOAD=true\
+              ' node_modules/react-native/scripts/react-native-xcode.sh
+                      echo "✅ Patched react-native-xcode.sh to disable Sentry"
+                    else
+                      echo "⚠️ react-native-xcode.sh not found"
+                    fi
       - run:
           name: Build and upload to TestFlight (Production)
           command: |
