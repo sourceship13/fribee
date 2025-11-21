@@ -91,11 +91,10 @@ jobs:
             # Clean everything
             rm -rf .gradle app/.cxx app/build
 
-            # Set Sentry vars with allow failure
-            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN:-}"
+            # Set Sentry vars - enable for production builds
+            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
             export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
             export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
-            export SENTRY_ALLOW_FAILURE=true
 
             # Generate all codegen artifacts first
             ./gradlew generateCodegenArtifactsFromSchema --no-daemon
@@ -163,7 +162,7 @@ jobs:
             chmod 600 ~/.ssh/id_ed25519
             ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-            cat > ~/.ssh/config \<< 'EOF'
+            cat > ~/.ssh/config << 'EOF'
             Host github.com-fastlane-match
               HostName github.com
               User git
@@ -184,12 +183,20 @@ jobs:
 
             echo "✅ Keychain setup complete"
       - run:
+          name: Install Sentry CLI
+          command: |
+            curl -sL https://sentry.io/get-cli/ | bash
+            sentry-cli --version
+      - run:
           name: Create Xcode environment file with Sentry
           command: |
-            echo "export SENTRY_AUTH_TOKEN=\"\${SENTRY_AUTH_TOKEN:-}\"" > ios/.xcode.env.local
-            echo "export SENTRY_ORG=\"\${SENTRY_ORG:-sera-industries-llc}\"" >> ios/.xcode.env.local
-            echo "export SENTRY_PROJECT=\"\${SENTRY_PROJECT:-react-native}\"" >> ios/.xcode.env.local
-            echo "export SENTRY_ALLOW_FAILURE=true" >> ios/.xcode.env.local
+            cat > ios/.xcode.env.local << EOF
+            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
+            export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
+            export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export NODE_BINARY=$(command -v node)
+            EOF
+            echo "✅ Sentry environment configured"
       - run:
           name: Strip bitcode from Hermes
           command: |
@@ -203,18 +210,6 @@ jobs:
               echo "⚠️ Hermes framework not found at expected location"
               find Pods -name "hermes.framework" -type d
             fi
-      - run:
-          name: Patch React Native bundler to disable Sentry
-          command: |
-            # Patch the react-native-xcode.sh script to disable Sentry
-            if [ -f "node_modules/react-native/scripts/react-native-xcode.sh" ]; then
-              sed -i '' '1i\
-              export SENTRY_DISABLE_AUTO_UPLOAD=true\
-              ' node_modules/react-native/scripts/react-native-xcode.sh
-                      echo "✅ Patched react-native-xcode.sh to disable Sentry"
-                    else
-                      echo "⚠️ react-native-xcode.sh not found"
-                    fi
       - run:
           name: Build and upload to TestFlight (Staging)
           command: |
@@ -280,7 +275,7 @@ jobs:
             chmod 600 ~/.ssh/id_ed25519
             ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-            cat > ~/.ssh/config \<< 'EOF'
+            cat > ~/.ssh/config << 'EOF'
             Host github.com-fastlane-match
               HostName github.com
               User git
@@ -301,12 +296,20 @@ jobs:
 
             echo "✅ Keychain setup complete"
       - run:
+          name: Install Sentry CLI
+          command: |
+            curl -sL https://sentry.io/get-cli/ | bash
+            sentry-cli --version
+      - run:
           name: Create Xcode environment file with Sentry
           command: |
-            echo "export SENTRY_AUTH_TOKEN=\"\${SENTRY_AUTH_TOKEN:-}\"" > ios/.xcode.env.local
-            echo "export SENTRY_ORG=\"\${SENTRY_ORG:-sera-industries-llc}\"" >> ios/.xcode.env.local
-            echo "export SENTRY_PROJECT=\"\${SENTRY_PROJECT:-react-native}\"" >> ios/.xcode.env.local
-            echo "export SENTRY_ALLOW_FAILURE=true" >> ios/.xcode.env.local
+            cat > ios/.xcode.env.local << EOF
+            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
+            export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
+            export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export NODE_BINARY=$(command -v node)
+            EOF
+            echo "✅ Sentry environment configured"
       - run:
           name: Strip bitcode from Hermes
           command: |
@@ -320,18 +323,6 @@ jobs:
               echo "⚠️ Hermes framework not found at expected location"
               find Pods -name "hermes.framework" -type d
             fi
-      - run:
-          name: Patch React Native bundler to disable Sentry
-          command: |
-            # Patch the react-native-xcode.sh script to disable Sentry
-            if [ -f "node_modules/react-native/scripts/react-native-xcode.sh" ]; then
-              sed -i '' '1i\
-              export SENTRY_DISABLE_AUTO_UPLOAD=true\
-              ' node_modules/react-native/scripts/react-native-xcode.sh
-                      echo "✅ Patched react-native-xcode.sh to disable Sentry"
-                    else
-                      echo "⚠️ react-native-xcode.sh not found"
-                    fi
       - run:
           name: Build and upload to TestFlight (Production)
           command: |
