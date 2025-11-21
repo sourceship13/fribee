@@ -91,10 +91,11 @@ jobs:
             # Clean everything
             rm -rf .gradle app/.cxx app/build
 
-            # Set Sentry vars - enable for production builds
+            # Set Sentry vars - enable for production builds with failure allowance
             export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
             export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
             export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export SENTRY_ALLOW_FAILURE=true
 
             # Generate all codegen artifacts first
             ./gradlew generateCodegenArtifactsFromSchema --no-daemon
@@ -201,6 +202,7 @@ jobs:
             export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
             export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
             export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export SENTRY_ALLOW_FAILURE=true
             export NODE_BINARY="$NODE_PATH"
             export SENTRY_CLI_EXECUTABLE="$SENTRY_CLI_PATH"
             export PATH="/usr/local/bin:\$PATH"
@@ -229,6 +231,7 @@ jobs:
             export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
             export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
             export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export SENTRY_ALLOW_FAILURE=true
             export PATH="/usr/local/bin:$PATH"
             
             bundle exec fastlane staging
@@ -331,6 +334,7 @@ jobs:
             export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
             export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
             export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export SENTRY_ALLOW_FAILURE=true
             export NODE_BINARY="$NODE_PATH"
             export SENTRY_CLI_EXECUTABLE="$SENTRY_CLI_PATH"
             export PATH="/usr/local/bin:\$PATH"
@@ -359,6 +363,7 @@ jobs:
             export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
             export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
             export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export SENTRY_ALLOW_FAILURE=true
             export PATH="/usr/local/bin:$PATH"
             
             bundle exec fastlane production
