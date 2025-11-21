@@ -183,20 +183,31 @@ jobs:
 
             echo "✅ Keychain setup complete"
       - run:
-          name: Install Sentry CLI
+          name: Install Sentry CLI globally
           command: |
             curl -sL https://sentry.io/get-cli/ | bash
+            # Make sure it's in PATH
+            export PATH="/usr/local/bin:$PATH"
             sentry-cli --version
+            which sentry-cli
       - run:
           name: Create Xcode environment file with Sentry
           command: |
+            # Get the actual node path
+            NODE_PATH=$(command -v node)
+            SENTRY_CLI_PATH=$(which sentry-cli)
+            
             cat > ios/.xcode.env.local \<< EOF
             export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
             export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
             export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
-            export NODE_BINARY=$(command -v node)
+            export NODE_BINARY="$NODE_PATH"
+            export SENTRY_CLI_EXECUTABLE="$SENTRY_CLI_PATH"
+            export PATH="/usr/local/bin:\$PATH"
             EOF
+            
             echo "✅ Sentry environment configured"
+            cat ios/.xcode.env.local
       - run:
           name: Strip bitcode from Hermes
           command: |
@@ -214,6 +225,12 @@ jobs:
           name: Build and upload to TestFlight (Staging)
           command: |
             cd ios
+            # Export Sentry vars for the build
+            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
+            export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
+            export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export PATH="/usr/local/bin:$PATH"
+            
             bundle exec fastlane staging
       - run:
           name: Display App Version and Build Number
@@ -296,20 +313,31 @@ jobs:
 
             echo "✅ Keychain setup complete"
       - run:
-          name: Install Sentry CLI
+          name: Install Sentry CLI globally
           command: |
             curl -sL https://sentry.io/get-cli/ | bash
+            # Make sure it's in PATH
+            export PATH="/usr/local/bin:$PATH"
             sentry-cli --version
+            which sentry-cli
       - run:
           name: Create Xcode environment file with Sentry
           command: |
+            # Get the actual node path
+            NODE_PATH=$(command -v node)
+            SENTRY_CLI_PATH=$(which sentry-cli)
+            
             cat > ios/.xcode.env.local \<< EOF
             export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
             export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
             export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
-            export NODE_BINARY=$(command -v node)
+            export NODE_BINARY="$NODE_PATH"
+            export SENTRY_CLI_EXECUTABLE="$SENTRY_CLI_PATH"
+            export PATH="/usr/local/bin:\$PATH"
             EOF
+            
             echo "✅ Sentry environment configured"
+            cat ios/.xcode.env.local
       - run:
           name: Strip bitcode from Hermes
           command: |
@@ -327,6 +355,12 @@ jobs:
           name: Build and upload to TestFlight (Production)
           command: |
             cd ios
+            # Export Sentry vars for the build
+            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
+            export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
+            export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export PATH="/usr/local/bin:$PATH"
+            
             bundle exec fastlane production
       - run:
           name: Display App Version and Build Number
