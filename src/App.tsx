@@ -15,13 +15,14 @@ import FeedbackModal from './components/FeedbackModal';
 
 Sentry.init({
   dsn: 'https://782d11d5dba6567941af57bb9981d2c3@o4510396604088320.ingest.us.sentry.io/4510396604940288',
+  // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+  tracesSampleRate: 1.0,
+  // Disable in dev
+  enabled: !__DEV__,
 
   // Adds more context data to events (IP address, cookies, user, etc.)
   // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
   sendDefaultPii: true,
-
-  // Enable Logs
-  enableLogs: true,
 
   // Configure Session Replay
   replaysSessionSampleRate: 0.1,
