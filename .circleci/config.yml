@@ -112,6 +112,9 @@ jobs:
     working_directory: ~/repo
     environment:
       FL_OUTPUT_DIR: output
+      SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN}
+      SENTRY_ORG: sera-industries-llc
+      SENTRY_PROJECT: react-native
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
