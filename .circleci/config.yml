@@ -112,9 +112,9 @@ jobs:
     working_directory: ~/repo
     environment:
       FL_OUTPUT_DIR: output
-      SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN}
-      SENTRY_ORG: sera-industries-llc
-      SENTRY_PROJECT: react-native
+      # SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN}
+      # SENTRY_ORG: sera-industries-llc
+      # SENTRY_PROJECT: react-native
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
@@ -194,9 +194,7 @@ jobs:
           name: Build and upload to TestFlight (Staging)
           command: |
             cd ios
-            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
-            export SENTRY_ORG="${SENTRY_ORG}"
-            export SENTRY_PROJECT="${SENTRY_PROJECT}"
+            export SENTRY_DISABLE_AUTO_UPLOAD=true
             bundle exec fastlane staging
       - run:
           name: Display App Version and Build Number
@@ -292,10 +290,11 @@ jobs:
               find Pods -name "hermes.framework" -type d
             fi
       - run:
-          name: Build and upload to TestFlight (Production)
-          command: |
-            cd ios
-            bundle exec fastlane production
+            name: Build and upload to TestFlight (Staging)
+            command: |
+              cd ios
+              export SENTRY_DISABLE_AUTO_UPLOAD=true
+              bundle exec fastlane staging
       - run:
           name: Display App Version and Build Number
           command: |
