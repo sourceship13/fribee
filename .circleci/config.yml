@@ -162,7 +162,7 @@ jobs:
             chmod 600 ~/.ssh/id_ed25519
             ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-            cat > ~/.ssh/config << 'EOF'
+            cat > ~/.ssh/config \<< 'EOF'
             Host github.com-fastlane-match
               HostName github.com
               User git
@@ -190,7 +190,7 @@ jobs:
       - run:
           name: Create Xcode environment file with Sentry
           command: |
-            cat > ios/.xcode.env.local << EOF
+            cat > ios/.xcode.env.local \<< EOF
             export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
             export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
             export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
@@ -275,7 +275,7 @@ jobs:
             chmod 600 ~/.ssh/id_ed25519
             ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-            cat > ~/.ssh/config << 'EOF'
+            cat > ~/.ssh/config \<< 'EOF'
             Host github.com-fastlane-match
               HostName github.com
               User git
@@ -303,7 +303,7 @@ jobs:
       - run:
           name: Create Xcode environment file with Sentry
           command: |
-            cat > ios/.xcode.env.local << EOF
+            cat > ios/.xcode.env.local \<< EOF
             export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
             export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
             export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
