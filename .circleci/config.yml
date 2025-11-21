@@ -186,12 +186,10 @@ jobs:
       - run:
           name: Create Xcode environment file with Sentry
           command: |
-            cat > ios/.xcode.env.local << EOF
-            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN:-}"
-            export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
-            export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
-            export SENTRY_ALLOW_FAILURE=true
-            EOF
+            echo "export SENTRY_AUTH_TOKEN=\"\${SENTRY_AUTH_TOKEN:-}\"" > ios/.xcode.env.local
+            echo "export SENTRY_ORG=\"\${SENTRY_ORG:-sera-industries-llc}\"" >> ios/.xcode.env.local
+            echo "export SENTRY_PROJECT=\"\${SENTRY_PROJECT:-react-native}\"" >> ios/.xcode.env.local
+            echo "export SENTRY_ALLOW_FAILURE=true" >> ios/.xcode.env.local
       - run:
           name: Strip bitcode from Hermes
           command: |
@@ -293,12 +291,10 @@ jobs:
       - run:
           name: Create Xcode environment file with Sentry
           command: |
-            cat > ios/.xcode.env.local << EOF
-            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN:-}"
-            export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
-            export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
-            export SENTRY_ALLOW_FAILURE=true
-            EOF
+            echo "export SENTRY_AUTH_TOKEN=\"\${SENTRY_AUTH_TOKEN:-}\"" > ios/.xcode.env.local
+            echo "export SENTRY_ORG=\"\${SENTRY_ORG:-sera-industries-llc}\"" >> ios/.xcode.env.local
+            echo "export SENTRY_PROJECT=\"\${SENTRY_PROJECT:-react-native}\"" >> ios/.xcode.env.local
+            echo "export SENTRY_ALLOW_FAILURE=true" >> ios/.xcode.env.local
       - run:
           name: Strip bitcode from Hermes
           command: |
