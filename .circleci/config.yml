@@ -31,7 +31,10 @@ jobs:
             - v1-npm-
       - run:
           name: Install Node.js dependencies
-          command: npm ci
+          command: |
+            npm ci
+            # Verify Sentry CLI installed
+            npx @sentry/cli --version || echo "⚠️ Sentry CLI not found"
       - save_cache:
           key: v1-npm-{{ arch }}-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
@@ -88,10 +91,11 @@ jobs:
             # Clean everything
             rm -rf .gradle app/.cxx app/build
             
-            # Export Sentry vars for Android build
-            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
-            export SENTRY_ORG="${SENTRY_ORG}"
-            export SENTRY_PROJECT="${SENTRY_PROJECT}"
+            # Set Sentry vars with allow failure
+            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN:-}"
+            export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
+            export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export SENTRY_ALLOW_FAILURE=true
             
             # Generate all codegen artifacts first
             ./gradlew generateCodegenArtifactsFromSchema --no-daemon
@@ -180,6 +184,15 @@ jobs:
             
             echo "✅ Keychain setup complete"
       - run:
+          name: Create Xcode environment file with Sentry
+          command: |
+            cat > ios/.xcode.env.local << EOF
+            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN:-}"
+            export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
+            export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export SENTRY_ALLOW_FAILURE=true
+            EOF
+      - run:
           name: Strip bitcode from Hermes
           command: |
             cd ios
@@ -196,10 +209,6 @@ jobs:
           name: Build and upload to TestFlight (Staging)
           command: |
             cd ios
-            # Export Sentry vars from CircleCI context
-            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
-            export SENTRY_ORG="${SENTRY_ORG}"
-            export SENTRY_PROJECT="${SENTRY_PROJECT}"
             bundle exec fastlane staging
       - run:
           name: Display App Version and Build Number
@@ -282,6 +291,15 @@ jobs:
             
             echo "✅ Keychain setup complete"
       - run:
+          name: Create Xcode environment file with Sentry
+          command: |
+            cat > ios/.xcode.env.local << EOF
+            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN:-}"
+            export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
+            export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
+            export SENTRY_ALLOW_FAILURE=true
+            EOF
+      - run:
           name: Strip bitcode from Hermes
           command: |
             cd ios
@@ -298,10 +316,6 @@ jobs:
           name: Build and upload to TestFlight (Production)
           command: |
             cd ios
-            # Export Sentry vars from CircleCI context
-            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
-            export SENTRY_ORG="${SENTRY_ORG}"
-            export SENTRY_PROJECT="${SENTRY_PROJECT}"
             bundle exec fastlane production
       - run:
           name: Display App Version and Build Number

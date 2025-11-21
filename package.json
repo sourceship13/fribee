@@ -13,7 +13,9 @@
     "ios:ipad": "react-native run-ios --simulator='iPad Pro (12.9-inch)'",
     "clean": "cd android && ./gradlew clean && cd ../ios && xcodebuild clean && cd ..",
     "reset-cache": "npx react-native start --reset-cache",
-    "pod-install": "cd ios && pod install && cd .."
+    "pod-install": "cd ios && pod install && cd ..",
+    "postinstall": "npx @sentry/cli --version || echo 'Warning: Sentry CLI not found'",
+  
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.1.0",
