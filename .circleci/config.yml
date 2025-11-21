@@ -194,6 +194,9 @@ jobs:
           name: Build and upload to TestFlight (Staging)
           command: |
             cd ios
+            export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN}"
+            export SENTRY_ORG="${SENTRY_ORG}"
+            export SENTRY_PROJECT="${SENTRY_PROJECT}"
             bundle exec fastlane staging
       - run:
           name: Display App Version and Build Number
