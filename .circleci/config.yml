@@ -88,7 +88,7 @@ jobs:
             # Clean everything
             rm -rf .gradle app/.cxx app/build
 
-            # Disable Sentry uploads for now
+            # Disable Sentry uploads
             export SENTRY_DISABLE_AUTO_UPLOAD=true
 
             # Generate all codegen artifacts first
@@ -120,6 +120,16 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - run:
+          name: Disable Sentry uploads completely
+          command: |
+            cat > node_modules/@sentry/cli/js/helper.js \<< 'EOF'
+            module.exports = {
+              execute: function() { return Promise.resolve(); },
+              getPath: function() { return '/usr/bin/true'; }
+            };
+            EOF
+            echo "✅ Disabled @sentry/cli"
       - run:
           name: Install Ruby 3.3.5
           command: |
@@ -177,15 +187,6 @@ jobs:
             security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed s/\"//g)
 
             echo "✅ Keychain setup complete"
-      - run:
-          name: Disable Sentry uploads
-          command: |
-            # Replace sentry-cli with a no-op script
-            sudo mv /usr/local/bin/sentry-cli /usr/local/bin/sentry-cli.bak 2>/dev/null || true
-            echo '#!/bin/bash' | sudo tee /usr/local/bin/sentry-cli > /dev/null
-            echo 'exit 0' | sudo tee -a /usr/local/bin/sentry-cli > /dev/null
-            sudo chmod +x /usr/local/bin/sentry-cli
-            echo "✅ Disabled sentry-cli"
       - run:
           name: Strip bitcode from Hermes
           command: |
@@ -228,6 +229,16 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Disable Sentry uploads completely
+          command: |
+            cat > node_modules/@sentry/cli/js/helper.js \<< 'EOF'
+            module.exports = {
+              execute: function() { return Promise.resolve(); },
+              getPath: function() { return '/usr/bin/true'; }
+            };
+            EOF
+            echo "✅ Disabled @sentry/cli"
+      - run:
           name: Install Ruby 3.3.5
           command: |
             if ! rbenv versions | grep -q "3.3.5"; then
@@ -284,15 +295,6 @@ jobs:
             security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed s/\"//g)
 
             echo "✅ Keychain setup complete"
-      - run:
-          name: Disable Sentry uploads
-          command: |
-            # Replace sentry-cli with a no-op script
-            sudo mv /usr/local/bin/sentry-cli /usr/local/bin/sentry-cli.bak 2>/dev/null || true
-            echo '#!/bin/bash' | sudo tee /usr/local/bin/sentry-cli > /dev/null
-            echo 'exit 0' | sudo tee -a /usr/local/bin/sentry-cli > /dev/null
-            sudo chmod +x /usr/local/bin/sentry-cli
-            echo "✅ Disabled sentry-cli"
       - run:
           name: Strip bitcode from Hermes
           command: |
