@@ -90,19 +90,19 @@ jobs:
             cd android
             # Clean everything
             rm -rf .gradle app/.cxx app/build
-            
+
             # Set Sentry vars with allow failure
             export SENTRY_AUTH_TOKEN="${SENTRY_AUTH_TOKEN:-}"
             export SENTRY_ORG="${SENTRY_ORG:-sera-industries-llc}"
             export SENTRY_PROJECT="${SENTRY_PROJECT:-react-native}"
             export SENTRY_ALLOW_FAILURE=true
-            
+
             # Generate all codegen artifacts first
             ./gradlew generateCodegenArtifactsFromSchema --no-daemon
-            
+
             # react-native-config doesn't generate codegen properly, create empty directory
             mkdir -p ../node_modules/react-native-config/android/build/generated/source/codegen/jni
-            
+
             # Clean and build
             ./gradlew clean assembleRelease --no-daemon --stacktrace
       - save_cache:
@@ -162,7 +162,7 @@ jobs:
             echo "$MATCH_GIT_SSH_KEY" | base64 --decode > ~/.ssh/id_ed25519
             chmod 600 ~/.ssh/id_ed25519
             ssh-keyscan github.com >> ~/.ssh/known_hosts
-            
+
             cat > ~/.ssh/config \<< 'EOF'
             Host github.com-fastlane-match
               HostName github.com
@@ -171,17 +171,17 @@ jobs:
               IdentitiesOnly yes
               StrictHostKeyChecking no
             EOF
-            
+
             KEYCHAIN_PATH=~/Library/Keychains/fastlane.keychain-db
             KEYCHAIN_PASSWORD=temp_password
-            
+
             security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
             security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
             security default-keychain -s "$KEYCHAIN_PATH"
             security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
             security set-keychain-settings -t 3600 -u "$KEYCHAIN_PATH"
             security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed s/\"//g)
-            
+
             echo "✅ Keychain setup complete"
       - run:
           name: Create Xcode environment file with Sentry
@@ -279,7 +279,7 @@ jobs:
             echo "$MATCH_GIT_SSH_KEY" | base64 --decode > ~/.ssh/id_ed25519
             chmod 600 ~/.ssh/id_ed25519
             ssh-keyscan github.com >> ~/.ssh/known_hosts
-            
+
             cat > ~/.ssh/config \<< 'EOF'
             Host github.com-fastlane-match
               HostName github.com
@@ -288,17 +288,17 @@ jobs:
               IdentitiesOnly yes
               StrictHostKeyChecking no
             EOF
-            
+
             KEYCHAIN_PATH=~/Library/Keychains/fastlane.keychain-db
             KEYCHAIN_PASSWORD=temp_password
-            
+
             security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
             security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
             security default-keychain -s "$KEYCHAIN_PATH"
             security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
             security set-keychain-settings -t 3600 -u "$KEYCHAIN_PATH"
             security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed s/\"//g)
-            
+
             echo "✅ Keychain setup complete"
       - run:
           name: Create Xcode environment file with Sentry
@@ -365,7 +365,7 @@ workflows:
             - nolimitsera-context
           requires:
             - install_dependencies
-  
+
   deploy_production:
     jobs:
       - install_dependencies:
