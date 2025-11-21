@@ -91,6 +91,9 @@ jobs:
             # Generate all codegen artifacts first
             ./gradlew generateCodegenArtifactsFromSchema --no-daemon
             
+            # react-native-config doesn't generate codegen properly, create empty directory
+            mkdir -p ../node_modules/react-native-config/android/build/generated/source/codegen/jni
+            
             # Clean and build
             ./gradlew clean assembleRelease --no-daemon --stacktrace
       - save_cache:
@@ -103,102 +106,102 @@ jobs:
           destination: android_apk
 
   build_ios_staging:
-  macos:
-    xcode: "16.4.0"
-  resource_class: macos.m1.medium.gen1
-  working_directory: ~/repo
-  environment:
-    FL_OUTPUT_DIR: output
-  shell: /bin/bash --login -o pipefail
-  steps:
-    - checkout
-    - attach_workspace:
-        at: .
-    - run:
-        name: Install Ruby 3.3.5
-        command: |
-          if ! rbenv versions | grep -q "3.3.5"; then
-            echo "Installing Ruby 3.3.5..."
-            rbenv install 3.3.5
-          fi
-          rbenv global 3.3.5
-          ruby --version
-    - run:
-        name: Install Ruby dependencies
-        command: |
-          cd ios
-          bundle update
-          bundle install
-    - restore_cache:
-        keys:
-          - v1-pods-{{ checksum "ios/Podfile.lock" }}
-          - v1-pods-
-    - run:
-        name: Install CocoaPods
-        command: |
-          cd ios
-          bundle exec pod install
-    - save_cache:
-        key: v1-pods-{{ checksum "ios/Podfile.lock" }}
-        paths:
-          - ios/Pods
-          - ~/.cocoapods
-    - run:
-        name: Setup SSH and Keychain for Match
-        command: |
-          mkdir -p ~/.ssh
-          echo "$MATCH_GIT_SSH_KEY" | base64 --decode > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          
-          cat > ~/.ssh/config \<< 'EOF'
-          Host github.com-fastlane-match
-            HostName github.com
-            User git
-            IdentityFile ~/.ssh/id_ed25519
-            IdentitiesOnly yes
-            StrictHostKeyChecking no
-          EOF
-          
-          KEYCHAIN_PATH=~/Library/Keychains/fastlane.keychain-db
-          KEYCHAIN_PASSWORD=temp_password
-          
-          security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
-          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-          security default-keychain -s "$KEYCHAIN_PATH"
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-          security set-keychain-settings -t 3600 -u "$KEYCHAIN_PATH"
-          security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed s/\"//g)
-          
-          echo "✅ Keychain setup complete"
-    - run:
-        name: Strip bitcode from Hermes
-        command: |
-          cd ios
-          HERMES_FRAMEWORK="Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.framework/hermes"
-          if [ -f "$HERMES_FRAMEWORK" ]; then
-            echo "Stripping bitcode from Hermes..."
-            xcrun bitcode_strip -r "$HERMES_FRAMEWORK" -o "$HERMES_FRAMEWORK"
-            echo "✅ Bitcode stripped successfully"
-          else
-            echo "⚠️ Hermes framework not found at expected location"
-            find Pods -name "hermes.framework" -type d
-          fi
-    - run:
-        name: Build and upload to TestFlight (Staging)
-        command: |
-          cd ios
-          bundle exec fastlane staging
-    - run:
-        name: Display App Version and Build Number
-        command: |
-          APP_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" ios/nolimitseradeals/Info.plist)
-          BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" ios/nolimitseradeals/Info.plist)
-          echo "Staging App Version: $APP_VERSION"
-          echo "Staging Build Number: $BUILD_NUMBER"
-    - store_artifacts:
-        path: ios/build
-        destination: ios_staging_build
+    macos:
+      xcode: "16.4.0"
+    resource_class: macos.m1.medium.gen1
+    working_directory: ~/repo
+    environment:
+      FL_OUTPUT_DIR: output
+    shell: /bin/bash --login -o pipefail
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install Ruby 3.3.5
+          command: |
+            if ! rbenv versions | grep -q "3.3.5"; then
+              echo "Installing Ruby 3.3.5..."
+              rbenv install 3.3.5
+            fi
+            rbenv global 3.3.5
+            ruby --version
+      - run:
+          name: Install Ruby dependencies
+          command: |
+            cd ios
+            bundle update
+            bundle install
+      - restore_cache:
+          keys:
+            - v1-pods-{{ checksum "ios/Podfile.lock" }}
+            - v1-pods-
+      - run:
+          name: Install CocoaPods
+          command: |
+            cd ios
+            bundle exec pod install
+      - save_cache:
+          key: v1-pods-{{ checksum "ios/Podfile.lock" }}
+          paths:
+            - ios/Pods
+            - ~/.cocoapods
+      - run:
+          name: Setup SSH and Keychain for Match
+          command: |
+            mkdir -p ~/.ssh
+            echo "$MATCH_GIT_SSH_KEY" | base64 --decode > ~/.ssh/id_ed25519
+            chmod 600 ~/.ssh/id_ed25519
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            
+            cat > ~/.ssh/config \<< 'EOF'
+            Host github.com-fastlane-match
+              HostName github.com
+              User git
+              IdentityFile ~/.ssh/id_ed25519
+              IdentitiesOnly yes
+              StrictHostKeyChecking no
+            EOF
+            
+            KEYCHAIN_PATH=~/Library/Keychains/fastlane.keychain-db
+            KEYCHAIN_PASSWORD=temp_password
+            
+            security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
+            security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+            security default-keychain -s "$KEYCHAIN_PATH"
+            security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+            security set-keychain-settings -t 3600 -u "$KEYCHAIN_PATH"
+            security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed s/\"//g)
+            
+            echo "✅ Keychain setup complete"
+      - run:
+          name: Strip bitcode from Hermes
+          command: |
+            cd ios
+            HERMES_FRAMEWORK="Pods/hermes-engine/destroot/Library/Frameworks/universal/hermes.framework/hermes"
+            if [ -f "$HERMES_FRAMEWORK" ]; then
+              echo "Stripping bitcode from Hermes..."
+              xcrun bitcode_strip -r "$HERMES_FRAMEWORK" -o "$HERMES_FRAMEWORK"
+              echo "✅ Bitcode stripped successfully"
+            else
+              echo "⚠️ Hermes framework not found at expected location"
+              find Pods -name "hermes.framework" -type d
+            fi
+      - run:
+          name: Build and upload to TestFlight (Staging)
+          command: |
+            cd ios
+            bundle exec fastlane staging
+      - run:
+          name: Display App Version and Build Number
+          command: |
+            APP_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" ios/nolimitseradeals/Info.plist)
+            BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" ios/nolimitseradeals/Info.plist)
+            echo "Staging App Version: $APP_VERSION"
+            echo "Staging Build Number: $BUILD_NUMBER"
+      - store_artifacts:
+          path: ios/build
+          destination: ios_staging_build
 
   build_ios_production:
     macos:
@@ -269,15 +272,6 @@ jobs:
             security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed s/\"//g)
             
             echo "✅ Keychain setup complete"
-      - run:
-          name: Generate React Native bundle
-          command: |
-            npx react-native bundle \
-              --entry-file index.js \
-              --platform ios \
-              --dev false \
-              --bundle-output ios/main.jsbundle \
-              --assets-dest ios
       - run:
           name: Strip bitcode from Hermes
           command: |
