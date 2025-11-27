@@ -49,7 +49,10 @@ import * as RNIap from 'react-native-iap';
 
 // Subscription product IDs (configure these in App Store Connect / Google Play Console)
 const SUBSCRIPTION_SKUS = Platform.select({
-  ios: ['com.nolimitsera.monthly.subscription.premium.staging', 'com.nolimitsera.monthly.subscription.regular.staging'],
+  ios: [
+    'com.nolimitsera.monthly.subscription.premium.staging',
+    'com.nolimitsera.monthly.subscription.regular.staging',
+  ],
   android: ['com.nolimitsera.monthly.subscription.premium.staging'],
 }) as string[];
 
@@ -82,36 +85,36 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
 
   // Hardcoded plans for fallback (will be replaced with actual IAP products)
   // Hardcoded plans for fallback
-const plans: SubscriptionPlan[] = [
-  {
-    id: 'com.nolimitsera.monthly.subscription.regular.staging',
-    title: 'Regular Business',
-    price: '$0.99/month',
-    description: 'Essential features for small businesses',
-    features: [
-      'Up to 4 deals per month',
-      'Basic analytics',
-      'Email support',
-      'Business profile',
-    ],
-    recommended: false,
-  },
-  {
-    id: 'com.nolimitsera.monthly.subscription.premium.staging',
-    title: 'Premium Business',
-    price: '$1.99/month',
-    description: 'Full-featured for growing businesses',
-    features: [
-      'Up to 8 deals per month',
-      'Advanced analytics dashboard',
-      'Push notifications',
-      'Priority email support',
-      'Business profile customization',
-      'Featured placement',
-    ],
-    recommended: true,
-  },
-];
+  const plans: SubscriptionPlan[] = [
+    {
+      id: 'com.nolimitsera.monthly.subscription.regular.staging',
+      title: 'Regular Business',
+      price: '$0.99/month',
+      description: 'Essential features for small businesses',
+      features: [
+        'Up to 4 deals per month',
+        'Basic analytics',
+        'Email support',
+        'Business profile',
+      ],
+      recommended: false,
+    },
+    {
+      id: 'com.nolimitsera.monthly.subscription.premium.staging',
+      title: 'Premium Business',
+      price: '$1.99/month',
+      description: 'Full-featured for growing businesses',
+      features: [
+        'Up to 8 deals per month',
+        'Advanced analytics dashboard',
+        'Push notifications',
+        'Priority email support',
+        'Business profile customization',
+        'Featured placement',
+      ],
+      recommended: true,
+    },
+  ];
 
   useEffect(() => {
     initializeIAP();
@@ -120,17 +123,83 @@ const plans: SubscriptionPlan[] = [
     const purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
       async purchase => {
         console.log('✅ Purchase updated (sandbox):', purchase);
+        console.log(
+          '📱 Full purchase object:',
+          JSON.stringify(purchase, null, 2),
+        );
         console.log('📱 Transaction ID:', purchase.transactionId);
         console.log('📱 Product ID:', purchase.productId);
+
+        // iOS purchases include transactionReceipt (base64 receipt data)
+        const iosPurchase = purchase as any;
+        console.log('📱 Checking receipt properties...');
+        console.log(
+          '📱 transactionReceipt:',
+          iosPurchase.transactionReceipt ? 'Present' : 'Missing',
+        );
+        console.log('📱 receipt:', iosPurchase.receipt ? 'Present' : 'Missing');
+        console.log(
+          '📱 purchaseToken:',
+          purchase.purchaseToken ? 'Present' : 'Missing',
+        );
+        console.log(
+          '📱 signedTransactionReceipt:',
+          iosPurchase.signedTransactionReceipt ? 'Present' : 'Missing',
+        );
 
         try {
           // Verify the purchase with backend
           console.log('🔵 Verifying purchase with backend...');
-          const response = await apiService.verifySubscription({
+
+          // For iOS, we need the transactionReceipt (base64 receipt data)
+          // For Android, we use the purchaseToken
+          const verificationData: any = {
             platform: Platform.OS,
             purchaseToken: purchase.transactionId || '',
             productId: purchase.productId,
+          };
+
+          // Add iOS-specific receipt data - try multiple possible properties
+          if (Platform.OS === 'ios') {
+            // In StoreKit 2 (Xcode/Sandbox), the JWT signed transaction is in purchaseToken
+            // In production, transactionReceipt may contain the base64 receipt
+            const receiptData =
+              iosPurchase.transactionReceipt ||
+              iosPurchase.receipt ||
+              purchase.purchaseToken || // StoreKit 2 JWT signed transaction
+              iosPurchase.signedTransactionReceipt;
+
+            if (receiptData) {
+              verificationData.transactionReceipt = receiptData;
+              console.log('📱 iOS Receipt found! Length:', receiptData.length);
+              console.log(
+                '📱 Receipt type:',
+                receiptData.startsWith('eyJ')
+                  ? 'JWT (StoreKit 2)'
+                  : 'Base64 Receipt',
+              );
+              console.log(
+                '📱 Receipt preview:',
+                receiptData.substring(0, 50) + '...',
+              );
+            } else {
+              console.error(
+                '❌ No receipt data found in purchase object for iOS!',
+              );
+              console.error('❌ Available keys:', Object.keys(iosPurchase));
+            }
+          }
+
+          console.log('🔵 Verification data prepared:', {
+            platform: verificationData.platform,
+            productId: verificationData.productId,
+            hasReceipt: !!verificationData.transactionReceipt,
+            receiptLength: verificationData.transactionReceipt?.length,
           });
+
+          const response = await apiService.verifySubscription(
+            verificationData,
+          );
 
           if (response.success) {
             console.log('✅ Purchase verified successfully');
@@ -246,9 +315,11 @@ const plans: SubscriptionPlan[] = [
           JSON.stringify(products, null, 2),
         );
         products.forEach(p => {
-          const productId = p.id || p.productId || (p as any).productID;
-          const price = p.displayPrice || `$${p.price}`;
-          console.log(`  - ${productId}: ${p.title} - ${price}`);
+          const productData = p as any;
+          const productId =
+            productData.productId || p.id || productData.productID;
+          const price = productData.displayPrice || `$${productData.price}`;
+          console.log(`  - ${productId}: ${productData.title} - ${price}`);
         });
         setSubscriptions(products);
       } else {
@@ -367,6 +438,67 @@ const plans: SubscriptionPlan[] = [
         });
       }
 
+      // After purchase completes, the purchase object contains the receipt
+      console.log('=== HANDLE PURCHASE DEBUG ===');
+      console.log('Plan ID received:', planId);
+
+      setIsPurchasing(true);
+      setSelectedPlan(planId);
+
+      if (FORCE_DEV_MODE) {
+        console.log('🛠️ FORCE DEV MODE: Simulating purchase');
+        setTimeout(() => {
+          Alert.alert('Development Mode', 'Subscription simulated!', [
+            {
+              text: 'Continue',
+              onPress: () => {
+                setIsPurchasing(false);
+                proceedToFinalStep();
+              },
+            },
+          ]);
+        }, 1500);
+        return;
+      }
+
+      if (!planId || planId === 'undefined') {
+        console.error('❌ Invalid planId:', planId);
+        Alert.alert('Error', `Invalid product ID: ${planId}`);
+        setIsPurchasing(false);
+        setSelectedPlan(null);
+        return;
+      }
+
+      try {
+        console.log('🔵 Initiating purchase for:', planId);
+
+        // REMOVE THE DUPLICATE - Only call requestPurchase ONCE
+        if (Platform.OS === 'ios') {
+          await RNIap.requestPurchase({
+            sku: planId,
+            // Don't await or process here - let purchaseUpdatedListener handle it
+          });
+        } else {
+          await RNIap.requestPurchase({
+            skus: [planId],
+          });
+        }
+
+        console.log('✅ Purchase request sent - waiting for response');
+        // Don't set isPurchasing to false here - let the listener handle it
+      } catch (error: any) {
+        console.error('❌ Purchase request failed:', error);
+        Alert.alert(
+          'Purchase Error',
+          `Failed to start purchase.\n\nError: ${error.message}`,
+        );
+        setIsPurchasing(false);
+        setSelectedPlan(null);
+      }
+
+      const result = await response.json();
+      console.log('Verification result:', result);
+
       console.log('✅ Purchase request sent - waiting for App Store response');
     } catch (error: any) {
       console.error('❌ Purchase request failed:', error);
@@ -393,7 +525,7 @@ const plans: SubscriptionPlan[] = [
 
   const proceedToFinalStep = () => {
     // Navigate to the final screen with all data including subscription info
-    navigation.navigate('BusinessCreationScreen4', {
+    navigation.navigate('BusinessCreationScreen1', {
       ...businessData,
       hasSubscription: true,
       subscriptionPlan: selectedPlan,
@@ -412,7 +544,7 @@ const plans: SubscriptionPlan[] = [
         {
           text: 'Skip',
           onPress: () => {
-            navigation.navigate('BusinessCreationScreen4', {
+            navigation.navigate('BusinessCreationScreen1', {
               ...businessData,
               hasSubscription: false,
             });
