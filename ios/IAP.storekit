@@ -93,6 +93,62 @@
           "winbackOffers" : [
 
           ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "PROD_REGULAR",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Regular Business Account (Production)",
+              "displayName" : "Regular Business Account",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.nolimitsera.monthly.subscription.regular.prod",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Regular Business Monthly Subscription (Prod)",
+          "subscriptionGroupID" : "0FB71169",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "1.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "PROD_PREMIUM",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Premium Monthly Business Subscription (Production)",
+              "displayName" : "Premium Monthly Business Subscription",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.nolimitsera.monthly.subscription.premium.prod",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Premium Business Monthly Subscription (Prod)",
+          "subscriptionGroupID" : "0FB71169",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         }
       ]
     }

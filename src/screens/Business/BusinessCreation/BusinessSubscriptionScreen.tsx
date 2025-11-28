@@ -47,20 +47,40 @@ import VersionFooter from '../../../components/VersionFooter';
 import apiService from '../../../services/api.service';
 import * as RNIap from 'react-native-iap';
 
-// Subscription product IDs (configure these in App Store Connect / Google Play Console)
+// =====================================================
+// 🔧 IAP ENVIRONMENT CONFIGURATION
+// =====================================================
+// Set this to 'staging' or 'production' to control which SKUs are used
+// 'staging' = uses .staging SKUs (for development/testing)
+// 'production' = uses .prod SKUs (for App Store release)
+const IAP_ENVIRONMENT: 'staging' | 'production' = __DEV__ ? 'staging' : 'production';
+// =====================================================
+
+const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
+
+// Subscription product IDs - different for staging vs production
+const STAGING_SKUS = {
+  premium: 'com.nolimitsera.monthly.subscription.premium.staging',
+  regular: 'com.nolimitsera.monthly.subscription.regular.staging',
+};
+
+const PRODUCTION_SKUS = {
+  premium: 'com.nolimitsera.monthly.subscription.premium.prod',
+  regular: 'com.nolimitsera.monthly.subscription.regular.prod',
+};
+
+const ACTIVE_SKUS = IS_PRODUCTION ? PRODUCTION_SKUS : STAGING_SKUS;
+
 const SUBSCRIPTION_SKUS = Platform.select({
-  ios: [
-    'com.nolimitsera.monthly.subscription.premium.staging',
-    'com.nolimitsera.monthly.subscription.regular.staging',
-  ],
-  android: ['com.nolimitsera.monthly.subscription.premium.staging'],
+  ios: [ACTIVE_SKUS.premium, ACTIVE_SKUS.regular],
+  android: [ACTIVE_SKUS.premium, ACTIVE_SKUS.regular],
 }) as string[];
 
 // Sandbox mode configuration
 // Set FORCE_DEV_MODE to true to simulate purchases without real IAP
 // Set to false to test with App Store Connect sandbox accounts
 const FORCE_DEV_MODE = false; // TRUE = Bypass IAP, FALSE = Real IAP with sandbox
-const USE_SANDBOX = true; // Always true for testing with sandbox accounts
+const USE_SANDBOX = true; // Use sandbox in dev, real store in production
 
 interface SubscriptionPlan {
   id: string;
@@ -87,7 +107,7 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
   // Hardcoded plans for fallback
   const plans: SubscriptionPlan[] = [
     {
-      id: 'com.nolimitsera.monthly.subscription.regular.staging',
+      id: ACTIVE_SKUS.regular,
       title: 'Regular Business',
       price: '$0.99/month',
       description: 'Essential features for small businesses',
@@ -100,7 +120,7 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
       recommended: false,
     },
     {
-      id: 'com.nolimitsera.monthly.subscription.premium.staging',
+      id: ACTIVE_SKUS.premium,
       title: 'Premium Business',
       price: '$1.99/month',
       description: 'Full-featured for growing businesses',
@@ -383,6 +403,10 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
 
       console.log('🔵 Initializing IAP...');
       console.log('🔵 Platform:', Platform.OS);
+      console.log('🔵 __DEV__:', __DEV__);
+      console.log('🔵 IAP_ENVIRONMENT:', IAP_ENVIRONMENT);
+      console.log('🔵 IS_PRODUCTION:', IS_PRODUCTION);
+      console.log('🔵 Active SKUs:', ACTIVE_SKUS);
       console.log('🔵 Looking for SKUs:', SUBSCRIPTION_SKUS);
       console.log('🔵 FORCE_DEV_MODE:', FORCE_DEV_MODE);
       console.log('🔵 USE_SANDBOX:', USE_SANDBOX);
@@ -623,7 +647,36 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
         style={styles.scrollView}
         contentContainerStyle={styles.content}
       >
-        {/* Sandbox Mode Indicator */}
+        {/* IAP Environment Indicator */}
+        <View
+          style={{
+            backgroundColor: IS_PRODUCTION ? '#D4EDDA' : '#FFF3CD',
+            padding: 8,
+            borderRadius: 8,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 8,
+          }}
+        >
+          <Icon
+            name={IS_PRODUCTION ? 'store' : 'science'}
+            size={16}
+            color={IS_PRODUCTION ? '#155724' : '#856404'}
+          />
+          <Text
+            style={{
+              color: IS_PRODUCTION ? '#155724' : '#856404',
+              fontSize: 12,
+              fontWeight: '600',
+              marginLeft: 6,
+            }}
+          >
+            {IS_PRODUCTION ? '🏪 PRODUCTION' : '🧪 STAGING'} SKUs | {USE_SANDBOX ? 'Sandbox' : 'Live'} Mode
+          </Text>
+        </View>
+
+        {/* Sandbox/Dev Mode Indicator */}
         {(USE_SANDBOX || FORCE_DEV_MODE) && (
           <View
             style={[

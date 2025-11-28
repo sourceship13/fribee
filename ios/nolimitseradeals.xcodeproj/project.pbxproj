@@ -134,6 +134,7 @@
 		DE8B204EF79F47E9A4AAE393 /* Roboto-VariableFont_wdth,wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9564D79325204B96B91623CE /* Roboto-VariableFont_wdth,wght.ttf */; };
 		DEAE9F642E9E27570041BB64 /* info-staging.plist in Resources */ = {isa = PBXBuildFile; fileRef = DEAE9F632E9E27570041BB64 /* info-staging.plist */; };
 		DEAE9F652E9E27570041BB64 /* info-staging.plist in Resources */ = {isa = PBXBuildFile; fileRef = DEAE9F632E9E27570041BB64 /* info-staging.plist */; };
+		DECAADB12ED9793300B64A25 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE15BF6F2ECD9AC400704938 /* StoreKit.framework */; };
 		DEE363062E98730100B65285 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		DEE3630A2E98730100B65285 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		DEE3630B2E98730100B65285 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -335,6 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9959A50E4557C6561A1BA49B /* libPods-nolimitseradeals-prod.a in Frameworks */,
+				DECAADB12ED9793300B64A25 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,9 +823,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -852,9 +858,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -891,9 +901,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -930,9 +944,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
