@@ -84,22 +84,44 @@ function AppWithStatusBar() {
     // Set update interval to 100ms
     setUpdateIntervalForType(SensorTypes.accelerometer, 100);
     
-    const SHAKE_THRESHOLD = 2.5; // Adjust sensitivity (lower = more sensitive)
+    // Android accelerometer includes gravity (~9.8), iOS returns values without gravity
+    // So we need different thresholds per platform
+    // On Android, we detect "jerk" (change in acceleration) rather than raw magnitude
+    const SHAKE_THRESHOLD = Platform.OS === 'android' ? 15 : 2.5;
     const SHAKE_COOLDOWN = 2000; // 2 seconds between shakes
+    
+    let lastX = 0, lastY = 0, lastZ = 0;
+    let isFirstReading = true;
     
     const subscription = accelerometer.subscribe(
       ({ x, y, z }) => {
-        // Calculate acceleration magnitude
-        const acceleration = Math.sqrt(x * x + y * y + z * z);
+        if (isFirstReading) {
+          lastX = x;
+          lastY = y;
+          lastZ = z;
+          isFirstReading = false;
+          return;
+        }
         
-        // Detect shake (sudden acceleration)
-        if (acceleration > SHAKE_THRESHOLD) {
+        // Calculate delta (change) in acceleration - this detects actual shaking motion
+        // rather than just the device's orientation relative to gravity
+        const deltaX = Math.abs(x - lastX);
+        const deltaY = Math.abs(y - lastY);
+        const deltaZ = Math.abs(z - lastZ);
+        const delta = deltaX + deltaY + deltaZ;
+        
+        lastX = x;
+        lastY = y;
+        lastZ = z;
+        
+        // Detect shake (sudden change in acceleration)
+        if (delta > SHAKE_THRESHOLD) {
           const now = Date.now();
           
           // Check cooldown to prevent multiple triggers
           if (now - lastShakeTime.current > SHAKE_COOLDOWN) {
             lastShakeTime.current = now;
-            console.log('📱 ===== SHAKE DETECTED ===== ');
+            console.log('📱 ===== SHAKE DETECTED ===== ', { delta, threshold: SHAKE_THRESHOLD });
             
             // Show custom feedback modal
             setFeedbackModalVisible(true);
