@@ -21,7 +21,7 @@ import { useAuth, getColors } from './libs/hooks/useAuth';
 import { ActivityIndicator, View } from 'react-native';
 import { iOSUIKit } from 'react-native-typography';
 import RedemptionScreen from './screens/Redemption/RedemptionScreen';
-import BusinessCreationScreen1 from './screens/Business/BusinessCreation/BusinessSubscriptionScreen';
+import BusinessCreationScreen1 from './screens/Business/BusinessCreation/BusinessCreationScreen1';
 import BusinessCreationScreen2 from './screens/Business/BusinessCreation/BusinessCreationScreen2';
 import BusinessCreationScreen3 from './screens/Business/BusinessCreation/BusinessCreationScreen3';
 import BusinessSubscriptionScreen from './screens/Business/BusinessCreation/BusinessSubscriptionScreen';
@@ -229,6 +229,7 @@ const AppNavigator = () => {
             <Stack.Screen name="Redemption" component={RedemptionScreen} />
             
             {/* Business screens */}
+            <Stack.Screen name="BusinessProfile" component={BusinessProfile} />
             <Stack.Screen name="BusinessCreationScreen1" component={BusinessCreationScreen1} />
             <Stack.Screen name="BusinessCreationScreen2" component={BusinessCreationScreen2} />
             <Stack.Screen name="BusinessCreationScreen3" component={BusinessCreationScreen3} />

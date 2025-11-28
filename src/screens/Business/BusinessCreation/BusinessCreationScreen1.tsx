@@ -7,7 +7,10 @@ import { iOSUIKit } from 'react-native-typography';
 import { TextInput } from 'react-native-gesture-handler';
 import VersionFooter from '../../../components/VersionFooter';
 
-const BusinessCreationScreen1 = ({ navigation }: any) => {
+const BusinessCreationScreen1 = ({ navigation, route }: any) => {
+  console.log('🎯 BusinessCreationScreen1 MOUNTED');
+  console.log('🎯 Route params:', route?.params);
+  
   const { isDarkMode } = useAuth();
   const colors = getColors(isDarkMode);
   const [businessName, setBusinessName] = React.useState('Debug Business');

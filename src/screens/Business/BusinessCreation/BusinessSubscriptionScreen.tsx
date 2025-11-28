@@ -197,34 +197,121 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
             receiptLength: verificationData.transactionReceipt?.length,
           });
 
+          console.log('🔵 Calling apiService.verifySubscription...');
           const response = await apiService.verifySubscription(
             verificationData,
           );
+          
+          console.log('📥 Verification response received:', JSON.stringify(response, null, 2));
+          console.log('📥 Response success:', response.success);
 
           if (response.success) {
             console.log('✅ Purchase verified successfully');
             // Finish the transaction
             await RNIap.finishTransaction({ purchase });
 
-            Alert.alert(
-              USE_SANDBOX
-                ? 'Sandbox Purchase Successful!'
-                : 'Subscription Activated!',
-              USE_SANDBOX
-                ? "Test purchase completed successfully! Your subscription is now active. Let's complete your business setup."
-                : "Your subscription is now active. Let's complete your business setup.",
-              [
-                {
-                  text: 'Continue',
-                  onPress: () => proceedToFinalStep(),
-                },
-              ],
-            );
+            console.log('✅ Transaction finished, now submitting business data');
+            console.log('📦 Business data:', businessData);
+            
+            // Store the plan ID before it gets cleared
+            const planId = selectedPlan || purchase.productId;
+            
+            // Now submit the business with the subscription
+            try {
+              // Create FormData for multipart/form-data upload
+              const formData = new FormData();
+              
+              // Add text fields
+              if (businessData?.businessName) formData.append('businessName', businessData.businessName);
+              if (businessData?.description) formData.append('description', businessData.description);
+              if (businessData?.address) formData.append('address', businessData.address);
+              if (businessData?.city) formData.append('city', businessData.city);
+              if (businessData?.state) formData.append('state', businessData.state);
+              if (businessData?.postalCode) formData.append('postalCode', businessData.postalCode);
+              if (businessData?.country) formData.append('country', businessData.country);
+              if (businessData?.phoneNumber) formData.append('phoneNumber', businessData.phoneNumber);
+              if (businessData?.businessUrl) formData.append('websiteUrl', businessData.businessUrl);
+              
+              // Add images
+              if (businessData?.logo) {
+                formData.append('logo', {
+                  uri: Platform.OS === 'ios' ? businessData.logo.uri.replace('file://', '') : businessData.logo.uri,
+                  type: businessData.logo.type || 'image/jpeg',
+                  name: businessData.logo.fileName || 'logo.jpg',
+                } as any);
+              }
+              
+              if (businessData?.cover) {
+                formData.append('coverImage', {
+                  uri: Platform.OS === 'ios' ? businessData.cover.uri.replace('file://', '') : businessData.cover.uri,
+                  type: businessData.cover.type || 'image/jpeg',
+                  name: businessData.cover.fileName || 'cover.jpg',
+                } as any);
+              }
+              
+              if (businessData?.businessImage1) {
+                formData.append('businessImage1', {
+                  uri: Platform.OS === 'ios' ? businessData.businessImage1.uri.replace('file://', '') : businessData.businessImage1.uri,
+                  type: businessData.businessImage1.type || 'image/jpeg',
+                  name: businessData.businessImage1.fileName || 'business_image_1.jpg',
+                } as any);
+              }
+              
+              if (businessData?.businessImage2) {
+                formData.append('businessImage2', {
+                  uri: Platform.OS === 'ios' ? businessData.businessImage2.uri.replace('file://', '') : businessData.businessImage2.uri,
+                  type: businessData.businessImage2.type || 'image/jpeg',
+                  name: businessData.businessImage2.fileName || 'business_image_2.jpg',
+                } as any);
+              }
+
+              console.log('🚀 Submitting business data to API...');
+              const businessResponse = await apiService.registerBusiness(formData);
+              console.log('📥 Business registration response:', businessResponse);
+
+              if (businessResponse.success) {
+                console.log('✅ Business created successfully, navigating to BusinessProfile');
+                // Clear state
+                setIsPurchasing(false);
+                setSelectedPlan(null);
+                
+                // Navigate to business profile
+                navigation.navigate('BusinessProfile');
+                
+                // Show success message after navigation
+                setTimeout(() => {
+                  Alert.alert(
+                    'Success!',
+                    'Your subscription is active and business account has been created!',
+                    [{ text: 'OK' }]
+                  );
+                }, 500);
+              } else {
+                throw new Error(businessResponse.message || 'Failed to create business');
+              }
+            } catch (businessError) {
+              console.error('❌ Error creating business:', businessError);
+              // Clear state
+              setIsPurchasing(false);
+              setSelectedPlan(null);
+              
+              Alert.alert(
+                'Business Creation Failed',
+                'Your subscription is active but there was an error creating your business account. Please contact support.',
+                [{ text: 'OK' }]
+              );
+            }
           } else {
+            console.error('❌ Verification response success was false');
+            console.error('❌ Response:', response);
             throw new Error('Verification failed');
           }
         } catch (error) {
           console.error('❌ Purchase verification failed:', error);
+          
+          // Store plan ID before state gets cleared
+          const planId = selectedPlan || purchase.productId;
+          
           Alert.alert(
             'Verification Error',
             'Failed to verify purchase with backend. The purchase may still be valid.\n\nWould you like to continue anyway?',
@@ -234,7 +321,13 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
                 onPress: async () => {
                   // Finish the transaction anyway
                   await RNIap.finishTransaction({ purchase });
-                  proceedToFinalStep();
+                  
+                  // Navigate with stored plan ID - spread businessData only if it exists
+                  navigation.navigate('BusinessCreationScreen1', {
+                    ...(businessData || {}),
+                    hasSubscription: true,
+                    subscriptionPlan: planId,
+                  });
                 },
               },
               {
