@@ -404,7 +404,7 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
       return;
     }
 
-    // Add validation
+    // Validate planId
     if (!planId || planId === 'undefined') {
       console.error('❌ Invalid planId:', planId);
       Alert.alert('Error', `Invalid product ID: ${planId}`);
@@ -417,96 +417,42 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
       console.log('🔵 Initiating purchase for:', planId);
       console.log('🔵 Platform:', Platform.OS);
 
-      // v14 API - Platform-specific request format
+      // react-native-iap v14 API - platform-specific request structure
+      let purchaseRequest: any;
+      
       if (Platform.OS === 'ios') {
-        await RNIap.requestPurchase({
-          type: 'subs',
+        purchaseRequest = {
+          type: 'subs' as const,
           request: {
             ios: {
               sku: planId,
             },
           },
-        });
+        };
       } else {
-        await RNIap.requestPurchase({
-          type: 'subs',
+        purchaseRequest = {
+          type: 'subs' as const,
           request: {
             android: {
               skus: [planId],
             },
           },
-        });
+        };
       }
-
-      // After purchase completes, the purchase object contains the receipt
-      console.log('=== HANDLE PURCHASE DEBUG ===');
-      console.log('Plan ID received:', planId);
-
-      setIsPurchasing(true);
-      setSelectedPlan(planId);
-
-      if (FORCE_DEV_MODE) {
-        console.log('🛠️ FORCE DEV MODE: Simulating purchase');
-        setTimeout(() => {
-          Alert.alert('Development Mode', 'Subscription simulated!', [
-            {
-              text: 'Continue',
-              onPress: () => {
-                setIsPurchasing(false);
-                proceedToFinalStep();
-              },
-            },
-          ]);
-        }, 1500);
-        return;
-      }
-
-      if (!planId || planId === 'undefined') {
-        console.error('❌ Invalid planId:', planId);
-        Alert.alert('Error', `Invalid product ID: ${planId}`);
-        setIsPurchasing(false);
-        setSelectedPlan(null);
-        return;
-      }
-
-      try {
-        console.log('🔵 Initiating purchase for:', planId);
-
-        // REMOVE THE DUPLICATE - Only call requestPurchase ONCE
-        if (Platform.OS === 'ios') {
-          await RNIap.requestPurchase({
-            sku: planId,
-            // Don't await or process here - let purchaseUpdatedListener handle it
-          });
-        } else {
-          await RNIap.requestPurchase({
-            skus: [planId],
-          });
-        }
-
-        console.log('✅ Purchase request sent - waiting for response');
-        // Don't set isPurchasing to false here - let the listener handle it
-      } catch (error: any) {
-        console.error('❌ Purchase request failed:', error);
-        Alert.alert(
-          'Purchase Error',
-          `Failed to start purchase.\n\nError: ${error.message}`,
-        );
-        setIsPurchasing(false);
-        setSelectedPlan(null);
-      }
-
-      const result = await response.json();
-      console.log('Verification result:', result);
+      
+      console.log('🔵 Purchase request:', JSON.stringify(purchaseRequest, null, 2));
+      
+      await RNIap.requestPurchase(purchaseRequest);
 
       console.log('✅ Purchase request sent - waiting for App Store response');
+      // Don't set isPurchasing to false here - the purchaseUpdatedListener will handle it
     } catch (error: any) {
       console.error('❌ Purchase request failed:', error);
       console.error('Error details:', JSON.stringify(error, null, 2));
 
       Alert.alert(
         'Purchase Error',
-        `Failed to start purchase.\n\nError: ${error.message}\n\nProduct ID: ${planId}`,
+        `Failed to request purchase.\n\nError: ${error.message}\n\nProduct ID: ${planId}`,
         [
           {
             text: 'OK',
