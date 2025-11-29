@@ -34,12 +34,12 @@ import VersionFooter from '../../components/VersionFooter';
 
 // Product IDs for deal post purchase
 const DEAL_POST_SKUS = Platform.select({
-  ios: ['com.nolimitsera.deal.post'],
+  ios: ['com.nolimitsera.staging.deal.post'],
   android: ['com.nolimitsera.deal.post'],
 }) as string[];
 
 // Configuration flags
-const FORCE_DEV_MODE = true; // Set to true to bypass IAP
+const FORCE_DEV_MODE = false; // Set to true to bypass IAP
 const USE_SANDBOX = true; // Always true for testing
 
 const DealPostPurchaseScreen = ({ navigation }: any) => {
@@ -58,16 +58,41 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
       async (purchase) => {
         console.log('✅ Deal post purchase updated:', purchase);
         console.log('📱 Transaction ID:', purchase.transactionId);
+        console.log('📱 Full purchase object:', JSON.stringify(purchase, null, 2));
         
         try {
           console.log('🔵 Verifying purchase with backend...');
-          const response = await apiService.verifySubscription({
+          
+          // For iOS, extract the receipt data
+          const iosPurchase = purchase as any;
+          let receiptData = undefined;
+          
+          if (Platform.OS === 'ios') {
+            receiptData = iosPurchase.transactionReceipt || 
+                         iosPurchase.receipt || 
+                         purchase.purchaseToken || 
+                         iosPurchase.signedTransactionReceipt;
+            
+            console.log('📱 iOS Receipt check:', {
+              hasTransactionReceipt: !!iosPurchase.transactionReceipt,
+              hasReceipt: !!iosPurchase.receipt,
+              hasPurchaseToken: !!purchase.purchaseToken,
+              hasSignedReceipt: !!iosPurchase.signedTransactionReceipt,
+            });
+            
+            if (receiptData) {
+              console.log('📱 Receipt found! Length:', receiptData.length);
+              console.log('📱 Receipt type:', receiptData.startsWith('eyJ') ? 'JWT (StoreKit 2)' : 'Base64 Receipt');
+            } else {
+              console.warn('⚠️ No receipt data found in iOS purchase object!');
+            }
+          }
+          
+          const response = await apiService.verifyConsumablePurchase({
             platform: Platform.OS,
             purchaseToken: purchase.transactionId || purchase.purchaseToken || '',
             productId: purchase.productId,
-            transactionReceipt: Platform.OS === 'ios' && 'transactionReceipt' in purchase 
-              ? (purchase as any).transactionReceipt 
-              : undefined,
+            transactionReceipt: receiptData,
           });
 
           if (response.success) {
