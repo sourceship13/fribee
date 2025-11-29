@@ -32,10 +32,32 @@ import apiService from '../../services/api.service';
 import * as RNIap from 'react-native-iap';
 import VersionFooter from '../../components/VersionFooter';
 
+// =====================================================
+// 🔧 IAP ENVIRONMENT CONFIGURATION
+// =====================================================
+// Set this to 'staging' or 'production' to control which SKUs are used
+const IAP_ENVIRONMENT: 'staging' | 'production' = __DEV__ ? 'staging' : 'production';
+// =====================================================
+
+const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
+
+// Staging vs Production Product IDs
+const STAGING_SKUS = {
+  ios: 'com.nolimitsera.staging.deal.post',
+  android: 'com.nolimitsera.deal.post',
+};
+
+const PRODUCTION_SKUS = {
+  ios: 'com.nolimitsera.prod.deal.post',
+  android: 'com.nolimitsera.deal.post',
+};
+
+const ACTIVE_SKUS = IS_PRODUCTION ? PRODUCTION_SKUS : STAGING_SKUS;
+
 // Product IDs for deal post purchase
 const DEAL_POST_SKUS = Platform.select({
-  ios: ['com.nolimitsera.staging.deal.post'],
-  android: ['com.nolimitsera.deal.post'],
+  ios: [ACTIVE_SKUS.ios],
+  android: [ACTIVE_SKUS.android],
 }) as string[];
 
 // Configuration flags

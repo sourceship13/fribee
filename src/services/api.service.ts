@@ -293,7 +293,8 @@ class ApiService {
     });
     
     try {
-      return await this.makeRequest('/subscriptions/consumables/verify', {
+      // TEMPORARY: Using subscription endpoint until backend implements /subscriptions/consumables/verify
+      return await this.makeRequest('/subscriptions/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

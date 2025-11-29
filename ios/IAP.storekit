@@ -26,7 +26,22 @@
         }
       ],
       "productID" : "com.nolimitsera.staging.deal.post",
-      "referenceName" : "Deal Post (Consumable)",
+      "referenceName" : "Deal Post (Consumable - Staging)",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "DEAL_POST_PROD",
+      "localizations" : [
+        {
+          "description" : "Create a single deal post to reach local customers",
+          "displayName" : "Deal Post",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.nolimitsera.prod.deal.post",
+      "referenceName" : "Deal Post (Consumable - Production)",
       "type" : "Consumable"
     }
   ],
