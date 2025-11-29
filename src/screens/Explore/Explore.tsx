@@ -342,7 +342,7 @@ const ExploreScreen = ({ navigation }: any) => {
             { color: colors.text, fontFamily: 'Roboto-Thin' },
           ]}
         >
-          Explore
+          FriBi
         </Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}

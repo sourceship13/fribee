@@ -17,6 +17,7 @@ import { useAuth, getColors } from '../../libs/hooks/useAuth';
 import { iOSUIKit } from 'react-native-typography';
 import VersionFooter from '../../components/VersionFooter';
 import * as Sentry from "@sentry/react-native";
+import App from '../../App';
 
 const PLACEHOLDER_DEAL = {
   id: 0,
@@ -181,7 +182,7 @@ const SwipeScreen = ({ navigation }: any) => {
             color: colors.text,
           }}
         >
-          DEALZ
+          FriBi
         </Text>
 
         <TouchableOpacity
