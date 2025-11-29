@@ -82,7 +82,7 @@ jobs:
             - v2-gradle-{{ checksum "android/build.gradle" }}-{{ checksum "android/app/build.gradle" }}
             - v2-gradle-
       - run:
-          name: Build Android APK (release)
+          name: Build Android Staging (APK & AAB)
           command: |
             cd android
             # Clean everything
@@ -97,16 +97,37 @@ jobs:
             # react-native-config doesn't generate codegen properly, create empty directory
             mkdir -p ../node_modules/react-native-config/android/build/generated/source/codegen/jni
 
-            # Clean and build
-            ./gradlew clean assembleRelease --no-daemon --stacktrace
+            # Build Staging APK
+            ./gradlew assembleStagingRelease --no-daemon --stacktrace
+            
+            # Build Staging AAB
+            ./gradlew bundleStagingRelease --no-daemon --stacktrace
+      - run:
+          name: Build Android Production (APK & AAB)
+          command: |
+            cd android
+            # Build Production APK
+            ./gradlew assembleProductionRelease --no-daemon --stacktrace
+            
+            # Build Production AAB
+            ./gradlew bundleProductionRelease --no-daemon --stacktrace
       - save_cache:
           key: v2-gradle-{{ checksum "android/build.gradle" }}-{{ checksum "android/app/build.gradle" }}
           paths:
             - ~/.gradle
             - android/.gradle
       - store_artifacts:
-          path: android/app/build/outputs/apk/release/app-release.apk
-          destination: android_apk
+          path: android/app/build/outputs/apk/staging/release/app-staging-release.apk
+          destination: artifacts/staging/app-staging-release.apk
+      - store_artifacts:
+          path: android/app/build/outputs/bundle/stagingRelease/app-staging-release.aab
+          destination: artifacts/staging/app-staging-release.aab
+      - store_artifacts:
+          path: android/app/build/outputs/apk/production/release/app-production-release.apk
+          destination: artifacts/production/app-production-release.apk
+      - store_artifacts:
+          path: android/app/build/outputs/bundle/productionRelease/app-production-release.aab
+          destination: artifacts/production/app-production-release.aab
 
   build_ios_staging:
     macos:
