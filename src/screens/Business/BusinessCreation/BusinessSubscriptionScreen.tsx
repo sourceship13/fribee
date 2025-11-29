@@ -53,20 +53,21 @@ import * as RNIap from 'react-native-iap';
 // Set this to 'staging' or 'production' to control which SKUs are used
 // 'staging' = uses .staging SKUs (for development/testing)
 // 'production' = uses .prod SKUs (for App Store release)
-const IAP_ENVIRONMENT: 'staging' | 'production' = __DEV__ ? 'staging' : 'production';
+// TEMPORARILY FORCED TO STAGING - Change to 'production' when prod SKUs are ready
+const IAP_ENVIRONMENT: 'staging' | 'production' = 'staging';
 // =====================================================
 
 const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
 
-// Subscription product IDs - different for staging vs production
+// Subscription product IDs - different for staging vs production and iOS vs Android
 const STAGING_SKUS = {
   premium: Platform.OS === 'android' ? 'nolimitsera.subscription.premium.staging' : 'com.nolimitsera.monthly.subscription.premium.staging',
   regular: Platform.OS === 'android' ? 'nolimitsera.subscription.regular.staging' : 'com.nolimitsera.monthly.subscription.regular.staging',
 };
 
 const PRODUCTION_SKUS = {
-  premium: 'com.nolimitsera.monthly.subscription.premium.prod',
-  regular: 'com.nolimitsera.monthly.subscription.regular.prod',
+  premium: Platform.OS === 'android' ? 'nolimitsera.subscription.premium.prod' : 'com.nolimitsera.monthly.subscription.premium.prod',
+  regular: Platform.OS === 'android' ? 'nolimitsera.subscription.regular.prod' : 'com.nolimitsera.monthly.subscription.regular.prod',
 };
 
 const ACTIVE_SKUS = IS_PRODUCTION ? PRODUCTION_SKUS : STAGING_SKUS;
