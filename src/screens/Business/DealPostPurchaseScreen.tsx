@@ -44,12 +44,12 @@ const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
 // Staging vs Production Product IDs
 const STAGING_SKUS = {
   ios: 'com.nolimitsera.staging.deal.post',
-  android: 'com.nolimitsera.deal.post',
+  android: 'com.nolimitsera.staging.deal.post',
 };
 
 const PRODUCTION_SKUS = {
   ios: 'com.nolimitsera.prod.deal.post',
-  android: 'com.nolimitsera.deal.post',
+  android: 'com.nolimitsera.prod.deal.post',
 };
 
 const ACTIVE_SKUS = IS_PRODUCTION ? PRODUCTION_SKUS : STAGING_SKUS;
@@ -188,24 +188,46 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
     try {
       setIsLoading(true);
       
+      console.log('🔵 Initializing IAP...');
+      console.log('🔵 Environment:', IAP_ENVIRONMENT);
+      console.log('🔵 Product SKUs to fetch:', DEAL_POST_SKUS);
+      
       await RNIap.initConnection();
-      console.log('IAP connection initialized');
+      console.log('✅ IAP connection initialized');
       
       // Fetch the deal post product
       const products = await RNIap.fetchProducts({
         skus: DEAL_POST_SKUS,
         type: 'in-app', // One-time purchase, not subscription
       });
-      console.log('Available products:', products);
+      
+      console.log('📦 Products returned:', products?.length || 0);
+      console.log('📦 Product details:', JSON.stringify(products, null, 2));
       
       if (products && products.length > 0) {
         setProduct(products[0]);
+        console.log('✅ Product loaded:', products[0].productId);
+      } else {
+        console.warn('⚠️ No products found! SKU may not exist or not be activated in Play Console');
+        Alert.alert(
+          'Product Not Available',
+          `Could not find product: ${DEAL_POST_SKUS[0]}\n\nPlease ensure:\n• Product is created in Play Console\n• Product is set to "Active"\n• App is installed from Play Store (Internal Testing)\n• Wait 24 hours after creating product`,
+          [{ text: 'OK' }]
+        );
       }
       
       setIsLoading(false);
       
     } catch (error: any) {
-      console.error('Failed to initialize IAP:', error);
+      console.error('❌ Failed to initialize IAP:', error);
+      console.error('❌ Error details:', JSON.stringify(error, null, 2));
+      
+      Alert.alert(
+        'IAP Initialization Failed',
+        `Error: ${error.message || 'Unknown error'}\n\nMake sure app is installed from Play Store Internal Testing.`,
+        [{ text: 'OK' }]
+      );
+      
       setIsLoading(false);
     }
   };
