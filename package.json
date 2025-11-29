@@ -3,7 +3,9 @@
   "version": "0.0.624",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --mode=StagingDebug --appId=com.nolimitseradeals.staging",
+    "android:staging": "react-native run-android --mode=StagingDebug --appId=com.nolimitseradeals.staging",
+    "android:prod": "react-native run-android --mode=ProductionDebug --appId=com.nolimitseradeals",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",

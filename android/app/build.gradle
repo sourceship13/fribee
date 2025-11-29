@@ -95,15 +95,39 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (project.hasProperty('NOLIMITSERA_RELEASE_STORE_FILE')) {
+                storeFile file(NOLIMITSERA_RELEASE_STORE_FILE)
+                storePassword NOLIMITSERA_RELEASE_STORE_PASSWORD
+                keyAlias NOLIMITSERA_RELEASE_KEY_ALIAS
+                keyPassword NOLIMITSERA_RELEASE_KEY_PASSWORD
+            }
+        }
     }
+    
+    // Product flavors for staging vs production
+    flavorDimensions "environment"
+    productFlavors {
+        staging {
+            dimension "environment"
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+            resValue "string", "app_name", "Sera Deals (Staging)"
+        }
+        production {
+            dimension "environment"
+            resValue "string", "app_name", "Sera Deals"
+        }
+    }
+    
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            // Use release signing config for debug builds to allow IAP testing
+            // This ensures the debug build signature matches the Play Store upload
+            signingConfig signingConfigs.release
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }

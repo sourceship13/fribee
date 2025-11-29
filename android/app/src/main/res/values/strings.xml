@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">nolimitseradeals</string>
+    <!-- app_name is defined in build.gradle productFlavors -->
     <string name="GOOGLE_MAPS_API_KEY">AIzaSyAP8fSG5JPvlZvmznHINSKTwXiNfBHm21E</string>
 </resources>

@@ -60,8 +60,8 @@ const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
 
 // Subscription product IDs - different for staging vs production
 const STAGING_SKUS = {
-  premium: 'com.nolimitsera.monthly.subscription.premium.staging',
-  regular: 'com.nolimitsera.monthly.subscription.regular.staging',
+  premium: Platform.OS === 'android' ? 'nolimitsera.subscription.premium.staging' : 'com.nolimitsera.monthly.subscription.premium.staging',
+  regular: Platform.OS === 'android' ? 'nolimitsera.subscription.regular.staging' : 'com.nolimitsera.monthly.subscription.regular.staging',
 };
 
 const PRODUCTION_SKUS = {
@@ -79,8 +79,14 @@ const SUBSCRIPTION_SKUS = Platform.select({
 // Sandbox mode configuration
 // Set FORCE_DEV_MODE to true to simulate purchases without real IAP
 // Set to false to test with App Store Connect sandbox accounts
+// NOTE: Android requires app to be published on Play Store for IAP to work
+// For Android development, we auto-enable dev mode unless it's a release build
 const FORCE_DEV_MODE = false; // TRUE = Bypass IAP, FALSE = Real IAP with sandbox
 const USE_SANDBOX = true; // Use sandbox in dev, real store in production
+
+// Android IAP requires the app to be published on Google Play Store (at least internal testing)
+// We allow testing in debug mode, but it may fail if the app signature doesn't match Play Store
+const shouldBypassIAP = FORCE_DEV_MODE;
 
 interface SubscriptionPlan {
   id: string;
@@ -409,7 +415,16 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
       console.log('🔵 Active SKUs:', ACTIVE_SKUS);
       console.log('🔵 Looking for SKUs:', SUBSCRIPTION_SKUS);
       console.log('🔵 FORCE_DEV_MODE:', FORCE_DEV_MODE);
+      console.log('🔵 shouldBypassIAP:', shouldBypassIAP);
       console.log('🔵 USE_SANDBOX:', USE_SANDBOX);
+
+      // Skip IAP initialization for Android debug builds (Play Billing requires published app)
+      if (shouldBypassIAP) {
+        console.log('🛠️ Bypassing IAP initialization (dev mode or Android debug)');
+        console.log('🛠️ Android IAP requires app to be published on Play Store');
+        setIsLoading(false);
+        return;
+      }
 
       // Initialize IAP connection
       const result = await RNIap.initConnection();
@@ -500,13 +515,16 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
     setIsPurchasing(true);
     setSelectedPlan(planId);
 
-    // Check if we should bypass IAP entirely (for local development)
-    if (FORCE_DEV_MODE) {
-      console.log('🛠️ FORCE DEV MODE: Simulating purchase for testing');
+    // Check if we should bypass IAP entirely (for local development or Android debug)
+    if (shouldBypassIAP) {
+      console.log('🛠️ BYPASS IAP MODE: Simulating purchase for testing');
+      console.log('🛠️ Reason:', FORCE_DEV_MODE ? 'FORCE_DEV_MODE enabled' : 'Android debug build');
       setTimeout(() => {
         Alert.alert(
           'Development Mode',
-          'Subscription simulated successfully! (IAP disabled)',
+          Platform.OS === 'android' 
+            ? 'Subscription simulated! (Android IAP requires published app on Play Store)'
+            : 'Subscription simulated successfully! (IAP disabled)',
           [
             {
               text: 'Continue',
@@ -677,30 +695,32 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
         </View>
 
         {/* Sandbox/Dev Mode Indicator */}
-        {(USE_SANDBOX || FORCE_DEV_MODE) && (
+        {(USE_SANDBOX || shouldBypassIAP) && (
           <View
             style={[
               styles.sandboxBanner,
               {
-                backgroundColor: FORCE_DEV_MODE ? '#FFF3CD' : '#D1ECF1',
+                backgroundColor: shouldBypassIAP ? '#FFF3CD' : '#D1ECF1',
               },
             ]}
           >
             <Icon
-              name={FORCE_DEV_MODE ? 'developer-mode' : 'science'}
+              name={shouldBypassIAP ? 'developer-mode' : 'science'}
               size={20}
-              color={FORCE_DEV_MODE ? '#856404' : '#0C5460'}
+              color={shouldBypassIAP ? '#856404' : '#0C5460'}
             />
             <Text
               style={[
                 styles.sandboxText,
                 {
-                  color: FORCE_DEV_MODE ? '#856404' : '#0C5460',
+                  color: shouldBypassIAP ? '#856404' : '#0C5460',
                 },
               ]}
             >
-              {FORCE_DEV_MODE
-                ? 'Development Mode: IAP Disabled'
+              {shouldBypassIAP
+                ? Platform.OS === 'android' 
+                  ? 'Android Dev Mode: IAP requires Play Store publish'
+                  : 'Development Mode: IAP Disabled'
                 : 'Sandbox Mode: Testing with App Store Connect'}
             </Text>
           </View>
