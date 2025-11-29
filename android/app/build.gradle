@@ -26,8 +26,8 @@ react {
 
     /* Bundling */
     //   A list containing the node command and its flags. Default is just 'node'.
-    // Use absolute path for node to ensure Gradle can find it
-    nodeExecutableAndArgs = ["/Users/alpha/.nvm/versions/node/v20.19.5/bin/node"]
+    // Use node from PATH - works in CI and local environments
+    // nodeExecutableAndArgs = ["node"]
     //
     //   The command to run when bundling. By default is 'bundle'
     // bundleCommand = "ram-bundle"
