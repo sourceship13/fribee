@@ -1,4 +1,10 @@
 PODS:
+  - AppAuth (2.0.0):
+    - AppAuth/Core (= 2.0.0)
+    - AppAuth/ExternalUserAgent (= 2.0.0)
+  - AppAuth/Core (2.0.0)
+  - AppAuth/ExternalUserAgent (2.0.0):
+    - AppAuth/Core
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
   - fast_float (8.0.0)
@@ -1814,6 +1820,9 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
+  - react-native-app-auth (8.1.0):
+    - AppAuth (>= 1.7.6)
+    - React-Core
   - react-native-barcode-creator (0.1.8):
     - React-Core
   - react-native-config (1.5.9):
@@ -3106,6 +3115,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
+  - react-native-app-auth (from `../node_modules/react-native-app-auth`)
   - react-native-barcode-creator (from `../node_modules/react-native-barcode-creator`)
   - react-native-config (from `../node_modules/react-native-config`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
@@ -3161,6 +3171,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AppAuth
     - Google-Maps-iOS-Utils
     - GoogleMaps
     - openiap
@@ -3253,6 +3264,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
+  react-native-app-auth:
+    :path: "../node_modules/react-native-app-auth"
   react-native-barcode-creator:
     :path: "../node_modules/react-native-barcode-creator"
   react-native-config:
@@ -3357,6 +3370,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AppAuth: 1c1a8afa7e12f2ec3a294d9882dfa5ab7d3cb063
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: b32c788ed9c6a8c584d114d0047beda9664e7cc6
@@ -3402,6 +3416,7 @@ SPEC CHECKSUMS:
   React-logger: 7aef4d74123e5e3d267e5af1fbf5135b5a0d8381
   React-Mapbuffer: 91e0eab42a6ae7f3e34091a126d70fc53bd3823e
   React-microtasksnativemodule: 1ead4fe154df3b1ba34b5a9e35ef3c4bdfa72ccb
+  react-native-app-auth: e21c8ee920876b960e38c9381971bd189ebea06b
   react-native-barcode-creator: 0e7416f1157a16baf5fc1a94ecabbdb4b765257a
   react-native-config: d08b60865268872495a43e211059b4606131fe01
   react-native-contacts: aff87a9bbd66e06cefe6e173be4102e95a824cd1

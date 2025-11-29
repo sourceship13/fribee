@@ -55,6 +55,11 @@ import * as RNIap from 'react-native-iap';
 // 'production' = uses .prod SKUs (for App Store release)
 // TEMPORARILY FORCED TO STAGING - Change to 'production' when prod SKUs are ready
 const IAP_ENVIRONMENT: 'staging' | 'production' = 'staging';
+
+// 🧪 TEST MODE - Bypass IAP and test backend verification directly
+// Set to true to skip Google Play billing and test with mock purchase data
+// This allows testing backend verification without uploading to Play Store
+const TEST_MODE_BACKEND_ONLY = true; // Set to false for real IAP testing
 // =====================================================
 
 const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
@@ -184,6 +189,7 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
             platform: Platform.OS,
             purchaseToken: purchase.transactionId || '',
             productId: purchase.productId,
+            GOOGLE_PACKAGE_NAME: Platform.OS === 'android' ? 'com.nolimitseradeals.staging' : undefined,
           };
 
           // Add iOS-specific receipt data - try multiple possible properties
@@ -516,6 +522,93 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
     setIsPurchasing(true);
     setSelectedPlan(planId);
 
+    // TEST MODE: Bypass IAP and test backend verification directly
+    if (TEST_MODE_BACKEND_ONLY) {
+      console.log('🧪 TEST MODE: Bypassing IAP, testing backend verification');
+      console.log('🧪 Product ID:', planId);
+      
+      try {
+        // Generate mock purchase data that mimics real IAP response
+        const mockPurchaseToken = `mock_token_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+        const mockTransactionReceipt = JSON.stringify({
+          productId: planId,
+          transactionId: `mock_txn_${Date.now()}`,
+          purchaseTime: Date.now(),
+          purchaseState: 'purchased',
+          developerPayload: '',
+          packageName: 'com.nolimitseradeals.staging',
+          orderId: `GPA.${Math.random().toString(36).substring(2, 15)}`,
+          acknowledged: false,
+        });
+
+        console.log('🧪 Mock Purchase Token:', mockPurchaseToken);
+        console.log('🧪 Mock Receipt:', mockTransactionReceipt);
+
+        // Call backend verification endpoint directly
+        console.log('🧪 Calling backend verification...');
+        const requestData = {
+          platform: Platform.OS,
+          purchaseToken: mockPurchaseToken,
+          productId: planId,
+          GOOGLE_PACKAGE_NAME: 'com.nolimitseradeals.staging',
+          transactionReceipt: mockTransactionReceipt,
+        };
+        console.log('🧪 REQUEST DATA OBJECT:', JSON.stringify(requestData, null, 2));
+        console.log('🧪 Has GOOGLE_PACKAGE_NAME?', 'GOOGLE_PACKAGE_NAME' in requestData);
+        console.log('🧪 GOOGLE_PACKAGE_NAME value:', requestData.GOOGLE_PACKAGE_NAME);
+        
+        const verificationResult = await apiService.verifySubscription(requestData);
+
+        console.log('🧪 Backend verification result:', JSON.stringify(verificationResult, null, 2));
+
+        if (verificationResult.success) {
+          Alert.alert(
+            '✅ Test Mode Success',
+            `Backend verification successful!\n\nProduct: ${planId}\n\nCheck logs for details.`,
+            [
+              {
+                text: 'Continue',
+                onPress: () => {
+                  setIsPurchasing(false);
+                  proceedToFinalStep();
+                },
+              },
+            ],
+          );
+        } else {
+          Alert.alert(
+            '❌ Test Mode - Verification Failed',
+            `Backend returned error:\n\n${verificationResult.message || verificationResult.error || 'Unknown error'}`,
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setIsPurchasing(false);
+                  setSelectedPlan(null);
+                },
+              },
+            ],
+          );
+        }
+      } catch (error: any) {
+        console.error('🧪 Test mode error:', error);
+        Alert.alert(
+          '❌ Test Mode Error',
+          `Failed to test backend verification:\n\n${error.message}`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                setIsPurchasing(false);
+                setSelectedPlan(null);
+              },
+            },
+          ],
+        );
+      }
+      return;
+    }
+
     // Check if we should bypass IAP entirely (for local development or Android debug)
     if (shouldBypassIAP) {
       console.log('🛠️ BYPASS IAP MODE: Simulating purchase for testing');
@@ -606,8 +699,8 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
   };
 
   const proceedToFinalStep = () => {
-    // Navigate to the final screen with all data including subscription info
-    navigation.navigate('BusinessCreationScreen1', {
+    // Navigate to BusinessProfile after successful subscription
+    navigation.navigate('BusinessProfile', {
       ...businessData,
       hasSubscription: true,
       subscriptionPlan: selectedPlan,

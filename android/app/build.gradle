@@ -87,6 +87,11 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3
         versionName "1.0.2"
+        
+        // Manifest placeholders for react-native-app-auth
+        manifestPlaceholders = [
+            appAuthRedirectScheme: 'com.nolimitseradeals'
+        ]
     }
     signingConfigs {
         debug {
