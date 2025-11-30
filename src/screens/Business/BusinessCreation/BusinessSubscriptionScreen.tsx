@@ -338,8 +338,15 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
               
               Alert.alert(
                 'Business Creation Failed',
-                'Your subscription is active but there was an error creating your business account. Please contact support.',
-                [{ text: 'OK' }]
+                'Your subscription is active but there was an error creating your business account. You will be redirected to complete your business profile.',
+                [{ 
+                  text: 'OK',
+                  onPress: () => {
+                    // Navigate to BusinessProfile even if creation failed
+                    // The user already has a subscription, they can try creating the business again later
+                    navigation.navigate('BusinessProfile');
+                  }
+                }]
               );
             }
           } else {
@@ -355,25 +362,20 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
           
           Alert.alert(
             'Verification Error',
-            'Failed to verify purchase with backend. The purchase may still be valid.\n\nWould you like to continue anyway?',
+            'Failed to verify purchase with backend. The purchase may still be valid.\n\nYou will be redirected to your business profile.',
             [
               {
-                text: 'Continue',
+                text: 'OK',
                 onPress: async () => {
                   // Finish the transaction anyway
                   await RNIap.finishTransaction({ purchase });
                   
-                  // Navigate with stored plan ID - spread businessData only if it exists
-                  navigation.navigate('BusinessCreationScreen1', {
-                    ...(businessData || {}),
-                    hasSubscription: true,
-                    subscriptionPlan: planId,
-                  });
+                  // Refresh user data to get latest subscription status
+                  await refreshUser();
+                  
+                  // Navigate to BusinessProfile instead of creation flow
+                  navigation.navigate('BusinessProfile');
                 },
-              },
-              {
-                text: 'Cancel',
-                style: 'cancel',
               },
             ],
           );
