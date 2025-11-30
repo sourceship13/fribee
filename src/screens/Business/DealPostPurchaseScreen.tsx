@@ -41,7 +41,7 @@ const IAP_ENVIRONMENT: 'staging' | 'production' = __DEV__ ? 'staging' : 'product
 // 🧪 TEST MODE - Bypass IAP and test backend verification directly (ANDROID ONLY)
 // Set to true to skip Google Play billing and test with mock purchase data
 // iOS will always use real Apple IAP (sandbox or production)
-const TEST_MODE_BACKEND_ONLY = Platform.OS === 'android' ? true : false;
+const TEST_MODE_BACKEND_ONLY = false; // Disabled - use real IAP for both platforms
 // =====================================================
 
 const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';

@@ -60,7 +60,7 @@ const IAP_ENVIRONMENT: 'staging' | 'production' = 'staging';
 // Set to true to skip Google Play billing and test with mock purchase data
 // This allows testing backend verification without uploading to Play Store
 // iOS will always use real Apple IAP (sandbox or production)
-const TEST_MODE_BACKEND_ONLY = Platform.OS === 'android' ? true : false;
+const TEST_MODE_BACKEND_ONLY = false; // Disabled - use real IAP for both platforms
 // =====================================================
 
 const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
