@@ -1,28 +1,46 @@
 // Gradle init script to set PATH for nvm node
-allprojects {
-    gradle.projectsEvaluated {
-        tasks.withType(Exec) {
-            environment('PATH', "/Users/alpha/.nvm/versions/node/v20.19.5/bin:${System.getenv('PATH')}")
-        }
+// Detects environment and uses appropriate Node.js path
+
+def getNodePath() {
+    // Check if running in CI environment
+    def isCI = System.getenv('CI') == 'true' || System.getenv('CIRCLECI') == 'true'
+    
+    if (isCI) {
+        // In CI, use node from PATH (CircleCI has node pre-installed)
+        return null
+    } else {
+        // Local development - use nvm node path
+        return "/Users/alpha/.nvm/versions/node/v20.19.5/bin"
     }
 }
 
-// Set PATH for process execution during settings evaluation
-System.setProperty('path.separator', ':')
-def nodePath = "/Users/alpha/.nvm/versions/node/v20.19.5/bin"
-def currentPath = System.getenv('PATH') ?: ''
-if (!currentPath.contains(nodePath)) {
-    def newPath = "${nodePath}:${currentPath}"
-    // This affects child processes spawned by Gradle
-    ['PATH', 'Path'].each { key ->
-        try {
-            def env = System.getenv()
-            def field = env.getClass().getDeclaredField('m')
-            field.setAccessible(true)
-            def map = field.get(env)
-            map.put(key, newPath)
-        } catch (Exception e) {
-            // Ignore if we can't modify environment
+def nodePath = getNodePath()
+
+if (nodePath != null) {
+    allprojects {
+        gradle.projectsEvaluated {
+            tasks.withType(Exec) {
+                environment('PATH', "${nodePath}:${System.getenv('PATH')}")
+            }
+        }
+    }
+
+    // Set PATH for process execution during settings evaluation
+    System.setProperty('path.separator', ':')
+    def currentPath = System.getenv('PATH') ?: ''
+    if (!currentPath.contains(nodePath)) {
+        def newPath = "${nodePath}:${currentPath}"
+        // This affects child processes spawned by Gradle
+        ['PATH', 'Path'].each { key ->
+            try {
+                def env = System.getenv()
+                def field = env.getClass().getDeclaredField('m')
+                field.setAccessible(true)
+                def map = field.get(env)
+                map.put(key, newPath)
+            } catch (Exception e) {
+                // Ignore if we can't modify environment
+            }
         }
     }
 }
