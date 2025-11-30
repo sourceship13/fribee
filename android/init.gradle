@@ -1,0 +1,28 @@
+// Gradle init script to set PATH for nvm node
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(Exec) {
+            environment('PATH', "/Users/alpha/.nvm/versions/node/v20.19.5/bin:${System.getenv('PATH')}")
+        }
+    }
+}
+
+// Set PATH for process execution during settings evaluation
+System.setProperty('path.separator', ':')
+def nodePath = "/Users/alpha/.nvm/versions/node/v20.19.5/bin"
+def currentPath = System.getenv('PATH') ?: ''
+if (!currentPath.contains(nodePath)) {
+    def newPath = "${nodePath}:${currentPath}"
+    // This affects child processes spawned by Gradle
+    ['PATH', 'Path'].each { key ->
+        try {
+            def env = System.getenv()
+            def field = env.getClass().getDeclaredField('m')
+            field.setAccessible(true)
+            def map = field.get(env)
+            map.put(key, newPath)
+        } catch (Exception e) {
+            // Ignore if we can't modify environment
+        }
+    }
+}
