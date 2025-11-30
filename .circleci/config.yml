@@ -82,6 +82,18 @@ jobs:
             - v2-gradle-{{ checksum "android/build.gradle" }}-{{ checksum "android/app/build.gradle" }}
             - v2-gradle-
       - run:
+          name: Decode Android Keystore
+          command: |
+            # Decode the base64 keystore from environment variable
+            if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
+              echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/nolimitsera-release.keystore
+              echo "✅ Keystore decoded successfully"
+            else
+              echo "⚠️  ANDROID_KEYSTORE_BASE64 not found - builds will fail at signing step"
+              echo "Add the keystore as a base64 environment variable in CircleCI"
+              exit 1
+            fi
+      - run:
           name: Build Android Staging (APK & AAB)
           command: |
             cd android
