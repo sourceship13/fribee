@@ -183,15 +183,27 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
         try {
           // Verify the purchase with backend
           console.log('🔵 Verifying purchase with backend...');
+          console.log('🔵 Full purchase object:', JSON.stringify(purchase, null, 2));
 
           // For iOS, we need the transactionReceipt (base64 receipt data)
-          // For Android, we use the purchaseToken
+          // For Android, we use the purchaseToken (not transactionId)
           const verificationData: any = {
             platform: Platform.OS,
-            purchaseToken: purchase.transactionId || '',
+            // Android: use purchaseToken, iOS: use transactionId
+            purchaseToken: Platform.OS === 'android' ? purchase.purchaseToken : purchase.transactionId,
             productId: purchase.productId,
             GOOGLE_PACKAGE_NAME: Platform.OS === 'android' ? 'com.nolimitseradeals.staging' : undefined,
           };
+
+          console.log('🔵 Android purchaseToken:', purchase.purchaseToken);
+          console.log('🔵 iOS transactionId:', purchase.transactionId);
+
+          // Add Android transaction receipt (full purchase data)
+          if (Platform.OS === 'android') {
+            // Android backend needs the full transaction receipt for verification with Google Play
+            verificationData.transactionReceipt = JSON.stringify(purchase);
+            console.log('🤖 Android transaction receipt added to verification data');
+          }
 
           // Add iOS-specific receipt data - try multiple possible properties
           if (Platform.OS === 'ios') {
