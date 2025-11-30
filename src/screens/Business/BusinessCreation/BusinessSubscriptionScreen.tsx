@@ -105,7 +105,7 @@ interface SubscriptionPlan {
 }
 
 const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
-  const { isDarkMode } = useAuth();
+  const { isDarkMode, refreshUser } = useAuth();
   const colors = getColors(isDarkMode);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -305,7 +305,13 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
               console.log('📥 Business registration response:', businessResponse);
 
               if (businessResponse.success) {
-                console.log('✅ Business created successfully, navigating to BusinessProfile');
+                console.log('✅ Business created successfully, refreshing user data...');
+                
+                // Refresh user data to load the new business profile
+                await refreshUser();
+                
+                console.log('✅ User data refreshed, clearing state and navigating...');
+                
                 // Clear state
                 setIsPurchasing(false);
                 setSelectedPlan(null);
@@ -700,13 +706,94 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
     }
   };
 
-  const proceedToFinalStep = () => {
-    // Navigate to BusinessProfile after successful subscription
-    navigation.navigate('BusinessProfile', {
-      ...businessData,
-      hasSubscription: true,
-      subscriptionPlan: selectedPlan,
-    });
+  const proceedToFinalStep = async () => {
+    // Create the business profile before navigating
+    try {
+      console.log('✅ Subscription verified, now creating business profile...');
+      console.log('📦 Business data:', businessData);
+      
+      // Create FormData for multipart/form-data upload
+      const formData = new FormData();
+      
+      // Add text fields
+      if (businessData?.businessName) formData.append('businessName', businessData.businessName);
+      if (businessData?.description) formData.append('description', businessData.description);
+      if (businessData?.address) formData.append('address', businessData.address);
+      if (businessData?.city) formData.append('city', businessData.city);
+      if (businessData?.state) formData.append('state', businessData.state);
+      if (businessData?.postalCode) formData.append('postalCode', businessData.postalCode);
+      if (businessData?.country) formData.append('country', businessData.country);
+      if (businessData?.phoneNumber) formData.append('phoneNumber', businessData.phoneNumber);
+      if (businessData?.businessUrl) formData.append('websiteUrl', businessData.businessUrl);
+      
+      // Add images
+      if (businessData?.logo) {
+        formData.append('logo', {
+          uri: Platform.OS === 'ios' ? businessData.logo.uri.replace('file://', '') : businessData.logo.uri,
+          type: businessData.logo.type || 'image/jpeg',
+          name: businessData.logo.fileName || 'logo.jpg',
+        } as any);
+      }
+      
+      if (businessData?.cover) {
+        formData.append('coverImage', {
+          uri: Platform.OS === 'ios' ? businessData.cover.uri.replace('file://', '') : businessData.cover.uri,
+          type: businessData.cover.type || 'image/jpeg',
+          name: businessData.cover.fileName || 'cover.jpg',
+        } as any);
+      }
+      
+      if (businessData?.businessImage1) {
+        formData.append('businessImage1', {
+          uri: Platform.OS === 'ios' ? businessData.businessImage1.uri.replace('file://', '') : businessData.businessImage1.uri,
+          type: businessData.businessImage1.type || 'image/jpeg',
+          name: businessData.businessImage1.fileName || 'business_image_1.jpg',
+        } as any);
+      }
+      
+      if (businessData?.businessImage2) {
+        formData.append('businessImage2', {
+          uri: Platform.OS === 'ios' ? businessData.businessImage2.uri.replace('file://', '') : businessData.businessImage2.uri,
+          type: businessData.businessImage2.type || 'image/jpeg',
+          name: businessData.businessImage2.fileName || 'business_image_2.jpg',
+        } as any);
+      }
+
+      console.log('🚀 Submitting business data to API...');
+      const businessResponse = await apiService.registerBusiness(formData);
+      console.log('📥 Business registration response:', businessResponse);
+
+      if (businessResponse.success) {
+        console.log('✅ Business created successfully, refreshing user data...');
+        
+        // Refresh user data to load the new business profile
+        await refreshUser();
+        
+        console.log('✅ User data refreshed, navigating to BusinessProfile');
+        
+        // Navigate to business profile
+        navigation.navigate('BusinessProfile');
+        
+        // Show success message after navigation
+        setTimeout(() => {
+          Alert.alert(
+            'Success!',
+            'Your subscription is active and business account has been created!',
+          );
+        }, 500);
+      } else {
+        Alert.alert(
+          'Error',
+          `Failed to create business profile: ${businessResponse.message || 'Unknown error'}`,
+        );
+      }
+    } catch (error: any) {
+      console.error('❌ Error creating business profile:', error);
+      Alert.alert(
+        'Error',
+        `Failed to create business profile: ${error.message}`,
+      );
+    }
   };
 
   const skipForNow = () => {
