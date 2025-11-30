@@ -56,10 +56,11 @@ import * as RNIap from 'react-native-iap';
 // TEMPORARILY FORCED TO STAGING - Change to 'production' when prod SKUs are ready
 const IAP_ENVIRONMENT: 'staging' | 'production' = 'staging';
 
-// 🧪 TEST MODE - Bypass IAP and test backend verification directly
+// 🧪 TEST MODE - Bypass IAP and test backend verification directly (ANDROID ONLY)
 // Set to true to skip Google Play billing and test with mock purchase data
 // This allows testing backend verification without uploading to Play Store
-const TEST_MODE_BACKEND_ONLY = true; // Set to false for real IAP testing
+// iOS will always use real Apple IAP (sandbox or production)
+const TEST_MODE_BACKEND_ONLY = Platform.OS === 'android' ? true : false;
 // =====================================================
 
 const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
@@ -203,6 +204,7 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
               iosPurchase.signedTransactionReceipt;
 
             if (receiptData) {
+              // Backend expects 'transactionReceipt' field for iOS verification
               verificationData.transactionReceipt = receiptData;
               console.log('📱 iOS Receipt found! Length:', receiptData.length);
               console.log(

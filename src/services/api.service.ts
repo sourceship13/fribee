@@ -264,6 +264,7 @@ class ApiService {
     productId: string;
     GOOGLE_PACKAGE_NAME?: string;
     transactionReceipt?: string;
+    receiptData?: string;
   }): Promise<ApiResponse> {
     console.log('🔐 Verifying subscription purchase...');
     console.log('📋 Request details:', {
@@ -302,6 +303,7 @@ class ApiService {
     productId: string;
     GOOGLE_PACKAGE_NAME?: string;
     transactionReceipt?: string;
+    receiptData?: string;
   }): Promise<ApiResponse> {
     console.log('🔐 Verifying consumable purchase...');
     console.log('📋 Request details:', {
