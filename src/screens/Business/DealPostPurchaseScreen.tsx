@@ -37,6 +37,11 @@ import VersionFooter from '../../components/VersionFooter';
 // =====================================================
 // Set this to 'staging' or 'production' to control which SKUs are used
 const IAP_ENVIRONMENT: 'staging' | 'production' = __DEV__ ? 'staging' : 'production';
+
+// 🧪 TEST MODE - Bypass IAP and test backend verification directly (ANDROID ONLY)
+// Set to true to skip Google Play billing and test with mock purchase data
+// iOS will always use real Apple IAP (sandbox or production)
+const TEST_MODE_BACKEND_ONLY = Platform.OS === 'android' ? true : false;
 // =====================================================
 
 const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
@@ -114,6 +119,7 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
             platform: Platform.OS,
             purchaseToken: purchase.transactionId || purchase.purchaseToken || '',
             productId: purchase.productId,
+            GOOGLE_PACKAGE_NAME: Platform.OS === 'android' ? 'com.nolimitseradeals.staging' : undefined,
             transactionReceipt: receiptData,
           });
 
@@ -132,7 +138,28 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
               ]
             );
           } else {
-            throw new Error('Verification failed');
+            console.error('❌ Verification failed:', response.message);
+            console.error('❌ Full response:', JSON.stringify(response, null, 2));
+            
+            // Check if it's a duplicate transaction error (check both message and error fields)
+            const errorText = (response.message || response.error || '').toLowerCase();
+            if (errorText.includes('duplicate') || errorText.includes('unique_transaction') || errorText.includes('violates')) {
+              console.log('⚠️ Duplicate transaction detected - finishing anyway');
+              await RNIap.finishTransaction({ purchase });
+              
+              Alert.alert(
+                'Transaction Already Verified',
+                'This purchase was already verified. You can proceed to create your deal.',
+                [
+                  {
+                    text: 'Create Deal',
+                    onPress: () => proceedToCreateDeal(),
+                  },
+                ]
+              );
+            } else {
+              throw new Error('Verification failed');
+            }
           }
         } catch (error) {
           console.error('❌ Purchase verification failed:', error);
@@ -234,6 +261,86 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
 
   const handlePurchase = async () => {
     setIsPurchasing(true);
+
+    // TEST MODE: Bypass IAP and test backend verification directly (Android only)
+    if (TEST_MODE_BACKEND_ONLY) {
+      console.log('🧪 TEST MODE: Bypassing IAP, testing backend verification');
+      console.log('🧪 Product ID:', DEAL_POST_SKUS[0]);
+      
+      try {
+        // Generate mock purchase data
+        const mockPurchaseToken = `mock_deal_token_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+        const mockTransactionReceipt = JSON.stringify({
+          productId: DEAL_POST_SKUS[0],
+          transactionId: `mock_deal_txn_${Date.now()}`,
+          purchaseTime: Date.now(),
+          purchaseState: 'purchased',
+          developerPayload: '',
+          packageName: 'com.nolimitseradeals.staging',
+          orderId: `GPA.${Math.random().toString(36).substring(2, 15)}`,
+          acknowledged: false,
+        });
+
+        console.log('🧪 Mock Purchase Token:', mockPurchaseToken);
+        console.log('🧪 Mock Receipt:', mockTransactionReceipt);
+
+        // Call backend verification endpoint directly
+        console.log('🧪 Calling backend verification...');
+        const verificationResult = await apiService.verifyConsumablePurchase({
+          platform: Platform.OS,
+          purchaseToken: mockPurchaseToken,
+          productId: DEAL_POST_SKUS[0],
+          GOOGLE_PACKAGE_NAME: 'com.nolimitseradeals.staging',
+          transactionReceipt: mockTransactionReceipt,
+        });
+
+        console.log('🧪 Backend verification result:', JSON.stringify(verificationResult, null, 2));
+
+        if (verificationResult.success) {
+          Alert.alert(
+            '✅ Test Mode Success',
+            `Backend verification successful!\n\nProduct: ${DEAL_POST_SKUS[0]}\n\nYou can now create your deal.`,
+            [
+              {
+                text: 'Create Deal',
+                onPress: () => {
+                  setIsPurchasing(false);
+                  proceedToCreateDeal();
+                },
+              },
+            ],
+          );
+        } else {
+          Alert.alert(
+            '❌ Test Mode - Verification Failed',
+            `Backend returned error:\n\n${verificationResult.message || verificationResult.error || 'Unknown error'}`,
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setIsPurchasing(false);
+                },
+              },
+            ],
+          );
+        }
+      } catch (error: any) {
+        console.error('🧪 Test mode error:', error);
+        Alert.alert(
+          '❌ Test Mode Error',
+          `Failed to test backend verification:\n\n${error.message}`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                setIsPurchasing(false);
+              },
+            },
+          ],
+        );
+      }
+      return;
+    }
 
     // Development mode bypass
     if (FORCE_DEV_MODE) {
