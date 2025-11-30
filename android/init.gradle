@@ -1,4 +1,4 @@
-// Gradle init script to set PATH for nvm node
+// Gradle init script to set PATH and Node.js for React Native builds
 // Detects environment and uses appropriate Node.js path
 
 def getNodePath() {
@@ -17,10 +17,15 @@ def getNodePath() {
 def nodePath = getNodePath()
 
 if (nodePath != null) {
+    // Set REACT_NATIVE_NODE_EXECUTABLE for build.gradle
+    def nodeExecutable = "${nodePath}/node"
+    System.setProperty('REACT_NATIVE_NODE_EXECUTABLE', nodeExecutable)
+    
     allprojects {
         gradle.projectsEvaluated {
             tasks.withType(Exec) {
                 environment('PATH', "${nodePath}:${System.getenv('PATH')}")
+                environment('REACT_NATIVE_NODE_EXECUTABLE', nodeExecutable)
             }
         }
     }

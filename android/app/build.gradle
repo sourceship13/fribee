@@ -18,8 +18,11 @@ react {
     //   The cli.js file which is the React Native CLI entrypoint. Default is ../../node_modules/react-native/cli.js
     // cliFile = file("../../node_modules/react-native/cli.js")
     
-    // Set node executable with full path for nvm compatibility
-    nodeExecutableAndArgs = ["/Users/alpha/.nvm/versions/node/v20.19.5/bin/node"]
+    // Set node executable - use environment variable if set, otherwise use system node
+    def nodeExecutable = System.getenv("REACT_NATIVE_NODE_EXECUTABLE") ?: "node"
+    if (nodeExecutable != "node") {
+        nodeExecutableAndArgs = [nodeExecutable]
+    }
 
     /* Variants */
     //   The list of variants to that are debuggable. For those we're going to
