@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, ActivityIndicator, Platform, Linking } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, ActivityIndicator, Platform, Linking, Alert } from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import Toolbar from '../../components/Toolbar';
@@ -7,6 +7,7 @@ import { iOSUIKit } from 'react-native-typography';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ApiService from '../../services/api.service';
 import VersionFooter from '../../components/VersionFooter';
+import * as RNIap from 'react-native-iap';
 
 interface BusinessData {
   id: string;
@@ -102,6 +103,60 @@ const BusinessProfile = ({ navigation, route }: any) => {
   const handleWebsitePress = () => {
     if (business?.websiteUrl) {
       Linking.openURL(business.websiteUrl);
+    }
+  };
+
+  const clearStuckPurchases = async () => {
+    try {
+      Alert.alert(
+        'Clear Stuck Purchases',
+        'This will clear all pending IAP purchases. Continue?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Clear',
+            onPress: async () => {
+              try {
+                console.log('🧹 Starting to clear stuck purchases...');
+                await RNIap.initConnection();
+                
+                const purchases = await RNIap.getAvailablePurchases();
+                console.log('📦 Found purchases:', purchases.length);
+                
+                if (purchases.length === 0) {
+                  Alert.alert('No Purchases', 'No stuck purchases found.');
+                  return;
+                }
+                
+                for (const purchase of purchases) {
+                  console.log('🔄 Consuming:', purchase.productId, purchase.purchaseToken);
+                  
+                  await RNIap.finishTransaction({ 
+                    purchase, 
+                    isConsumable: true 
+                  });
+                  
+                  if (Platform.OS === 'android') {
+                    await RNIap.consumePurchaseAndroid(purchase.purchaseToken);
+                  }
+                  
+                  console.log('✅ Done consuming:', purchase.productId);
+                }
+                
+                console.log('✅ All stuck purchases cleared!');
+                Alert.alert('Success', `Cleared ${purchases.length} stuck purchase(s)`);
+                
+              } catch (error: any) {
+                console.error('❌ Error clearing purchases:', error);
+                Alert.alert('Error', `Failed to clear purchases: ${error.message}`);
+              }
+            }
+          }
+        ]
+      );
+    } catch (error: any) {
+      console.error('❌ Error:', error);
+      Alert.alert('Error', error.message);
     }
   };
 
@@ -221,6 +276,19 @@ const BusinessProfile = ({ navigation, route }: any) => {
             Business Deals
           </Text>
         </TouchableOpacity>
+
+        {/* Debug: Clear Stuck Purchases Button */}
+        {Platform.OS === 'android' && (
+          <TouchableOpacity
+            style={[styles.debugButton, { backgroundColor: '#FFA500', marginTop: 12 }]}
+            onPress={clearStuckPurchases}
+          >
+            <Icon name="clean-hands" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Text style={[iOSUIKit.body, { color: '#FFFFFF', fontWeight: '600' }]}>
+              Clear Stuck Purchases (Debug)
+            </Text>
+          </TouchableOpacity>
+        )}
 
         {/* Contact Information */}
         <View style={[styles.section, { backgroundColor: colors.surface }]}>
@@ -416,6 +484,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 24,
+    padding: 16,
+    borderRadius: 12,
+  },
+  debugButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 24,
     padding: 16,
     borderRadius: 12,
   },
