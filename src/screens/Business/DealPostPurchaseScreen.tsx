@@ -36,7 +36,8 @@ import VersionFooter from '../../components/VersionFooter';
 // 🔧 IAP ENVIRONMENT CONFIGURATION
 // =====================================================
 // Set this to 'staging' or 'production' to control which SKUs are used
-const IAP_ENVIRONMENT: 'staging' | 'production' = __DEV__ ? 'staging' : 'production';
+// Note: For staging release builds, we need to explicitly use 'staging'
+const IAP_ENVIRONMENT: 'staging' | 'production' = 'staging'; // Force staging for staging builds
 
 // 🧪 TEST MODE - Bypass IAP and test backend verification directly (ANDROID ONLY)
 // Set to true to skip Google Play billing and test with mock purchase data
@@ -125,7 +126,15 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
 
           if (response.success) {
             console.log('✅ Purchase verified successfully');
-            await RNIap.finishTransaction({ purchase });
+            
+            // Finish transaction and consume for Android
+            await RNIap.finishTransaction({ purchase, isConsumable: true });
+            
+            if (Platform.OS === 'android') {
+              console.log('🤖 Consuming Android purchase...');
+              await RNIap.consumePurchaseAndroid(purchase.purchaseToken);
+              console.log('✅ Android purchase consumed');
+            }
             
             Alert.alert(
               USE_SANDBOX ? 'Sandbox Purchase Successful!' : 'Purchase Complete!',
@@ -145,7 +154,15 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
             const errorText = (response.message || response.error || '').toLowerCase();
             if (errorText.includes('duplicate') || errorText.includes('unique_transaction') || errorText.includes('violates')) {
               console.log('⚠️ Duplicate transaction detected - finishing anyway');
-              await RNIap.finishTransaction({ purchase });
+              
+              // Finish transaction and consume for Android
+              await RNIap.finishTransaction({ purchase, isConsumable: true });
+              
+              if (Platform.OS === 'android') {
+                console.log('🤖 Consuming Android purchase (duplicate)...');
+                await RNIap.consumePurchaseAndroid(purchase.purchaseToken);
+                console.log('✅ Android purchase consumed');
+              }
               
               Alert.alert(
                 'Transaction Already Verified',
@@ -170,7 +187,15 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
               {
                 text: 'Continue',
                 onPress: async () => {
-                  await RNIap.finishTransaction({ purchase });
+                  // Finish transaction and consume for Android
+                  await RNIap.finishTransaction({ purchase, isConsumable: true });
+                  
+                  if (Platform.OS === 'android') {
+                    console.log('🤖 Consuming Android purchase (error case)...');
+                    await RNIap.consumePurchaseAndroid(purchase.purchaseToken);
+                    console.log('✅ Android purchase consumed');
+                  }
+                  
                   proceedToCreateDeal();
                 },
               },
