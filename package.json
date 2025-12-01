@@ -1,6 +1,6 @@
 {
   "name": "nolimitseradeals",
-  "version": "0.0.625",
+  "version": "0.0.626",
   "private": true,
   "scripts": {
     "android": "react-native run-android --mode=StagingDebug --appId=com.nolimitseradeals.staging",
