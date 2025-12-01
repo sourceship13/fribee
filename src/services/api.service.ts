@@ -262,7 +262,7 @@ class ApiService {
     platform: string;
     purchaseToken: string;
     productId: string;
-    GOOGLE_PACKAGE_NAME?: string;
+    packageName?: string;
     transactionReceipt?: string;
     receiptData?: string;
   }): Promise<ApiResponse> {
@@ -276,8 +276,8 @@ class ApiService {
       purchaseTokenLength: data.purchaseToken?.length,
       hasReceipt: !!data.transactionReceipt,
       receiptLength: data.transactionReceipt?.length,
-      hasPackageName: !!data.GOOGLE_PACKAGE_NAME,
-      packageName: data.GOOGLE_PACKAGE_NAME,
+      hasPackageName: !!data.packageName,
+      packageName: data.packageName,
     });
     console.log('📦 Full request body:', JSON.stringify(data, null, 2));
     console.log('📡 API Base URL:', this.baseUrl);

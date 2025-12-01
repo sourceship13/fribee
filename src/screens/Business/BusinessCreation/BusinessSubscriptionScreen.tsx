@@ -192,16 +192,18 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
             // Android: use purchaseToken, iOS: use transactionId
             purchaseToken: Platform.OS === 'android' ? purchase.purchaseToken : purchase.transactionId,
             productId: purchase.productId,
-            GOOGLE_PACKAGE_NAME: Platform.OS === 'android' ? 'com.nolimitseradeals.staging' : undefined,
           };
 
           console.log('🔵 Android purchaseToken:', purchase.purchaseToken);
           console.log('🔵 iOS transactionId:', purchase.transactionId);
 
-          // Add Android transaction receipt (full purchase data)
+          // Add Android-specific fields
           if (Platform.OS === 'android') {
+            // Add package name for Google Play verification
+            verificationData.packageName = 'com.nolimitseradeals.staging';
             // Android backend needs the full transaction receipt for verification with Google Play
             verificationData.transactionReceipt = JSON.stringify(purchase);
+            console.log('🤖 Android package name:', verificationData.packageName);
             console.log('🤖 Android transaction receipt added to verification data');
           }
 
