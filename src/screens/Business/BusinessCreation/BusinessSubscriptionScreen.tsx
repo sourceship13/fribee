@@ -350,8 +350,8 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
                 setIsPurchasing(false);
                 setSelectedPlan(null);
                 
-                // Navigate to business profile
-                navigation.navigate('BusinessProfile');
+                // Navigate to profile tab (will show BusinessProfile for business accounts)
+                navigation.navigate('MainTabs', { screen: 'ProfileTab' });
                 
                 // Show success message after navigation
                 setTimeout(() => {
@@ -378,9 +378,9 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
                   onPress: async () => {
                     // Refresh deals before navigation in case business was partially created
                     await refreshDeals();
-                    // Navigate to BusinessProfile even if creation failed
+                    // Navigate to profile tab even if creation failed
                     // The user already has a subscription, they can try creating the business again later
-                    navigation.navigate('BusinessProfile');
+                    navigation.navigate('MainTabs', { screen: 'ProfileTab' });
                   }
                 }]
               );
@@ -429,8 +429,8 @@ Please share this information with support.
                   // Refresh user data and deals to get latest subscription status
                   await Promise.all([refreshUser(), refreshDeals()]);
                   
-                  // Navigate to BusinessProfile instead of creation flow
-                  navigation.navigate('BusinessProfile');
+                  // Navigate to profile tab instead of creation flow
+                  navigation.navigate('MainTabs', { screen: 'ProfileTab' });
                 },
               },
             ],
@@ -827,10 +827,10 @@ Please share this information with support.
         // Refresh user data and deals to load the new business profile
         await Promise.all([refreshUser(), refreshDeals()]);
         
-        console.log('✅ User data and deals refreshed, navigating to BusinessProfile');
+        console.log('✅ User data and deals refreshed, navigating to profile tab');
         
-        // Navigate to business profile
-        navigation.navigate('BusinessProfile');
+        // Navigate to profile tab (will show BusinessProfile for business accounts)
+        navigation.navigate('MainTabs', { screen: 'ProfileTab' });
         
         // Show success message after navigation
         setTimeout(() => {
