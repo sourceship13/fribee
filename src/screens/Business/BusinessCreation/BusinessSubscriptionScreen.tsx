@@ -200,10 +200,10 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
           // Add Android-specific fields
           if (Platform.OS === 'android') {
             // Add package name for Google Play verification
-            verificationData.packageName = 'com.nolimitseradeals.staging';
+            verificationData.GOOGLE_PACKAGE_NAME = 'com.nolimitseradeals.staging';
             // Android backend needs the full transaction receipt for verification with Google Play
             verificationData.transactionReceipt = JSON.stringify(purchase);
-            console.log('🤖 Android package name:', verificationData.packageName);
+            console.log('🤖 Android package name:', verificationData.GOOGLE_PACKAGE_NAME);
             console.log('🤖 Android transaction receipt added to verification data');
           }
 

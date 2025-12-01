@@ -41,14 +41,18 @@ class AuthService {
   ): Promise<Response> {
     const accessToken = await this.getAccessToken();
     
+    // Don't set Content-Type if body is FormData - let fetch set it with boundary
+    const isFormData = options.body instanceof FormData;
+    
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
+      ...(!isFormData && { 'Content-Type': 'application/json' }), // Only set for non-FormData
       ...options.headers as Record<string, string>,
       ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     };
 
     console.log('🌐 Making request to:', url);
     console.log('🔑 Using access token:', accessToken ? 'YES (length: ' + accessToken.length + ')' : 'NO');
+    console.log('📦 Request body type:', isFormData ? 'FormData' : 'JSON');
     
     const response = await fetch(url, { ...options, headers });
     
@@ -306,12 +310,15 @@ class AuthService {
       
       console.log('✅ Token refreshed, retrying request...');
       
+      // Don't set Content-Type if body is FormData - let fetch set it with boundary
+      const isFormData = options.body instanceof FormData;
+      
       // Retry with new token
       const retryResponse = await fetch(url, {
         ...options,
         headers: {
           ...options.headers,
-          'Content-Type': 'application/json',
+          ...(!isFormData && { 'Content-Type': 'application/json' }), // Only set for non-FormData
           'Authorization': `Bearer ${newAccessToken}`,
         },
       });
