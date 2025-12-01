@@ -105,7 +105,7 @@ interface SubscriptionPlan {
 }
 
 const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
-  const { isDarkMode, refreshUser } = useAuth();
+  const { isDarkMode, refreshUser, refreshDeals } = useAuth();
   const colors = getColors(isDarkMode);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -341,10 +341,10 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
               if (businessResponse.success) {
                 console.log('✅ Business created successfully, refreshing user data...');
                 
-                // Refresh user data to load the new business profile
-                await refreshUser();
+                // Refresh user data and deals to load the new business profile
+                await Promise.all([refreshUser(), refreshDeals()]);
                 
-                console.log('✅ User data refreshed, clearing state and navigating...');
+                console.log('✅ User data and deals refreshed, clearing state and navigating...');
                 
                 // Clear state
                 setIsPurchasing(false);
@@ -375,7 +375,9 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
                 'Your subscription is active but there was an error creating your business account. You will be redirected to complete your business profile.',
                 [{ 
                   text: 'OK',
-                  onPress: () => {
+                  onPress: async () => {
+                    // Refresh deals before navigation in case business was partially created
+                    await refreshDeals();
                     // Navigate to BusinessProfile even if creation failed
                     // The user already has a subscription, they can try creating the business again later
                     navigation.navigate('BusinessProfile');
@@ -424,8 +426,8 @@ Please share this information with support.
                   // Finish the transaction anyway
                   await RNIap.finishTransaction({ purchase });
                   
-                  // Refresh user data to get latest subscription status
-                  await refreshUser();
+                  // Refresh user data and deals to get latest subscription status
+                  await Promise.all([refreshUser(), refreshDeals()]);
                   
                   // Navigate to BusinessProfile instead of creation flow
                   navigation.navigate('BusinessProfile');
@@ -822,10 +824,10 @@ Please share this information with support.
       if (businessResponse.success) {
         console.log('✅ Business created successfully, refreshing user data...');
         
-        // Refresh user data to load the new business profile
-        await refreshUser();
+        // Refresh user data and deals to load the new business profile
+        await Promise.all([refreshUser(), refreshDeals()]);
         
-        console.log('✅ User data refreshed, navigating to BusinessProfile');
+        console.log('✅ User data and deals refreshed, navigating to BusinessProfile');
         
         // Navigate to business profile
         navigation.navigate('BusinessProfile');
