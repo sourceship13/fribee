@@ -242,15 +242,35 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
             productId: verificationData.productId,
             hasReceipt: !!verificationData.transactionReceipt,
             receiptLength: verificationData.transactionReceipt?.length,
+            hasPurchaseToken: !!verificationData.purchaseToken,
+            purchaseTokenLength: verificationData.purchaseToken?.length,
+            hasGooglePackageName: !!verificationData.GOOGLE_PACKAGE_NAME,
           });
+
+          console.log('========== BACKEND VERIFICATION DEBUG ==========');
+          console.log('📤 Sending to backend:', JSON.stringify(verificationData, null, 2));
+          console.log('📤 Request URL: /subscriptions/verify');
+          console.log('📤 Platform:', Platform.OS);
+          console.log('📤 Product ID:', verificationData.productId);
+          console.log('📤 Purchase Token (first 50 chars):', verificationData.purchaseToken?.substring(0, 50));
+          if (Platform.OS === 'android') {
+            console.log('📤 Package Name:', verificationData.GOOGLE_PACKAGE_NAME);
+            console.log('📤 Transaction Receipt Length:', verificationData.transactionReceipt?.length);
+          }
+          console.log('===============================================');
 
           console.log('🔵 Calling apiService.verifySubscription...');
           const response = await apiService.verifySubscription(
             verificationData,
           );
           
+          console.log('========== BACKEND RESPONSE DEBUG ==========');
           console.log('📥 Verification response received:', JSON.stringify(response, null, 2));
           console.log('📥 Response success:', response.success);
+          console.log('📥 Response message:', response.message);
+          console.log('📥 Response error:', response.error);
+          console.log('📥 Response data:', response.data ? JSON.stringify(response.data, null, 2) : 'none');
+          console.log('===========================================');
 
           if (response.success) {
             console.log('✅ Purchase verified successfully');
@@ -362,22 +382,42 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
               );
             }
           } else {
-            console.error('❌ Verification response success was false');
-            console.error('❌ Response:', response);
-            throw new Error('Verification failed');
+            console.error('========== VERIFICATION FAILED ==========');
+            console.error('❌ Backend returned success: false');
+            console.error('❌ Response:', JSON.stringify(response, null, 2));
+            console.error('❌ Error message:', response.message || response.error || 'No error message provided');
+            console.error('========================================');
+            throw new Error(response.message || response.error || 'Verification failed');
           }
-        } catch (error) {
-          console.error('❌ Purchase verification failed:', error);
+        } catch (error: any) {
+          console.error('========== VERIFICATION EXCEPTION ==========');
+          console.error('❌ Purchase verification failed with exception');
+          console.error('❌ Error name:', error?.name);
+          console.error('❌ Error message:', error?.message);
+          console.error('❌ Error stack:', error?.stack);
+          console.error('❌ Full error object:', JSON.stringify(error, null, 2));
+          console.error('===========================================');
           
           // Store plan ID before state gets cleared
           const planId = selectedPlan || purchase.productId;
           
+          // Create detailed error message for the alert
+          const errorDetails = `
+Error: ${error?.message || 'Unknown error'}
+Platform: ${Platform.OS}
+Product ID: ${purchase.productId}
+Purchase Token: ${purchase.purchaseToken ? 'Present' : 'Missing'}
+${Platform.OS === 'android' ? `Package Name: com.nolimitseradeals.staging` : ''}
+
+Please share this information with support.
+          `.trim();
+          
           Alert.alert(
             'Verification Error',
-            'Failed to verify purchase with backend. The purchase may still be valid.\n\nYou will be redirected to your business profile.',
+            errorDetails,
             [
               {
-                text: 'OK',
+                text: 'Continue to Profile',
                 onPress: async () => {
                   // Finish the transaction anyway
                   await RNIap.finishTransaction({ purchase });

@@ -266,6 +266,7 @@ class ApiService {
     transactionReceipt?: string;
     receiptData?: string;
   }): Promise<ApiResponse> {
+    console.log('========== API SERVICE: VERIFY SUBSCRIPTION ==========');
     console.log('🔐 Verifying subscription purchase...');
     console.log('📋 Request details:', {
       endpoint: '/subscriptions/verify',
@@ -275,24 +276,38 @@ class ApiService {
       purchaseTokenLength: data.purchaseToken?.length,
       hasReceipt: !!data.transactionReceipt,
       receiptLength: data.transactionReceipt?.length,
+      hasPackageName: !!data.GOOGLE_PACKAGE_NAME,
+      packageName: data.GOOGLE_PACKAGE_NAME,
     });
     console.log('📦 Full request body:', JSON.stringify(data, null, 2));
+    console.log('📡 API Base URL:', this.baseUrl);
+    console.log('📡 Full URL:', `${this.baseUrl}/subscriptions/verify`);
+    console.log('====================================================');
     
     try {
+      console.log('📤 Making POST request to /subscriptions/verify...');
       const response = await this.makeRequest('/subscriptions/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
       
-      console.log('✅ Subscription verification response:', response);
+      console.log('========== API SERVICE: RESPONSE RECEIVED ==========');
+      console.log('✅ Subscription verification response:', JSON.stringify(response, null, 2));
+      console.log('✅ Response success:', response.success);
+      console.log('✅ Response message:', response.message);
+      console.log('====================================================');
       return response;
     } catch (error) {
+      console.error('========== API SERVICE: REQUEST FAILED ==========');
       console.error('❌ Subscription Verification Error:', error);
       console.error('❌ Error details:', {
         message: (error as Error)?.message,
         name: (error as Error)?.name,
+        stack: (error as Error)?.stack,
       });
+      console.error('❌ Full error:', JSON.stringify(error, null, 2));
+      console.error('================================================');
       throw error;
     }
   }
