@@ -53,20 +53,27 @@ import * as RNIap from 'react-native-iap';
 // Set this to 'staging' or 'production' to control which SKUs are used
 // 'staging' = uses .staging SKUs (for development/testing)
 // 'production' = uses .prod SKUs (for App Store release)
-const IAP_ENVIRONMENT: 'staging' | 'production' = __DEV__ ? 'staging' : 'production';
+// TEMPORARILY FORCED TO STAGING - Change to 'production' when prod SKUs are ready
+const IAP_ENVIRONMENT: 'staging' | 'production' = 'staging';
+
+// 🧪 TEST MODE - Bypass IAP and test backend verification directly (ANDROID ONLY)
+// Set to true to skip Google Play billing and test with mock purchase data
+// This allows testing backend verification without uploading to Play Store
+// iOS will always use real Apple IAP (sandbox or production)
+const TEST_MODE_BACKEND_ONLY = false; // Disabled - use real IAP for both platforms
 // =====================================================
 
 const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
 
-// Subscription product IDs - different for staging vs production
+// Subscription product IDs - different for staging vs production and iOS vs Android
 const STAGING_SKUS = {
   premium: Platform.OS === 'android' ? 'nolimitsera.subscription.premium.staging' : 'com.nolimitsera.monthly.subscription.premium.staging',
   regular: Platform.OS === 'android' ? 'nolimitsera.subscription.regular.staging' : 'com.nolimitsera.monthly.subscription.regular.staging',
 };
 
 const PRODUCTION_SKUS = {
-  premium: 'com.nolimitsera.monthly.subscription.premium.prod',
-  regular: 'com.nolimitsera.monthly.subscription.regular.prod',
+  premium: Platform.OS === 'android' ? 'nolimitsera.subscription.premium.prod' : 'com.nolimitsera.monthly.subscription.premium.prod',
+  regular: Platform.OS === 'android' ? 'nolimitsera.subscription.regular.prod' : 'com.nolimitsera.monthly.subscription.regular.prod',
 };
 
 const ACTIVE_SKUS = IS_PRODUCTION ? PRODUCTION_SKUS : STAGING_SKUS;
@@ -98,7 +105,7 @@ interface SubscriptionPlan {
 }
 
 const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
-  const { isDarkMode } = useAuth();
+  const { isDarkMode, refreshUser, refreshDeals } = useAuth();
   const colors = getColors(isDarkMode);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -176,14 +183,29 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
         try {
           // Verify the purchase with backend
           console.log('🔵 Verifying purchase with backend...');
+          console.log('🔵 Full purchase object:', JSON.stringify(purchase, null, 2));
 
           // For iOS, we need the transactionReceipt (base64 receipt data)
-          // For Android, we use the purchaseToken
+          // For Android, we use the purchaseToken (not transactionId)
           const verificationData: any = {
             platform: Platform.OS,
-            purchaseToken: purchase.transactionId || '',
+            // Android: use purchaseToken, iOS: use transactionId
+            purchaseToken: Platform.OS === 'android' ? purchase.purchaseToken : purchase.transactionId,
             productId: purchase.productId,
           };
+
+          console.log('🔵 Android purchaseToken:', purchase.purchaseToken);
+          console.log('🔵 iOS transactionId:', purchase.transactionId);
+
+          // Add Android-specific fields
+          if (Platform.OS === 'android') {
+            // Add package name for Google Play verification
+            verificationData.GOOGLE_PACKAGE_NAME = 'com.nolimitseradeals.staging';
+            // Android backend needs the full transaction receipt for verification with Google Play
+            verificationData.transactionReceipt = JSON.stringify(purchase);
+            console.log('🤖 Android package name:', verificationData.GOOGLE_PACKAGE_NAME);
+            console.log('🤖 Android transaction receipt added to verification data');
+          }
 
           // Add iOS-specific receipt data - try multiple possible properties
           if (Platform.OS === 'ios') {
@@ -196,6 +218,7 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
               iosPurchase.signedTransactionReceipt;
 
             if (receiptData) {
+              // Backend expects 'transactionReceipt' field for iOS verification
               verificationData.transactionReceipt = receiptData;
               console.log('📱 iOS Receipt found! Length:', receiptData.length);
               console.log(
@@ -221,15 +244,35 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
             productId: verificationData.productId,
             hasReceipt: !!verificationData.transactionReceipt,
             receiptLength: verificationData.transactionReceipt?.length,
+            hasPurchaseToken: !!verificationData.purchaseToken,
+            purchaseTokenLength: verificationData.purchaseToken?.length,
+            hasGooglePackageName: !!verificationData.GOOGLE_PACKAGE_NAME,
           });
+
+          console.log('========== BACKEND VERIFICATION DEBUG ==========');
+          console.log('📤 Sending to backend:', JSON.stringify(verificationData, null, 2));
+          console.log('📤 Request URL: /subscriptions/verify');
+          console.log('📤 Platform:', Platform.OS);
+          console.log('📤 Product ID:', verificationData.productId);
+          console.log('📤 Purchase Token (first 50 chars):', verificationData.purchaseToken?.substring(0, 50));
+          if (Platform.OS === 'android') {
+            console.log('📤 Package Name:', verificationData.GOOGLE_PACKAGE_NAME);
+            console.log('📤 Transaction Receipt Length:', verificationData.transactionReceipt?.length);
+          }
+          console.log('===============================================');
 
           console.log('🔵 Calling apiService.verifySubscription...');
           const response = await apiService.verifySubscription(
             verificationData,
           );
           
+          console.log('========== BACKEND RESPONSE DEBUG ==========');
           console.log('📥 Verification response received:', JSON.stringify(response, null, 2));
           console.log('📥 Response success:', response.success);
+          console.log('📥 Response message:', response.message);
+          console.log('📥 Response error:', response.error);
+          console.log('📥 Response data:', response.data ? JSON.stringify(response.data, null, 2) : 'none');
+          console.log('===========================================');
 
           if (response.success) {
             console.log('✅ Purchase verified successfully');
@@ -296,13 +339,19 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
               console.log('📥 Business registration response:', businessResponse);
 
               if (businessResponse.success) {
-                console.log('✅ Business created successfully, navigating to BusinessProfile');
+                console.log('✅ Business created successfully, refreshing user data...');
+                
+                // Refresh user data and deals to load the new business profile
+                await Promise.all([refreshUser(), refreshDeals()]);
+                
+                console.log('✅ User data and deals refreshed, clearing state and navigating...');
+                
                 // Clear state
                 setIsPurchasing(false);
                 setSelectedPlan(null);
                 
-                // Navigate to business profile
-                navigation.navigate('BusinessProfile');
+                // Navigate to profile tab (will show BusinessProfile for business accounts)
+                navigation.navigate('MainTabs', { screen: 'ProfileTab' });
                 
                 // Show success message after navigation
                 setTimeout(() => {
@@ -323,42 +372,66 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
               
               Alert.alert(
                 'Business Creation Failed',
-                'Your subscription is active but there was an error creating your business account. Please contact support.',
-                [{ text: 'OK' }]
+                'Your subscription is active but there was an error creating your business account. You will be redirected to complete your business profile.',
+                [{ 
+                  text: 'OK',
+                  onPress: async () => {
+                    // Refresh deals before navigation in case business was partially created
+                    await refreshDeals();
+                    // Navigate to profile tab even if creation failed
+                    // The user already has a subscription, they can try creating the business again later
+                    navigation.navigate('MainTabs', { screen: 'ProfileTab' });
+                  }
+                }]
               );
             }
           } else {
-            console.error('❌ Verification response success was false');
-            console.error('❌ Response:', response);
-            throw new Error('Verification failed');
+            console.error('========== VERIFICATION FAILED ==========');
+            console.error('❌ Backend returned success: false');
+            console.error('❌ Response:', JSON.stringify(response, null, 2));
+            console.error('❌ Error message:', response.message || response.error || 'No error message provided');
+            console.error('========================================');
+            throw new Error(response.message || response.error || 'Verification failed');
           }
-        } catch (error) {
-          console.error('❌ Purchase verification failed:', error);
+        } catch (error: any) {
+          console.error('========== VERIFICATION EXCEPTION ==========');
+          console.error('❌ Purchase verification failed with exception');
+          console.error('❌ Error name:', error?.name);
+          console.error('❌ Error message:', error?.message);
+          console.error('❌ Error stack:', error?.stack);
+          console.error('❌ Full error object:', JSON.stringify(error, null, 2));
+          console.error('===========================================');
           
           // Store plan ID before state gets cleared
           const planId = selectedPlan || purchase.productId;
           
+          // Create detailed error message for the alert
+          const errorDetails = `
+Error: ${error?.message || 'Unknown error'}
+Platform: ${Platform.OS}
+Product ID: ${purchase.productId}
+Purchase Token: ${purchase.purchaseToken ? 'Present' : 'Missing'}
+${Platform.OS === 'android' ? `Package Name: com.nolimitseradeals.staging` : ''}
+
+Please share this information with support.
+          `.trim();
+          
           Alert.alert(
             'Verification Error',
-            'Failed to verify purchase with backend. The purchase may still be valid.\n\nWould you like to continue anyway?',
+            errorDetails,
             [
               {
-                text: 'Continue',
+                text: 'Continue to Profile',
                 onPress: async () => {
                   // Finish the transaction anyway
                   await RNIap.finishTransaction({ purchase });
                   
-                  // Navigate with stored plan ID - spread businessData only if it exists
-                  navigation.navigate('BusinessCreationScreen1', {
-                    ...(businessData || {}),
-                    hasSubscription: true,
-                    subscriptionPlan: planId,
-                  });
+                  // Refresh user data and deals to get latest subscription status
+                  await Promise.all([refreshUser(), refreshDeals()]);
+                  
+                  // Navigate to profile tab instead of creation flow
+                  navigation.navigate('MainTabs', { screen: 'ProfileTab' });
                 },
-              },
-              {
-                text: 'Cancel',
-                style: 'cancel',
               },
             ],
           );
@@ -515,6 +588,93 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
     setIsPurchasing(true);
     setSelectedPlan(planId);
 
+    // TEST MODE: Bypass IAP and test backend verification directly
+    if (TEST_MODE_BACKEND_ONLY) {
+      console.log('🧪 TEST MODE: Bypassing IAP, testing backend verification');
+      console.log('🧪 Product ID:', planId);
+      
+      try {
+        // Generate mock purchase data that mimics real IAP response
+        const mockPurchaseToken = `mock_token_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+        const mockTransactionReceipt = JSON.stringify({
+          productId: planId,
+          transactionId: `mock_txn_${Date.now()}`,
+          purchaseTime: Date.now(),
+          purchaseState: 'purchased',
+          developerPayload: '',
+          packageName: 'com.nolimitseradeals.staging',
+          orderId: `GPA.${Math.random().toString(36).substring(2, 15)}`,
+          acknowledged: false,
+        });
+
+        console.log('🧪 Mock Purchase Token:', mockPurchaseToken);
+        console.log('🧪 Mock Receipt:', mockTransactionReceipt);
+
+        // Call backend verification endpoint directly
+        console.log('🧪 Calling backend verification...');
+        const requestData = {
+          platform: Platform.OS,
+          purchaseToken: mockPurchaseToken,
+          productId: planId,
+          GOOGLE_PACKAGE_NAME: 'com.nolimitseradeals.staging',
+          transactionReceipt: mockTransactionReceipt,
+        };
+        console.log('🧪 REQUEST DATA OBJECT:', JSON.stringify(requestData, null, 2));
+        console.log('🧪 Has GOOGLE_PACKAGE_NAME?', 'GOOGLE_PACKAGE_NAME' in requestData);
+        console.log('🧪 GOOGLE_PACKAGE_NAME value:', requestData.GOOGLE_PACKAGE_NAME);
+        
+        const verificationResult = await apiService.verifySubscription(requestData);
+
+        console.log('🧪 Backend verification result:', JSON.stringify(verificationResult, null, 2));
+
+        if (verificationResult.success) {
+          Alert.alert(
+            '✅ Test Mode Success',
+            `Backend verification successful!\n\nProduct: ${planId}\n\nCheck logs for details.`,
+            [
+              {
+                text: 'Continue',
+                onPress: () => {
+                  setIsPurchasing(false);
+                  proceedToFinalStep();
+                },
+              },
+            ],
+          );
+        } else {
+          Alert.alert(
+            '❌ Test Mode - Verification Failed',
+            `Backend returned error:\n\n${verificationResult.message || verificationResult.error || 'Unknown error'}`,
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setIsPurchasing(false);
+                  setSelectedPlan(null);
+                },
+              },
+            ],
+          );
+        }
+      } catch (error: any) {
+        console.error('🧪 Test mode error:', error);
+        Alert.alert(
+          '❌ Test Mode Error',
+          `Failed to test backend verification:\n\n${error.message}`,
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                setIsPurchasing(false);
+                setSelectedPlan(null);
+              },
+            },
+          ],
+        );
+      }
+      return;
+    }
+
     // Check if we should bypass IAP entirely (for local development or Android debug)
     if (shouldBypassIAP) {
       console.log('🛠️ BYPASS IAP MODE: Simulating purchase for testing');
@@ -604,13 +764,94 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
     }
   };
 
-  const proceedToFinalStep = () => {
-    // Navigate to the final screen with all data including subscription info
-    navigation.navigate('BusinessCreationScreen1', {
-      ...businessData,
-      hasSubscription: true,
-      subscriptionPlan: selectedPlan,
-    });
+  const proceedToFinalStep = async () => {
+    // Create the business profile before navigating
+    try {
+      console.log('✅ Subscription verified, now creating business profile...');
+      console.log('📦 Business data:', businessData);
+      
+      // Create FormData for multipart/form-data upload
+      const formData = new FormData();
+      
+      // Add text fields
+      if (businessData?.businessName) formData.append('businessName', businessData.businessName);
+      if (businessData?.description) formData.append('description', businessData.description);
+      if (businessData?.address) formData.append('address', businessData.address);
+      if (businessData?.city) formData.append('city', businessData.city);
+      if (businessData?.state) formData.append('state', businessData.state);
+      if (businessData?.postalCode) formData.append('postalCode', businessData.postalCode);
+      if (businessData?.country) formData.append('country', businessData.country);
+      if (businessData?.phoneNumber) formData.append('phoneNumber', businessData.phoneNumber);
+      if (businessData?.businessUrl) formData.append('websiteUrl', businessData.businessUrl);
+      
+      // Add images
+      if (businessData?.logo) {
+        formData.append('logo', {
+          uri: Platform.OS === 'ios' ? businessData.logo.uri.replace('file://', '') : businessData.logo.uri,
+          type: businessData.logo.type || 'image/jpeg',
+          name: businessData.logo.fileName || 'logo.jpg',
+        } as any);
+      }
+      
+      if (businessData?.cover) {
+        formData.append('coverImage', {
+          uri: Platform.OS === 'ios' ? businessData.cover.uri.replace('file://', '') : businessData.cover.uri,
+          type: businessData.cover.type || 'image/jpeg',
+          name: businessData.cover.fileName || 'cover.jpg',
+        } as any);
+      }
+      
+      if (businessData?.businessImage1) {
+        formData.append('businessImage1', {
+          uri: Platform.OS === 'ios' ? businessData.businessImage1.uri.replace('file://', '') : businessData.businessImage1.uri,
+          type: businessData.businessImage1.type || 'image/jpeg',
+          name: businessData.businessImage1.fileName || 'business_image_1.jpg',
+        } as any);
+      }
+      
+      if (businessData?.businessImage2) {
+        formData.append('businessImage2', {
+          uri: Platform.OS === 'ios' ? businessData.businessImage2.uri.replace('file://', '') : businessData.businessImage2.uri,
+          type: businessData.businessImage2.type || 'image/jpeg',
+          name: businessData.businessImage2.fileName || 'business_image_2.jpg',
+        } as any);
+      }
+
+      console.log('🚀 Submitting business data to API...');
+      const businessResponse = await apiService.registerBusiness(formData);
+      console.log('📥 Business registration response:', businessResponse);
+
+      if (businessResponse.success) {
+        console.log('✅ Business created successfully, refreshing user data...');
+        
+        // Refresh user data and deals to load the new business profile
+        await Promise.all([refreshUser(), refreshDeals()]);
+        
+        console.log('✅ User data and deals refreshed, navigating to profile tab');
+        
+        // Navigate to profile tab (will show BusinessProfile for business accounts)
+        navigation.navigate('MainTabs', { screen: 'ProfileTab' });
+        
+        // Show success message after navigation
+        setTimeout(() => {
+          Alert.alert(
+            'Success!',
+            'Your subscription is active and business account has been created!',
+          );
+        }, 500);
+      } else {
+        Alert.alert(
+          'Error',
+          `Failed to create business profile: ${businessResponse.message || 'Unknown error'}`,
+        );
+      }
+    } catch (error: any) {
+      console.error('❌ Error creating business profile:', error);
+      Alert.alert(
+        'Error',
+        `Failed to create business profile: ${error.message}`,
+      );
+    }
   };
 
   const skipForNow = () => {

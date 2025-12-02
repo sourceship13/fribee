@@ -262,21 +262,52 @@ class ApiService {
     platform: string;
     purchaseToken: string;
     productId: string;
+    packageName?: string;
     transactionReceipt?: string;
+    receiptData?: string;
   }): Promise<ApiResponse> {
-    console.log('🔐 Verifying subscription purchase:', {
+    console.log('========== API SERVICE: VERIFY SUBSCRIPTION ==========');
+    console.log('🔐 Verifying subscription purchase...');
+    console.log('📋 Request details:', {
+      endpoint: '/subscriptions/verify',
       platform: data.platform,
       productId: data.productId,
+      hasPurchaseToken: !!data.purchaseToken,
+      purchaseTokenLength: data.purchaseToken?.length,
+      hasReceipt: !!data.transactionReceipt,
+      receiptLength: data.transactionReceipt?.length,
+      hasPackageName: !!data.packageName,
+      packageName: data.packageName,
     });
+    console.log('📦 Full request body:', JSON.stringify(data, null, 2));
+    console.log('📡 API Base URL:', this.baseUrl);
+    console.log('📡 Full URL:', `${this.baseUrl}/subscriptions/verify`);
+    console.log('====================================================');
     
     try {
-      return await this.makeRequest('/subscriptions/verify', {
+      console.log('📤 Making POST request to /subscriptions/verify...');
+      const response = await this.makeRequest('/subscriptions/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+      
+      console.log('========== API SERVICE: RESPONSE RECEIVED ==========');
+      console.log('✅ Subscription verification response:', JSON.stringify(response, null, 2));
+      console.log('✅ Response success:', response.success);
+      console.log('✅ Response message:', response.message);
+      console.log('====================================================');
+      return response;
     } catch (error) {
-      console.error(`💥 Subscription Verification Error:`, error);
+      console.error('========== API SERVICE: REQUEST FAILED ==========');
+      console.error('❌ Subscription Verification Error:', error);
+      console.error('❌ Error details:', {
+        message: (error as Error)?.message,
+        name: (error as Error)?.name,
+        stack: (error as Error)?.stack,
+      });
+      console.error('❌ Full error:', JSON.stringify(error, null, 2));
+      console.error('================================================');
       throw error;
     }
   }
@@ -285,22 +316,37 @@ class ApiService {
     platform: string;
     purchaseToken: string;
     productId: string;
+    GOOGLE_PACKAGE_NAME?: string;
     transactionReceipt?: string;
+    receiptData?: string;
   }): Promise<ApiResponse> {
-    console.log('🔐 Verifying consumable purchase:', {
+    console.log('🔐 Verifying consumable purchase...');
+    console.log('📋 Request details:', {
+      endpoint: '/subscriptions/consumables/verify',
       platform: data.platform,
       productId: data.productId,
+      hasPurchaseToken: !!data.purchaseToken,
+      purchaseTokenLength: data.purchaseToken?.length,
+      hasReceipt: !!data.transactionReceipt,
+      receiptLength: data.transactionReceipt?.length,
     });
+    console.log('📦 Full request body:', JSON.stringify(data, null, 2));
     
     try {
-      // TEMPORARY: Using subscription endpoint until backend implements /subscriptions/consumables/verify
-      return await this.makeRequest('/subscriptions/verify', {
+      const response = await this.makeRequest('/subscriptions/consumables/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+      
+      console.log('✅ Consumable verification response:', response);
+      return response;
     } catch (error) {
-      console.error(`💥 Consumable Verification Error:`, error);
+      console.error('❌ Consumable Verification Error:', error);
+      console.error('❌ Error details:', {
+        message: (error as Error)?.message,
+        name: (error as Error)?.name,
+      });
       throw error;
     }
   }

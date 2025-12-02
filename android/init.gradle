@@ -1,0 +1,51 @@
+// Gradle init script to set PATH and Node.js for React Native builds
+// Detects environment and uses appropriate Node.js path
+
+def getNodePath() {
+    // Check if running in CI environment
+    def isCI = System.getenv('CI') == 'true' || System.getenv('CIRCLECI') == 'true'
+    
+    if (isCI) {
+        // In CI, use node from PATH (CircleCI has node pre-installed)
+        return null
+    } else {
+        // Local development - use nvm node path
+        return "/Users/alpha/.nvm/versions/node/v20.19.5/bin"
+    }
+}
+
+def nodePath = getNodePath()
+
+if (nodePath != null) {
+    // Set REACT_NATIVE_NODE_EXECUTABLE for build.gradle
+    def nodeExecutable = "${nodePath}/node"
+    System.setProperty('REACT_NATIVE_NODE_EXECUTABLE', nodeExecutable)
+    
+    allprojects {
+        gradle.projectsEvaluated {
+            tasks.withType(Exec) {
+                environment('PATH', "${nodePath}:${System.getenv('PATH')}")
+                environment('REACT_NATIVE_NODE_EXECUTABLE', nodeExecutable)
+            }
+        }
+    }
+
+    // Set PATH for process execution during settings evaluation
+    System.setProperty('path.separator', ':')
+    def currentPath = System.getenv('PATH') ?: ''
+    if (!currentPath.contains(nodePath)) {
+        def newPath = "${nodePath}:${currentPath}"
+        // This affects child processes spawned by Gradle
+        ['PATH', 'Path'].each { key ->
+            try {
+                def env = System.getenv()
+                def field = env.getClass().getDeclaredField('m')
+                field.setAccessible(true)
+                def map = field.get(env)
+                map.put(key, newPath)
+            } catch (Exception e) {
+                // Ignore if we can't modify environment
+            }
+        }
+    }
+}

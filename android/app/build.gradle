@@ -17,6 +17,12 @@ react {
     // codegenDir = file("../../node_modules/@react-native/codegen")
     //   The cli.js file which is the React Native CLI entrypoint. Default is ../../node_modules/react-native/cli.js
     // cliFile = file("../../node_modules/react-native/cli.js")
+    
+    // Set node executable - use environment variable if set, otherwise use system node
+    def nodeExecutable = System.getenv("REACT_NATIVE_NODE_EXECUTABLE") ?: "node"
+    if (nodeExecutable != "node") {
+        nodeExecutableAndArgs = [nodeExecutable]
+    }
 
     /* Variants */
     //   The list of variants to that are debuggable. For those we're going to
@@ -26,8 +32,8 @@ react {
 
     /* Bundling */
     //   A list containing the node command and its flags. Default is just 'node'.
-    // Use absolute path for node to ensure Gradle can find it
-    nodeExecutableAndArgs = ["/Users/alpha/.nvm/versions/node/v20.19.5/bin/node"]
+    // Use node from PATH - works in CI and local environments
+    // nodeExecutableAndArgs = ["node"]
     //
     //   The command to run when bundling. By default is 'bundle'
     // bundleCommand = "ram-bundle"
@@ -85,8 +91,13 @@ android {
         applicationId "com.nolimitseradeals"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 21
+        versionName "1.0.21"
+        
+        // Manifest placeholders for react-native-app-auth
+        manifestPlaceholders = [
+            appAuthRedirectScheme: 'com.nolimitseradeals'
+        ]
     }
     signingConfigs {
         debug {
