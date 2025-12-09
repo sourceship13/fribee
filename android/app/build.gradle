@@ -3,6 +3,35 @@ apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
+// Find node executable - check multiple locations for macOS compatibility
+def findNodeExecutable() {
+    def nodePaths = [
+        "/usr/local/bin/node",
+        "${System.getenv('HOME')}/.nvm/versions/node/v20.19.5/bin/node",
+        "/opt/homebrew/bin/node",
+        "${System.getenv('HOME')}/.nodenv/shims/node",
+        "${System.getenv('HOME')}/.volta/bin/node"
+    ]
+    
+    for (path in nodePaths) {
+        def nodeFile = new File(path)
+        if (nodeFile.exists() && nodeFile.canExecute()) {
+            println "[React Native] Using node from: ${path}"
+            return path
+        }
+    }
+    
+    // Fallback to PATH (works in terminal)
+    println "[React Native] Node not found in known paths, using 'node' from PATH"
+    return "node"
+}
+
+ext {
+    NODE_BINARY = findNodeExecutable()
+    REACT_NATIVE_NODE_MODULES_DIR = new File(rootProject.projectDir, "../node_modules/react-native")
+    REACT_NATIVE_WORKLETS_NODE_MODULES_DIR = new File(rootProject.projectDir, "../node_modules/react-native-worklets")
+}
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -18,11 +47,8 @@ react {
     //   The cli.js file which is the React Native CLI entrypoint. Default is ../../node_modules/react-native/cli.js
     // cliFile = file("../../node_modules/react-native/cli.js")
     
-    // Set node executable - use environment variable if set, otherwise use system node
-    def nodeExecutable = System.getenv("REACT_NATIVE_NODE_EXECUTABLE") ?: "node"
-    if (nodeExecutable != "node") {
-        nodeExecutableAndArgs = [nodeExecutable]
-    }
+    // Use absolute path to node for Android Studio compatibility
+    nodeExecutableAndArgs = [NODE_BINARY]
 
     /* Variants */
     //   The list of variants to that are debuggable. For those we're going to

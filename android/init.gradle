@@ -1,51 +1,31 @@
 // Gradle init script to set PATH and Node.js for React Native builds
-// Detects environment and uses appropriate Node.js path
+// This must be loaded via --init-script or org.gradle.jvmargs
 
-def getNodePath() {
-    // Check if running in CI environment
-    def isCI = System.getenv('CI') == 'true' || System.getenv('CIRCLECI') == 'true'
-    
-    if (isCI) {
-        // In CI, use node from PATH (CircleCI has node pre-installed)
-        return null
-    } else {
-        // Local development - use nvm node path
-        return "/Users/alpha/.nvm/versions/node/v20.19.5/bin"
-    }
-}
+def home = System.getProperty("user.home")
+def androidDir = new File(System.getProperty("user.dir")).absolutePath
+def nodePaths = androidDir + ":/usr/local/bin:" + home + "/.nvm/versions/node/v20.19.5/bin"
+def currentPath = System.getenv("PATH") ?: ""
+def newPath = nodePaths + ":" + currentPath
 
-def nodePath = getNodePath()
-
-if (nodePath != null) {
-    // Set REACT_NATIVE_NODE_EXECUTABLE for build.gradle
-    def nodeExecutable = "${nodePath}/node"
-    System.setProperty('REACT_NATIVE_NODE_EXECUTABLE', nodeExecutable)
-    
-    allprojects {
-        gradle.projectsEvaluated {
-            tasks.withType(Exec) {
-                environment('PATH', "${nodePath}:${System.getenv('PATH')}")
-                environment('REACT_NATIVE_NODE_EXECUTABLE', nodeExecutable)
-            }
-        }
-    }
-
-    // Set PATH for process execution during settings evaluation
-    System.setProperty('path.separator', ':')
-    def currentPath = System.getenv('PATH') ?: ''
-    if (!currentPath.contains(nodePath)) {
-        def newPath = "${nodePath}:${currentPath}"
-        // This affects child processes spawned by Gradle
-        ['PATH', 'Path'].each { key ->
-            try {
-                def env = System.getenv()
-                def field = env.getClass().getDeclaredField('m')
-                field.setAccessible(true)
-                def map = field.get(env)
-                map.put(key, newPath)
-            } catch (Exception e) {
-                // Ignore if we can't modify environment
-            }
-        }
+// Use reflection to modify process environment
+try {
+    def processEnvClass = Class.forName("java.lang.ProcessEnvironment")
+    def theEnvironmentField = processEnvClass.getDeclaredField("theEnvironment")
+    theEnvironmentField.setAccessible(true)
+    def env = theEnvironmentField.get(null)
+    env.put("PATH", newPath)
+    println "[init.gradle] PATH updated with node paths"
+} catch (Exception e) {
+    println "[init.gradle] Could not update PATH via ProcessEnvironment: " + e.message
+    // Try alternative method
+    try {
+        def env = System.getenv()
+        def field = env.getClass().getDeclaredField('m')
+        field.setAccessible(true)
+        def map = field.get(env)
+        map.put("PATH", newPath)
+        println "[init.gradle] PATH updated via alternative method"
+    } catch (Exception e2) {
+        println "[init.gradle] All PATH update methods failed"
     }
 }
