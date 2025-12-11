@@ -17,6 +17,7 @@ import { useAuth, getColors } from '../../libs/hooks/useAuth';
 import { iOSUIKit } from 'react-native-typography';
 import VersionFooter from '../../components/VersionFooter';
 import * as Sentry from "@sentry/react-native";
+import AnalyticsService from '../../services/analytics.service';
 
 const PLACEHOLDER_DEAL = {
   id: 0,
@@ -124,22 +125,29 @@ const SwipeScreen = ({ navigation }: any) => {
       if (translationX > 150) {
         // Swipe right - like
         handleSwipe('right');
-        handleSwipe('right');
         resetAnimations();
       } else if (translationX < -150) {
         // Swipe left - dislike
         handleSwipe('left');
-        handleSwipe('left');
         resetAnimations();
       } else {
         // Snap back to center
-        resetAnimations();
         resetAnimations();
       }
     }
   };
 
   const handleSwipe = (direction: 'left' | 'right') => {
+    // Track analytics for the swipe
+    const dealId = currentDeal?.id?.toString() || currentDeal?.deal_id?.toString();
+    if (dealId && currentDeal.id !== 0) {
+      AnalyticsService.trackDealSwipe(dealId, direction, {
+        title: currentDeal.offer || currentDeal.title,
+        business: currentDeal.business_name || currentDeal.business,
+        category: currentDeal.category,
+      });
+    }
+
     if (direction === 'right') {
       navigation.navigate('DealDetail', { deal: currentDeal });
     } else {

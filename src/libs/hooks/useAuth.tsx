@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getColors } from '../colors';
 import AuthService from '../../services/auth.service';
 import ApiService from '../../services/api.service';
+import AnalyticsService from '../../services/analytics.service';
 import * as Sentry from '@sentry/react-native';
 
 export { getColors };
@@ -589,6 +590,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       // Make API call - optimistic update already applied
       await ApiService.heartDeal(dealId);
+
+      // Track analytics for deal save
+      AnalyticsService.trackDealSave(dealId);
 
       return true;
     } catch (error: any) {

@@ -19,6 +19,7 @@ import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
 import { useDealSharing } from '../../libs/hooks/useDealSharing';
 import { TextInput } from 'react-native-gesture-handler';
+import AnalyticsService from '../../services/analytics.service';
 
 // Type definitions for better type safety
 interface DealDetailProps {
@@ -137,6 +138,16 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
     selectedCount,
     loading: sharingLoading,
   } = useDealSharing(dealId, deal?.min_shares_required || 3);
+
+  // Track deal view when component mounts
+  useEffect(() => {
+    if (dealId && deal?.id !== 0) {
+      AnalyticsService.trackDealTap(dealId.toString(), {
+        title: deal?.offer || deal?.title,
+        business: deal?.business_name || deal?.business,
+      });
+    }
+  }, [dealId]);
 
   useEffect(() => {
     if (
@@ -305,6 +316,11 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
       setShowModal(false); // Close modal immediately
 
       await shareDeal(deal);
+
+      // Track share analytics
+      if (dealId) {
+        AnalyticsService.trackDealShare(dealId.toString(), 'contacts');
+      }
 
       // The shareDeal function automatically updates shareProgress via loadShareProgress()
       // Button text will now show updated count (e.g., "2/3" after sharing with 2 people)

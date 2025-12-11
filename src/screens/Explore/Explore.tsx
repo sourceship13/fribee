@@ -13,6 +13,7 @@ import { getColors } from '../../libs/colors';
 import ApiConfig from '../../libs/utils/api.utils';
 import { iOSUIKit } from 'react-native-typography';
 import VersionFooter from '../../components/VersionFooter';
+import AnalyticsService from '../../services/analytics.service';
 
 const ExploreScreen = ({ navigation }: any) => {
   const {
@@ -120,6 +121,17 @@ const ExploreScreen = ({ navigation }: any) => {
     const isPremium =
       item.is_premium === true || item.is_premium_business === true;
 
+    const handleDealPress = () => {
+      // Track the tap from Explore screen
+      AnalyticsService.trackDealTap(
+        item.id || item.deal_id,
+        item.business_name || item.business,
+        item.category_name,
+        'explore',
+      );
+      navigation.navigate('DealDetail', { deal: item });
+    };
+
     return (
       <TouchableOpacity
         style={[
@@ -132,7 +144,7 @@ const ExploreScreen = ({ navigation }: any) => {
             borderWidth: 0,
           },
         ]}
-        onPress={() => navigation.navigate('DealDetail', { deal: item })}
+        onPress={handleDealPress}
         activeOpacity={0.7}
       >
         {/* Gradient overlays temporarily removed */}
@@ -392,9 +404,19 @@ const ExploreScreen = ({ navigation }: any) => {
                   ? selectedCategory === null
                   : selectedCategory === cat.slug;
 
+              const handleCategoryPress = () => {
+                // Track category filter selection
+                AnalyticsService.trackEvent('category_filter', {
+                  category_slug: cat.slug || 'all',
+                  category_name: cat.name,
+                  screen: 'explore',
+                });
+                setSelectedCategory(cat.slug);
+              };
+
               return (
                 <TouchableOpacity
-                  onPress={() => setSelectedCategory(cat.slug)}
+                  onPress={handleCategoryPress}
                   style={[
                     styles.categoryChip,
                     {
