@@ -33,6 +33,7 @@
     "react-native-app-auth": "^8.1.0",
     "react-native-barcode-builder": "^2.0.0",
     "react-native-barcode-creator": "^0.1.8",
+    "react-native-bootsplash": "^6.3.11",
     "react-native-config": "^1.5.9",
     "react-native-contacts": "^8.0.7",
     "react-native-gesture-handler": "^2.28.0",
