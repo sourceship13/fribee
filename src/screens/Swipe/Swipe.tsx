@@ -407,6 +407,22 @@ const SwipeScreen = ({ navigation }: any) => {
                     </Text>
                   </View>
                 </View>
+
+                {/* Action buttons at bottom of image */}
+                <View style={styles.actionButtonsContainer}>
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.dislikeButton]}
+                    onPress={() => handleSwipe('left')}
+                  >
+                    <Text style={styles.dislikeButtonText}>✕</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.likeButton]}
+                    onPress={() => handleSwipe('right')}
+                  >
+                    <Text style={styles.likeButtonText}>♥</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </>
           )}
@@ -545,6 +561,47 @@ const styles = StyleSheet.create({
       textAlign: 'center',
     },
   ]),
+  actionButtonsContainer: {
+    position: 'absolute',
+    bottom: screenHeight * 0.12,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 40,
+    zIndex: 10,
+  },
+  actionButton: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  dislikeButton: {
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#888',
+  },
+  likeButton: {
+    backgroundColor: '#FF4458',
+  },
+  dislikeButtonText: {
+    fontSize: 32,
+    color: '#888',
+    fontWeight: 'bold',
+  },
+  likeButtonText: {
+    fontSize: 32,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
   actionContainer: {
     height: screenHeight * 0.1, // 1/10 of screen height
     flexDirection: 'row',
