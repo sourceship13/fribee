@@ -188,11 +188,17 @@ const SwipeScreen = ({ navigation }: any) => {
           resizeMode="contain"
         />
 
+        <Text>Discover Deals</Text>
+
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}
           style={styles.settingsButton}
         >
-          <Text style={[iOSUIKit.title3, { color: colors.primary }]}>⚙️</Text>
+         <Image 
+          source={require('../../../assets/imgs/settings-icon.png')} 
+          style={{ width: 32, height: 36, tintColor: 'grey' }} 
+          resizeMode="contain"
+        />
         </TouchableOpacity>
       </View>
 
