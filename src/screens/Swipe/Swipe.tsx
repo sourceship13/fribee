@@ -10,6 +10,7 @@ import {
   Dimensions,
   Platform,
   Button,
+  Image,
 } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -181,16 +182,11 @@ const SwipeScreen = ({ navigation }: any) => {
           { backgroundColor: colors.surface, borderBottomColor: colors.border },
         ]}
       >
-        <Text
-          style={{
-            fontFamily: 'Inter-Variable',
-            fontWeight: '800',
-            fontSize: 28,
-            color: colors.text,
-          }}
-        >
-          DEALZ
-        </Text>
+        <Image 
+          source={require('../../../assets/imgs//icon_logo.png')} 
+          style={{ width: 32, height: 36, tintColor: 'orange' }} 
+          resizeMode="contain"
+        />
 
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}
