@@ -14,8 +14,9 @@ import {
   SafeAreaView,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
-import Toolbar from '../../components/Toolbar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { iOSUIKit } from 'react-native-typography';
 import { useDealSharing } from '../../libs/hooks/useDealSharing';
 import { TextInput } from 'react-native-gesture-handler';
@@ -111,6 +112,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
     deals,
   } = useAuth();
   const colors = getColors(isDarkMode);
+  const insets = useSafeAreaInsets();
 
   const [deal, _setDeal] = useState(initialDeal || null);
   const [loading, setLoading] = useState(false);
@@ -395,23 +397,33 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Toolbar
-        title="Deal Details"
-        onBack={() => navigation.goBack()}
-        dealId={dealId}
-        dealObject={deal}
-        showHearted={true}
-        onToggleHearted={toggleHeartDeal}
-        isDealHearted={isDealHearted}
-        backgroundColor={colors.background}
-      />
-
       <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
         {/* Deal Images */}
         <View style={styles.imageContainer}>
+          {/* Overlay Buttons */}
+          <View style={[styles.overlayButtons, { top: insets.top + 10 }]}>
+            <TouchableOpacity
+              style={[styles.circleButton, { backgroundColor: colors.overlayButton }]}
+              onPress={() => navigation.goBack()}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Ionicons name="chevron-back" size={24} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.circleButton, { backgroundColor: colors.overlayButton }]}
+              onPress={() => dealId && toggleHeartDeal(dealId, deal)}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <MaterialIcons
+                name={isSaved ? 'favorite' : 'favorite-border'}
+                size={24}
+                color={isSaved ? '#ff4458' : '#fff'}
+              />
+            </TouchableOpacity>
+          </View>
           {(() => {
             // Look for DEAL images (not business images) from the deals API response
             const deal_images = deal.deal_images; // Deal-specific images array
@@ -907,6 +919,22 @@ const styles = StyleSheet.create({
   ]),
   imageContainer: {
     height: screenHeight * 0.4,
+    position: 'relative',
+  },
+  overlayButtons: {
+    position: 'absolute',
+    left: 16,
+    right: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    zIndex: 10,
+  },
+  circleButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   dealImage: {
     width: screenWidth,

@@ -30,7 +30,8 @@ export const Colors = {
     instagram: '#E1306C',
     apple:'red',
     disabled: '#888',
-    placeholder: '#000'
+    placeholder: '#000',
+    overlayButton: 'rgba(255,255,255,0.5)',
   },
   dark: {
     background: '#2A2A2A' ,
@@ -60,7 +61,8 @@ export const Colors = {
     instagram: '#E1306C',
     apple: '#fff',
     disabled: '#888',
-    placeholder: '#fff'
+    placeholder: '#fff',
+    overlayButton: 'rgba(0,0,0,0.5)',
   },
 };
 
