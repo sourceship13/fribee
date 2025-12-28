@@ -19,6 +19,7 @@ interface ToolbarProps {
   showHearted?: boolean;
   onToggleHearted?: (dealId: string, dealObject?: any) => void;
   isDealHearted?: (dealId: string) => boolean;
+  backgroundColor?: string;
 }
 
 
@@ -35,17 +36,18 @@ const Toolbar: React.FC<ToolbarProps> = ({
   showHearted,
   onToggleHearted,
   isDealHearted,
+  backgroundColor,
 }) => {
   const { isDarkMode } = useAuth();
-  // Transparent background with 5% opacity
-  const transparentBg = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+  // Use provided backgroundColor or fall back to transparent
+  const toolbarBg = backgroundColor || (isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)');
 
   // Heart icon logic
   const hearted = dealId && isDealHearted ? isDealHearted(dealId) : false;
 
   return (
-    <SafeAreaView edges={["top"]} style={{ backgroundColor: transparentBg }}>
-      <View style={[styles.toolbar, { backgroundColor: transparentBg, borderBottomWidth: 0 }]}>  
+    <SafeAreaView edges={["top"]} style={{ backgroundColor: toolbarBg }}>
+      <View style={[styles.toolbar, { backgroundColor: toolbarBg, borderBottomWidth: 0 }]}>  
         <View style={styles.leftContainer}>
           {onBack ? (
             <TouchableOpacity
@@ -130,7 +132,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 28,
-    backgroundColor: 'rgba(0,0,0,0.1)',
     zIndex: 10,
   },
   settingsBtn: {
@@ -139,7 +140,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 28,
-    backgroundColor: 'rgba(0,0,0,0.1)',
     zIndex: 10,
   },
   rightButtons: {

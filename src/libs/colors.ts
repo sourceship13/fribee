@@ -4,6 +4,8 @@
 export const Colors = {
   light: {
     background: '#E6E9EF',
+    backgroundSecondary: '#2a3413',
+    backgroundSecondary2: '#F2F2F28C',
     surface: '#f5f5f5',
     title: `#2A2A2A`,
     titleSecondary: `#8E8E93`,
@@ -32,6 +34,8 @@ export const Colors = {
   },
   dark: {
     background: '#2A2A2A' ,
+    backgroundSecondary: '##D1D1D6',
+    backgroundSecondary2: '#F2F2F28C',
     surface: 'rgba(30, 31, 32, 0.95)',
     title: `#FFFFFF`,
     titleSecondary: `#E5E5EA`,
