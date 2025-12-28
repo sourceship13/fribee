@@ -597,6 +597,13 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               )}
             </View>
 
+            {/* Rectangular blocks above share button */}
+            <View style={styles.blocksContainer}>
+              <View style={[styles.rectangularBlock]} />
+              <View style={[styles.rectangularBlock]} />
+              <View style={[styles.rectangularBlock]} />
+            </View>
+
             <>
               <TouchableOpacity
                 style={[
@@ -957,6 +964,20 @@ const styles = StyleSheet.create({
   shareButton: {
     marginBottom: 20,
   },
+  blocksContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    gap: 10,
+    marginVertical: 10,
+  },
+  rectangularBlock: {
+    flex: 1,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#ccc',
+  },
   actionButtons: {
     flexDirection: 'row',
     gap: 12,
@@ -1163,7 +1184,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     borderWidth: 1,
-    marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
