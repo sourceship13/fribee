@@ -84,26 +84,20 @@ const MainTabNavigator = () => {
         tabBarActiveTintColor: '#FFFFFF', // White for both dark and light mode
         tabBarInactiveTintColor: '#FFFFFF', // White for both dark and light mode
         tabBarStyle: {
-          backgroundColor: Colors.dark.background, // More visible dark gray with opacity
+          backgroundColor: Colors.dark.background,
           borderTopColor: 'transparent',
           borderTopWidth: 0,
-          borderRadius: 20,
-          // Optionally add blur effect for iOS
-          ...(Platform.OS === 'ios' ? { backdropFilter: 'blur(12px)' } : {}),
-          marginHorizontal: 16,
-          marginBottom: 20,
+          borderRadius: 0,
+          marginHorizontal: 0,
+          marginBottom: 0,
           paddingBottom: 8,
           paddingTop: 8,
-          height: 70,
+          height: 87,
           position: 'absolute',
-          shadowColor: '#000000',
-          shadowOffset: {
-            width: 0,
-            height: 6,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 12,
-          elevation: 12,
+          shadowColor: 'transparent',
+          shadowOpacity: 0,
+          shadowRadius: 0,
+          elevation: 0,
         },
         tabBarLabelStyle: [
           iOSUIKit.largeTitleEmphasized,

@@ -182,7 +182,7 @@ const SwipeScreen = ({ navigation }: any) => {
       <View
         style={[
           styles.header,
-          { backgroundColor: colors.surface, borderBottomColor: colors.border },
+          { backgroundColor: colors.background, borderBottomColor: colors.border },
         ]}
       >
         <Image 
