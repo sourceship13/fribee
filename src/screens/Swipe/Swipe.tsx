@@ -344,6 +344,7 @@ const SwipeScreen = ({ navigation }: any) => {
                           {
                             backgroundColor:
                               currentDeal.backgroundColor || colors.primary,
+
                           },
                         ]}
                       >
@@ -374,6 +375,21 @@ const SwipeScreen = ({ navigation }: any) => {
                     );
                   }
                 })()}
+
+                 <View style={styles.actionButtonsContainer}>
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.dislikeButton]}
+                    onPress={() => handleSwipe('left')}
+                  >
+                    <Text style={styles.dislikeButtonText}>✕</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.likeButton]}
+                    onPress={() => handleSwipe('right')}
+                  >
+                    <Text style={styles.likeButtonText}>♥</Text>
+                  </TouchableOpacity>
+                </View>
 
                 {/* Card content overlay on image */}
                 <View style={styles.cardOverlay} pointerEvents="none">
@@ -409,20 +425,7 @@ const SwipeScreen = ({ navigation }: any) => {
                 </View>
 
                 {/* Action buttons at bottom of image */}
-                <View style={styles.actionButtonsContainer}>
-                  <TouchableOpacity
-                    style={[styles.actionButton, styles.dislikeButton]}
-                    onPress={() => handleSwipe('left')}
-                  >
-                    <Text style={styles.dislikeButtonText}>✕</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.actionButton, styles.likeButton]}
-                    onPress={() => handleSwipe('right')}
-                  >
-                    <Text style={styles.likeButtonText}>♥</Text>
-                  </TouchableOpacity>
-                </View>
+               
               </View>
             </>
           )}
@@ -480,14 +483,18 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     position: 'relative',
-    overflow: 'visible', // Ensure indicators are not clipped
+    overflow: 'hidden',
+    borderRadius: 20,
+    margin: 10,
   },
   imageCarousel: {
     flex: 1,
+    borderRadius: 20,
   },
   fullScreenImage: {
-    width: screenWidth,
+    width: screenWidth - 20,
     flex: 1,
+    borderRadius: 20,
   },
   imageOverlay: {
     position: 'absolute',
@@ -496,6 +503,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 20,
   },
   cardOverlay: {
     position: 'absolute',
