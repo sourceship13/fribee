@@ -59,7 +59,7 @@ const SettingsScreen = ({ navigation }: any) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <Toolbar title="Preferences" onBack={() => navigation.goBack()} />
+      <Toolbar title="Preferences" onBack={() => navigation.goBack()} isModal={true} />
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Theme</Text>

@@ -161,7 +161,8 @@ const MainTabNavigator = () => {
 };
 
 const AppNavigator = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, isDarkMode } = useAuth();
+  const colors = getColors(isDarkMode);
 
   if (loading) {
     // Show loading screen while checking authentication
@@ -202,16 +203,18 @@ const AppNavigator = () => {
               name="DealDetail" 
               component={DealDetailScreen}
               options={{ 
-                presentation: 'modal',
+                presentation: 'fullScreenModal',
                 gestureEnabled: true,
+                contentStyle: { backgroundColor: colors.background },
               }}
             />
             <Stack.Screen 
               name="Settings" 
               component={SettingsScreen}
               options={{ 
-                presentation: 'modal',
+                presentation: 'fullScreenModal',
                 gestureEnabled: true,
+                contentStyle: { backgroundColor: colors.background },
               }}
             />
             
