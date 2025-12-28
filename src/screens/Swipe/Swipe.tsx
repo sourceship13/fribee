@@ -497,7 +497,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 20,
     margin: 10,
-    marginBottom: 60,
+    marginBottom: 40,
   },
   imageCarousel: {
     flex: 1,

@@ -84,7 +84,7 @@ const MainTabNavigator = () => {
         tabBarActiveTintColor: '#FFFFFF', // White for both dark and light mode
         tabBarInactiveTintColor: '#FFFFFF', // White for both dark and light mode
         tabBarStyle: {
-          backgroundColor: Colors.dark.surface, // More visible dark gray with opacity
+          backgroundColor: Colors.dark.background, // More visible dark gray with opacity
           borderTopColor: 'transparent',
           borderTopWidth: 0,
           borderRadius: 20,
