@@ -5,6 +5,10 @@ export const Colors = {
   light: {
     background: '#E6E9EF',
     surface: '#f5f5f5',
+    title: `#2A2A2A`,
+    titleSecondary: `#8E8E93`,
+    buttonBackground: `#2A2A2A`,
+    buttonText: `#FFFFFF`,
     primary: '#DE541E',
     secondary: '#4ECDC4',
     accent: '#1877F3',
@@ -27,8 +31,12 @@ export const Colors = {
     placeholder: '#000'
   },
   dark: {
-    background: '#0A0A0A',
+    background: '#2A2A2A' ,
     surface: 'rgba(30, 31, 32, 0.95)',
+    title: `#FFFFFF`,
+    titleSecondary: `#E5E5EA`,
+    buttonBackground: `#FFFFFF`,
+    buttonText: `#000000`,
     primary: '#DE541E',
     secondary: '#4ECDC4',
     accent: '#BB86FC',

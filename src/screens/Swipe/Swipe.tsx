@@ -19,6 +19,8 @@ import { iOSUIKit } from 'react-native-typography';
 import VersionFooter from '../../components/VersionFooter';
 import * as Sentry from "@sentry/react-native";
 import AnalyticsService from '../../services/analytics.service';
+import ApproveButton from '../../../assets/imgs/approve-butt.svg';
+import DeclineButton from '../../../assets/imgs/decline-butt.svg';
 
 const PLACEHOLDER_DEAL = {
   id: 0,
@@ -376,20 +378,7 @@ const SwipeScreen = ({ navigation }: any) => {
                   }
                 })()}
 
-                 <View style={styles.actionButtonsContainer}>
-                  <TouchableOpacity
-                    style={[styles.actionButton, styles.dislikeButton]}
-                    onPress={() => handleSwipe('left')}
-                  >
-                    <Text style={styles.dislikeButtonText}>✕</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.actionButton, styles.likeButton]}
-                    onPress={() => handleSwipe('right')}
-                  >
-                    <Text style={styles.likeButtonText}>♥</Text>
-                  </TouchableOpacity>
-                </View>
+                 
 
                 {/* Card content overlay on image */}
                 <View style={styles.cardOverlay} pointerEvents="none">
@@ -425,7 +414,20 @@ const SwipeScreen = ({ navigation }: any) => {
                 </View>
 
                 {/* Action buttons at bottom of image */}
-               
+                <View style={styles.actionButtonsContainer}>
+                  <TouchableOpacity
+                    style={styles.declineButton}
+                    onPress={() => handleSwipe('left')}
+                  >
+                    <DeclineButton width={147} height={50} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.approveButton}
+                    onPress={() => handleSwipe('right')}
+                  >
+                    <ApproveButton width={147} height={50} />
+                  </TouchableOpacity>
+                </View>
               </View>
             </>
           )}
@@ -441,7 +443,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    paddingBottom: 100,
+    paddingBottom: 60,
   },
   topBar: {
     width: '100%',
@@ -486,6 +488,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 20,
     margin: 10,
+    marginBottom: 60,
   },
   imageCarousel: {
     flex: 1,
@@ -507,7 +510,7 @@ const styles = StyleSheet.create({
   },
   cardOverlay: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 90,
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -515,7 +518,6 @@ const styles = StyleSheet.create({
     height: screenHeight * 0.11, // 1/8 of screen height
   },
   cardContent: {
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     padding: 10,
     alignItems: 'flex-start',
     width: '100%',
@@ -571,7 +573,7 @@ const styles = StyleSheet.create({
   ]),
   actionButtonsContainer: {
     position: 'absolute',
-    bottom: screenHeight * 0.12,
+    bottom: 15,
     left: 0,
     right: 0,
     flexDirection: 'row',
@@ -599,6 +601,14 @@ const styles = StyleSheet.create({
   },
   likeButton: {
     backgroundColor: '#FF4458',
+  },
+  approveButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  declineButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   dislikeButtonText: {
     fontSize: 32,
