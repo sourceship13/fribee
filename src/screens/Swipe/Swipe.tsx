@@ -21,6 +21,7 @@ import * as Sentry from "@sentry/react-native";
 import AnalyticsService from '../../services/analytics.service';
 import ApproveButton from '../../../assets/imgs/approve-butt.svg';
 import DeclineButton from '../../../assets/imgs/decline-butt.svg';
+import LinearGradient from 'react-native-linear-gradient';
 
 const PLACEHOLDER_DEAL = {
   id: 0,
@@ -311,7 +312,11 @@ const SwipeScreen = ({ navigation }: any) => {
                             style={styles.fullScreenImage}
                             resizeMode="cover"
                           >
-                            <View style={styles.imageOverlay} />
+                            <LinearGradient
+                              colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
+                              locations={[0, 0.5, 1]}
+                              style={styles.imageOverlay}
+                            />
                             {/* Swipe feedback icons on top of image */}
                             <View
                               style={styles.imageIconsOverlay}
@@ -350,7 +355,11 @@ const SwipeScreen = ({ navigation }: any) => {
                           },
                         ]}
                       >
-                        <View style={styles.imageOverlay} />
+                        <LinearGradient
+                          colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
+                          locations={[0, 0.5, 1]}
+                          style={styles.imageOverlay}
+                        />
                         {/* Swipe feedback icons on top of image */}
                         <View
                           style={styles.imageIconsOverlay}
@@ -505,7 +514,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     borderRadius: 20,
   },
   cardOverlay: {
