@@ -13,6 +13,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { getColors } from '../../libs/hooks/useAuth';
 import { iOSUIKit } from 'react-native-typography';
 import { TextInput } from 'react-native-gesture-handler';
+import CheckButton from '../../../assets/imgs/check-button.svg';
 
 interface ContactSelectionModalProps {
   visible: boolean;
@@ -59,11 +60,10 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
         style={[
           styles.contactItem,
           {
-            backgroundColor: colors.card,
             borderColor: colors.border,
           },
           isSelected && {
-            backgroundColor: colors.primary + '20',
+            backgroundColor: colors.primzary + '20',
             borderColor: colors.primary,
           },
         ]}
@@ -71,8 +71,8 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
         activeOpacity={0.7}
       >
         <View style={styles.contactInfo}>
-          <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
-            <Text style={[styles.avatarText, { color: colors.background }]}>
+          <View style={[styles.avatar, { backgroundColor: colors.lightContactBadge }]}>
+            <Text style={[styles.avatarText, { color: colors.text }]}>
               {item.displayName?.charAt(0)?.toUpperCase() || '?'}
             </Text>
           </View>
@@ -87,20 +87,7 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
             </Text>
           </View>
         </View>
-        <View
-          style={[
-            styles.checkbox,
-            { borderColor: colors.border },
-            isSelected && {
-              backgroundColor: colors.primary,
-              borderColor: colors.primary,
-            },
-          ]}
-        >
-          {isSelected && (
-            <MaterialIcons name="check" size={16} color={colors.background} />
-          )}
-        </View>
+        <CheckButton width={24} height={24} />
       </TouchableOpacity>
     );
   };
@@ -113,66 +100,27 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
       onRequestClose={onClose}
     >
       <SafeAreaView
-        style={[
-          styles.modalContainer,
-          { backgroundColor: colors.background },
-        ]}
+        style={[styles.modalContainer]}
       >
         {/* Modal Header */}
         <View
-          style={[
-            styles.modalHeader,
-            { borderBottomColor: colors.border },
-          ]}
+          style={[styles.modalHeader, { borderBottomColor: colors.border }]}
         >
-          <TouchableOpacity
-            onPress={onClose}
-            style={styles.closeButton}
-          >
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <MaterialIcons name="close" size={24} color={colors.text} />
           </TouchableOpacity>
           <Text style={[styles.modalTitle, { color: colors.text }]}>
             Share Deal
           </Text>
-          <TouchableOpacity
-            onPress={clearSelection}
-            disabled={selectedCount === 0}
-          >
-            <Text
-              style={[
-                styles.clearButton,
-                {
-                  color:
-                    selectedCount > 0
-                      ? colors.primary
-                      : colors.disabled,
-                },
-              ]}
-            >
-              Clear
-            </Text>
-          </TouchableOpacity>
         </View>
 
         {/* Deal Badge */}
-        <View
-          style={[
-            styles.dealBadge,
-            { backgroundColor: colors.surface },
-          ]}
-        >
-          <View
-            style={[
-              styles.dealIcon,
-              { backgroundColor: colors.primary },
-            ]}
-          >
+        <View style={[styles.dealBadge, { borderWidth: 1, borderColor: '#C7C7CC' }]}>
+          <View style={[styles.dealIcon, { backgroundColor: colors.primary }]}>
             <Text style={styles.dealEmoji}>🛍️</Text>
           </View>
           <View style={styles.dealBadgeContent}>
-            <Text
-              style={[styles.dealBadgeTitle, { color: colors.text }]}
-            >
+            <Text style={[styles.dealBadgeTitle, { color: colors.text }]}>
               {deal?.business_name || deal?.business || 'Deal'}
             </Text>
             <Text
@@ -190,10 +138,7 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
 
         {/* Search Bar */}
         <View
-          style={[
-            styles.searchContainer,
-            { backgroundColor: colors.surface },
-          ]}
+          style={[styles.searchContainer]}
         >
           <MaterialIcons
             name="search"
@@ -213,14 +158,8 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
         {/* Selected Count */}
         {selectedCount > 0 && (
           <View style={styles.selectedCountContainer}>
-            <Text
-              style={[
-                styles.selectedCountText,
-                { color: colors.primary },
-              ]}
-            >
-              {selectedCount} contact{selectedCount !== 1 ? 's' : ''}{' '}
-              selected
+            <Text style={[styles.selectedCountText, { color: colors.primary }]}>
+              {selectedCount} contact{selectedCount !== 1 ? 's' : ''} selected
             </Text>
           </View>
         )}
@@ -239,12 +178,7 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
                 size={48}
                 color={colors.textPlaceholder}
               />
-              <Text
-                style={[
-                  styles.emptyText,
-                  { color: colors.textSecondary },
-                ]}
-              >
+              <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
                 {sharingLoading
                   ? 'Loading contacts...'
                   : searchQuery
@@ -274,12 +208,7 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
         />
 
         {/* Share Button */}
-        <View
-          style={[
-            styles.modalFooter,
-            { borderTopColor: colors.border },
-          ]}
-        >
+        <View style={[styles.modalFooter, { borderTopColor: colors.border }]}>
           <TouchableOpacity
             style={[
               styles.shareModalButton,
@@ -291,9 +220,7 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
               },
             ]}
             onPress={onShare}
-            disabled={
-              !canShare || selectedCount === 0 || sharingLoading
-            }
+            disabled={!canShare || selectedCount === 0 || sharingLoading}
           >
             <Text
               style={[
@@ -331,8 +258,18 @@ const styles = StyleSheet.create({
   closeButton: {
     padding: 8,
     marginLeft: -8,
+    width: 40,
   },
-  modalTitle: iOSUIKit.title3EmphasizedObject,
+  headerPlaceholder: {
+    width: 40,
+  },
+  modalTitle: StyleSheet.flatten([
+    iOSUIKit.title3EmphasizedObject,
+    {
+      textAlign: 'center',
+      flex: 1,
+    },
+  ]),
   clearButton: StyleSheet.flatten([
     iOSUIKit.callout,
     {
@@ -404,7 +341,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 12,
     borderRadius: 8,
-    borderWidth: 1,
     marginBottom: 8,
   },
   contactInfo: {
