@@ -191,7 +191,7 @@ const SwipeScreen = ({ navigation }: any) => {
           resizeMode="contain"
         />
 
-        <Text>Discover Deals</Text>
+        <Text style={[iOSUIKit.title3Emphasized, { color: colors.title }]}>Discover Deals</Text>
 
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}
