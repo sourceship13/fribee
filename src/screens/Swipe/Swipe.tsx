@@ -199,7 +199,7 @@ const SwipeScreen = ({ navigation }: any) => {
         >
          <Image 
           source={require('../../../assets/imgs/settings-icon.png')} 
-          style={{ width: 32, height: 36, tintColor: 'grey' }} 
+          style={{ width: 32, height: 36, tintColor: colors.inactive }} 
           resizeMode="contain"
         />
         </TouchableOpacity>
