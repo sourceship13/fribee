@@ -68,6 +68,8 @@ const MainTabNavigator = () => {
           let iconName;
           let IconComponent = MaterialIcons;
 
+          color = colors.background
+
           if (route.name === 'SwipeTab') {
             iconName = 'swipe';
           } else if (route.name === 'ExploreTab') {
@@ -84,7 +86,6 @@ const MainTabNavigator = () => {
         tabBarActiveTintColor: '#FFFFFF', // White for both dark and light mode
         tabBarInactiveTintColor: '#FFFFFF', // White for both dark and light mode
         tabBarStyle: {
-          backgroundColor: Colors.dark.background,
           borderTopColor: 'transparent',
           borderTopWidth: 0,
           borderRadius: 0,
@@ -103,7 +104,7 @@ const MainTabNavigator = () => {
           iOSUIKit.largeTitleEmphasized,
           {
             fontSize: 12, // Override the large title size for tab bar
-            color: '#FFFFFF', // White for both dark and light mode
+            color: colors.subText, // White for both dark and light mode
             marginTop: -12, // Reduce space between icon and label
           }
         ],
