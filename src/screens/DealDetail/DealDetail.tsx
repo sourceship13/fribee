@@ -410,7 +410,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               onPress={() => navigation.goBack()}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
-              <Ionicons name="chevron-back" size={24} color="#fff" />
+              <Ionicons name="chevron-back" size={24} color={colors.text} />
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.circleButton, { backgroundColor: colors.overlayButton }]}
@@ -420,7 +420,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               <MaterialIcons
                 name={isSaved ? 'favorite' : 'favorite-border'}
                 size={24}
-                color={isSaved ? '#ff4458' : '#fff'}
+                color={isSaved ? '#ff4458' : colors.text}
               />
             </TouchableOpacity>
           </View>
@@ -627,15 +627,15 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
           <View style={styles.blocksContainer}>
             <View style={styles.blockWithLabel}>
               <Text style={[styles.blockLabel, { color: colors.text }]}>Share to Unlock</Text>
-              <View style={[styles.rectangularBlock, { backgroundColor: 'hotpink' }]} />
+              <View style={[styles.rectangularBlock, { backgroundColor: colors.primary }]} />
             </View>
             <View style={styles.blockWithLabel}>
               <Text style={[styles.blockLabel, { color: colors.text }]}>Share More!</Text>
-              <View style={[styles.rectangularBlock, { backgroundColor: 'hotpink' }]} />
+              <View style={[styles.rectangularBlock, { backgroundColor: colors.inactive }]} />
             </View>
             <View style={styles.blockWithLabel}>
               <Text style={[styles.blockLabel, { color: colors.text }]}>Redeem</Text>
-              <View style={[styles.rectangularBlock, { backgroundColor: 'hotpink' }]} />
+              <View style={[styles.rectangularBlock, { backgroundColor: colors.inactive }]} />
             </View>
           </View>
 
@@ -1018,6 +1018,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     gap: 10,
+    marginBottom: 20,
 
   },
   blockWithLabel: {
