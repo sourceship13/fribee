@@ -20,6 +20,7 @@ interface ToolbarProps {
   onToggleHearted?: (dealId: string, dealObject?: any) => void;
   isDealHearted?: (dealId: string) => boolean;
   backgroundColor?: string;
+  skipSafeArea?: boolean;
 }
 
 
@@ -37,6 +38,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onToggleHearted,
   isDealHearted,
   backgroundColor,
+  skipSafeArea = false,
 }) => {
   const { isDarkMode } = useAuth();
   // Use provided backgroundColor or fall back to transparent
@@ -45,8 +47,11 @@ const Toolbar: React.FC<ToolbarProps> = ({
   // Heart icon logic
   const hearted = dealId && isDealHearted ? isDealHearted(dealId) : false;
 
+  const Wrapper = skipSafeArea ? View : SafeAreaView;
+  const wrapperProps = skipSafeArea ? {} : { edges: ['top'] as const };
+
   return (
-    <SafeAreaView edges={["top"]} style={{ backgroundColor: toolbarBg }}>
+    <Wrapper {...wrapperProps} style={{ backgroundColor: toolbarBg }}>
       <View style={[styles.toolbar, { backgroundColor: toolbarBg, borderBottomWidth: 0 }]}>  
         <View style={styles.leftContainer}>
           {onBack ? (
@@ -114,7 +119,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
           {!showSettings && !showRedemptions && !showHearted ? <View style={{ width: 40 }} /> : null}
         </View>
       </View>
-    </SafeAreaView>
+    </Wrapper>
   );
 };
 

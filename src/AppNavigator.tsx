@@ -224,7 +224,17 @@ const AppNavigator = () => {
             <Stack.Screen name="FontDebug" component={FontDebug} />
             <Stack.Screen name="PermissionTest" component={PermissionTestScreen} />
             <Stack.Screen name="NetworkDebug" component={NetworkDebugScreen} />
-            <Stack.Screen name="Redemption" component={RedemptionScreen} />
+            <Stack.Screen 
+              name="Redemption" 
+              component={RedemptionScreen}
+              options={{
+                presentation: 'transparentModal',
+                gestureEnabled: true,
+                headerShown: false,
+                cardStyle: { backgroundColor: 'transparent' },
+                cardOverlayEnabled: true,
+              }}
+            />
             
             {/* Business screens */}
             <Stack.Screen name="BusinessProfile" component={BusinessProfile} />
