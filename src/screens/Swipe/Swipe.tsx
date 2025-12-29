@@ -203,6 +203,7 @@ const SwipeScreen = ({ navigation }: any) => {
           resizeMode="contain"
         />
         </TouchableOpacity>
+        
       </View>
 
       {/* 3. Full-screen content area */}

@@ -406,14 +406,20 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
           {/* Overlay Buttons */}
           <View style={[styles.overlayButtons, { top: insets.top + 10 }]}>
             <TouchableOpacity
-              style={[styles.circleButton, { backgroundColor: colors.overlayButton }]}
+              style={[
+                styles.circleButton,
+                { backgroundColor: colors.overlayButton },
+              ]}
               onPress={() => navigation.goBack()}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <Ionicons name="chevron-back" size={24} color={colors.text} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.circleButton, { backgroundColor: colors.overlayButton }]}
+              style={[
+                styles.circleButton,
+                { backgroundColor: colors.overlayButton },
+              ]}
               onPress={() => dealId && toggleHeartDeal(dealId, deal)}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
@@ -528,6 +534,11 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
         >
           {/* Business Info */}
           <View style={styles.businessHeader}>
+            <Text
+              style={[styles.categoryText, { color: colors.textSecondary }]}
+            >
+              {deal.category_name || deal.category || ''}
+            </Text>
             <View style={styles.businessTitleRow}>
               <Text style={[styles.businessName, { color: colors.text }]}>
                 {deal.business_name || deal.business || 'Unknown Business'}
@@ -541,11 +552,6 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
                 />
               )}
             </View>
-            <Text
-              style={[styles.categoryText, { color: colors.textSecondary }]}
-            >
-              {deal.category_name || deal.category || ''}
-            </Text>
           </View>
 
           {/* Deal Description */}
@@ -626,16 +632,37 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
           {/* Rectangular blocks above share button */}
           <View style={styles.blocksContainer}>
             <View style={styles.blockWithLabel}>
-              <Text style={[styles.blockLabel, { color: colors.text }]}>Share to Unlock</Text>
-              <View style={[styles.rectangularBlock, { backgroundColor: colors.primary }]} />
+              <Text style={[styles.blockLabel, { color: colors.text }]}>
+                Share to Unlock
+              </Text>
+              <View
+                style={[
+                  styles.rectangularBlock,
+                  { backgroundColor: colors.primary },
+                ]}
+              />
             </View>
             <View style={styles.blockWithLabel}>
-              <Text style={[styles.blockLabel, { color: colors.text }]}>Share More!</Text>
-              <View style={[styles.rectangularBlock, { backgroundColor: colors.inactive }]} />
+              <Text style={[styles.blockLabel, { color: colors.text }]}>
+                Share More!
+              </Text>
+              <View
+                style={[
+                  styles.rectangularBlock,
+                  { backgroundColor: colors.inactive },
+                ]}
+              />
             </View>
             <View style={styles.blockWithLabel}>
-              <Text style={[styles.blockLabel, { color: colors.text }]}>Redeem</Text>
-              <View style={[styles.rectangularBlock, { backgroundColor: colors.inactive }]} />
+              <Text style={[styles.blockLabel, { color: colors.text }]}>
+                Redeem
+              </Text>
+              <View
+                style={[
+                  styles.rectangularBlock,
+                  { backgroundColor: colors.inactive },
+                ]}
+              />
             </View>
           </View>
 
@@ -892,6 +919,14 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
             </TouchableOpacity>
           </View>
         </View>
+        <Text
+          style={[
+            iOSUIKit.subhead,
+            { color: colors.subText, textAlign: 'center' },
+          ]}
+        >
+          Share {currentShares} times to unlock this deal
+        </Text>
       </ScrollView>
     </View>
   );
@@ -963,7 +998,7 @@ const styles = StyleSheet.create({
   businessTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4,
+    marginVertical: 20,
   },
   businessName: StyleSheet.flatten([
     iOSUIKit.title3Emphasized,
@@ -1019,7 +1054,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 10,
     marginBottom: 20,
-
   },
   blockWithLabel: {
     flex: 1,
