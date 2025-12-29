@@ -638,7 +638,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               <View
                 style={[
                   styles.rectangularBlock,
-                  { backgroundColor: colors.primary },
+                  { backgroundColor: currentShares === 0 ? colors.primary : colors.inactive },
                 ]}
               />
             </View>
@@ -649,7 +649,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               <View
                 style={[
                   styles.rectangularBlock,
-                  { backgroundColor: colors.inactive },
+                  { backgroundColor: currentShares > 0 && !canRedeem ? colors.primary : colors.inactive },
                 ]}
               />
             </View>
@@ -660,7 +660,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               <View
                 style={[
                   styles.rectangularBlock,
-                  { backgroundColor: colors.inactive },
+                  { backgroundColor: canRedeem ? colors.primary : colors.inactive },
                 ]}
               />
             </View>
