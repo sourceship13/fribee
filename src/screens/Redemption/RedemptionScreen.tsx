@@ -4,6 +4,7 @@ type RedemptionRouteParams = {
   userId?: string;
   userSavedDealId?: string;
   sharesRequired?: number;
+  dealImageUrl?: string;
 };
 import React, { useMemo, useRef, useState } from 'react';
 
@@ -31,9 +32,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  ImageBackground,
 } from 'react-native';
 import SlideToUnlock from '../../components/SlideToUnlock';
 import ApiService from '../../services/api.service';
+import { color } from '../../../node_modules_old/ansi-fragments/build';
+import render from '../../../node_modules_old/dom-serializer/lib';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const MODAL_HEIGHT = screenHeight * 0.8; // 65% of screen height
@@ -88,6 +92,69 @@ const RedemptionScreen = () => {
   const sidePad = Math.max(0, (containerW - CARD_W) / 2);
   const endPad = Math.max(0, (containerW - CARD_W) / 2);
 
+  const renderImage = () => {
+    const deal_images = deal.deal_images; // Deal-specific images array
+    const deal_image_url = deal.deal_image_url; // Single deal image URL
+    const image_url = deal.image_url; // Generic image URL
+    const images = deal.images; // Generic images array
+    const business_images = deal.business_images; // Business images (fallback)
+
+    let finalImages = null;
+
+    // Extract image URLs from deal_images array (objects with image_url property)
+    if (deal_images && Array.isArray(deal_images) && deal_images.length > 0) {
+      finalImages = deal_images
+        .filter(img => img && typeof img === 'object' && img.image_url)
+        .map(img => img.image_url)
+        .filter(url => url && typeof url === 'string' && url.trim().length > 0);
+    }
+    // Single deal image URL
+    else if (
+      deal_image_url &&
+      typeof deal_image_url === 'string' &&
+      deal_image_url.trim().length > 0
+    ) {
+      finalImages = [deal_image_url];
+    }
+    // Generic image URL
+    else if (
+      image_url &&
+      typeof image_url === 'string' &&
+      image_url.trim().length > 0
+    ) {
+      finalImages = [image_url];
+    }
+    // Generic images array (could be strings or objects)
+    else if (images && Array.isArray(images) && images.length > 0) {
+      finalImages = images
+        .map(img => {
+          // Handle both string URLs and objects with image_url property
+          if (typeof img === 'string') return img;
+          if (typeof img === 'object' && img.image_url) return img.image_url;
+          return null;
+        })
+        .filter(url => url && typeof url === 'string' && url.trim().length > 0);
+    }
+    // Business images as fallback (objects with image_url property)
+    else if (
+      business_images &&
+      Array.isArray(business_images) &&
+      business_images.length > 0
+    ) {
+      finalImages = business_images
+        .filter(img => img && typeof img === 'object' && img.image_url)
+        .map(img => img.image_url)
+        .filter(url => url && typeof url === 'string' && url.trim().length > 0);
+    }
+    return (
+      <ImageBackground
+        source={{ uri: finalImages[0] || '' }}
+        style={{ width: 80, height: 80, borderRadius: 40, overflow: 'hidden' }}
+        resizeMode="cover"
+      />
+    );
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: 'transparent' }}>
       {/* Tap outside to dismiss */}
@@ -107,33 +174,35 @@ const RedemptionScreen = () => {
           style={[styles.modalHeader, { borderBottomColor: colors.border }]}
         >
           <TouchableOpacity style={styles.closeButton}>
-            <MaterialIcons name="close" size={24} color={colors.text} />
+            <MaterialIcons name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
-          <Text style={[styles.modalTitle, { color: colors.text }]}>
-            Share Deal
-          </Text>
-        </View>
-        <View style={styles.container}>
-          <Text
-            style={[
-              iOSUIKit.title3Emphasized,
-              { color: colors.text, marginBottom: 16 },
-            ]}
-          >
-            Show this code to the business
-          </Text>
-          <View style={styles.codeBox}>
-            <Text
-              style={[iOSUIKit.largeTitleEmphasized, { color: colors.primary }]}
-            >
-              {redemptionCode}
+          <Text style={[iOSUIKit.title3Emphasized, {textAlign: 'center', color: colors.text }]}>
+              Redeem Deal
             </Text>
-          </View>
-          <Text
-            style={[iOSUIKit.body, { color: colors.text, marginVertical: 16 }]}
+            <View> </View>
+        </View>
+        <View
+            style={{
+              borderWidth: 1,
+              borderColor: colors.subText,
+              borderRadius: 12,
+              padding: 16,
+              alignItems: 'space-between',
+              flexDirection: 'row',
+              margin: 20
+            }}
           >
-            Or scan this QR code:
-          </Text>
+            <View>{renderImage()}</View>
+            <View style={{ flex: 1, marginLeft: 12, flexShrink: 1, justifyContent: 'space-between' }}>
+              <Text>{deal.business_name}</Text>
+              <View>
+                <Text style={{ color: colors.subText, flexWrap: 'wrap', marginBottom: 4 }}>{deal.description}</Text>
+                <Text style={{ color: colors.primary, flexWrap: 'wrap' }}>Goal Achieved</Text>
+              </View>
+            </View>
+          </View>
+        <View style={styles.container}>
+          
           <View style={styles.qrBox}>
             <FlatList
               ref={listRef}
@@ -232,6 +301,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
+  },
+  closeButton: {
+    padding: 8,
+    borderWidth: 1,
+    borderColor: `#8E8E93`,
+    borderRadius: 24,
   },
   codeBox: {
     padding: 24,

@@ -214,7 +214,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
   if (!deal) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Toolbar title="Deal Details" onBack={() => navigation.goBack()} />
+        {/* <Toolbar title="Deal Details" onBack={() => navigation.goBack()} /> */}
         <View style={styles.centerContent}>
           <Text style={[styles.errorText, { color: colors.text }]}>
             Deal not found
@@ -236,7 +236,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
   if (error) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Toolbar title="Deal Details" onBack={() => navigation.goBack()} />
+        {/* <Toolbar title="Deal Details" onBack={() => navigation.goBack()} /> */}
         <View style={styles.centerContent}>
           <Text style={[styles.errorText, { color: colors.text }]}>
             Error: {error}
@@ -664,7 +664,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
                 },
               ]}
               onPress={handleRedeem}
-              disabled={loading || !shareProgress?.canRedeem}
+              // disabled={loading || !shareProgress?.canRedeem}
             >
               <MaterialIcons name="redeem" size={20} color="#fff" />
               <Text style={styles.redeemButtonText}>Redeem Deal</Text>
