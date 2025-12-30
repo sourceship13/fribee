@@ -15,6 +15,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useAuth } from '../../libs/hooks/useAuth';
 import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
+import RedeemBg from '../../../assets/imgs/redeem-bg.svg';
 import VersionFooter from '../../components/VersionFooter';
 import {
   BarcodeCreatorView,
@@ -85,7 +86,7 @@ const RedemptionScreen = () => {
     [redemptionCode],
   );
 
-  const CARD_W = 260; // visible card width
+  const CARD_W = 300; // visible card width
   const SPACING = 16; // space between cards
   const INTERVAL = CARD_W + SPACING;
 
@@ -176,110 +177,131 @@ const RedemptionScreen = () => {
           <TouchableOpacity style={styles.closeButton}>
             <MaterialIcons name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
-          <Text style={[iOSUIKit.title3Emphasized, {textAlign: 'center', color: colors.text }]}>
-              Redeem Deal
-            </Text>
-            <View> </View>
+          <Text
+            style={[
+              iOSUIKit.title3Emphasized,
+              { textAlign: 'center', color: colors.text },
+            ]}
+          >
+            Redeem Deal
+          </Text>
+          <View> </View>
         </View>
         <View
+          style={{
+            borderWidth: 1,
+            borderColor: '#E6E6E6',
+            borderRadius: 12,
+            padding: 16,
+            flexDirection: 'row',
+            marginHorizontal: 20,
+            marginTop: 16,
+            backgroundColor: '#FFFFFF',
+          }}
+        >
+          <View>{renderImage()}</View>
+          <View
             style={{
-              borderWidth: 1,
-              borderColor: colors.subText,
-              borderRadius: 12,
-              padding: 16,
-              alignItems: 'space-between',
-              flexDirection: 'row',
-              margin: 20
+              flex: 1,
+              marginLeft: 12,
+              justifyContent: 'center',
             }}
           >
-            <View>{renderImage()}</View>
-            <View style={{ flex: 1, marginLeft: 12, flexShrink: 1, justifyContent: 'space-between' }}>
-              <Text>{deal.business_name}</Text>
-              <View>
-                <Text style={{ color: colors.subText, flexWrap: 'wrap', marginBottom: 4 }}>{deal.description}</Text>
-                <Text style={{ color: colors.primary, flexWrap: 'wrap' }}>Goal Achieved</Text>
+            <Text style={{ fontWeight: '600', fontSize: 16, color: colors.text, marginBottom: 4 }}>
+              {deal.business_name}
+            </Text>
+            <Text
+              style={{
+                color: colors.subText,
+                fontSize: 14,
+                marginBottom: 6,
+              }}
+              numberOfLines={2}
+            >
+              {deal.description}
+            </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ color: '#FF9500', fontSize: 14, fontWeight: '500' }}>
+                Goal achieved!
+              </Text>
+              <Text style={{ color: '#FF9500', fontSize: 14, fontWeight: '500' }}>
+                0/3
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.couponWrapper}>
+          {/* Coupon Card with SVG background */}
+          <View style={styles.couponCardContainer}>
+            {/* SVG Background for top section */}
+            <View style={styles.couponTopBackground}>
+              <RedeemBg
+                width={screenWidth - 40}
+                height={150}
+                preserveAspectRatio="xMidYMin slice"
+              />
+            </View>
+            
+            {/* Coupon Content Card */}
+            <View style={styles.couponCard}>
+              {/* Top Section - Promo Code */}
+              <View style={styles.couponTopSection}>
+                <Text style={styles.couponLabel}>Your promocode:</Text>
+                <View style={styles.codeRow}>
+                  <Text style={styles.couponCode}>{redemptionCode}</Text>
+                  <TouchableOpacity style={styles.copyButton}>
+                    <MaterialIcons name="content-copy" size={20} color="#666" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Bottom Section - Barcode */}
+              <View style={styles.couponBottomSection}>
+                <Text style={styles.scanLabel}>Or scan QR code below:</Text>
+                <View style={styles.barcodeContainer}>
+                  <BarcodeCreatorView
+                    value={redemptionCode}
+                    format={BarcodeFormat.CODE128}
+                    background={'#FFFFFF'}
+                    foregroundColor={'#000000'}
+                    style={{ width: 200, height: 60 }}
+                  />
+                </View>
+              </View>
+
+              {/* Divider and Button */}
+              <View style={styles.redeemSection}>
+                <View style={styles.redeemDivider} />
+                <TouchableOpacity
+                  style={styles.redeemButton}
+                  activeOpacity={0.7}
+                  onPress={async () => {
+                    if (!userId || !(deal?.id || deal?.deal_id)) {
+                      console.error('Missing required redemption parameters', {
+                        userId,
+                        dealId: deal?.id || deal?.deal_id,
+                      });
+                      return;
+                    }
+                    const dealId = deal?.id || deal?.deal_id;
+                    const payload = {
+                      userId: String(userId),
+                      dealId: String(dealId),
+                    };
+                    try {
+                      await ApiService.postDealRedemption(payload);
+                      await refreshDeals();
+                      navigation.goBack();
+                    } catch (err) {
+                      console.error('Deal redemption failed', err);
+                    }
+                  }}
+                >
+                  <Text style={styles.redeemButtonText}>Set Deal as Redeemed</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
-        <View style={styles.container}>
-          
-          <View style={styles.qrBox}>
-            <FlatList
-              ref={listRef}
-              horizontal
-              data={barcodeData}
-              keyExtractor={i => i.id}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingHorizontal: sidePad }}
-              ItemSeparatorComponent={() => <View style={{ width: SPACING }} />}
-              renderItem={({ item }) => (
-                <View
-                  style={{
-                    width: CARD_W,
-                    height: 180,
-                    borderRadius: 14,
-                    backgroundColor: '#FFF',
-                    borderWidth: 1,
-                    borderColor: '#E6E6E6',
-                    padding: 12,
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text style={{ fontWeight: '600' }}>{item.label}</Text>
-
-                  {/* The barcode scales to the view size you give it */}
-                  <BarcodeCreatorView
-                    value={item.payload}
-                    format={item.format}
-                    background={'#FFFFFF'}
-                    foregroundColor={'#000000'}
-                    style={{ width: CARD_W - 24, height: 120 }}
-                  />
-
-                  <Text style={{ color: '#666' }}>{item.payload}</Text>
-                </View>
-              )}
-              // 🔑 center-snapping
-              snapToAlignment="center"
-              // snapToInterval={INTERVAL}
-              decelerationRate="normal"
-              disableIntervalMomentum
-              // perf: exact measurements for RN
-              getItemLayout={(_, index) => ({
-                length: INTERVAL,
-                offset: INTERVAL * index,
-                index,
-              })}
-            />
-          </View>
-          <SlideToUnlock
-            label="Slide to Mark Redeemed by Business"
-            onUnlock={async () => {
-              if (!userId || !(deal?.id || deal?.deal_id)) {
-                console.error('Missing required redemption parameters', {
-                  userId,
-                  dealId: deal?.id || deal?.deal_id,
-                });
-                // Optionally show feedback to user
-                return;
-              }
-              const dealId = deal?.id || deal?.deal_id;
-              const payload = {
-                userId: String(userId),
-                dealId: String(dealId),
-              };
-              try {
-                await ApiService.postDealRedemption(payload);
-                // Refresh deals to get updated redemption status
-                await refreshDeals();
-                navigation.goBack();
-              } catch (err) {
-                // Optionally show error feedback
-                console.error('Deal redemption failed', err);
-              }
-            }}
-          />
         </View>
       </View>
     </View>
@@ -292,54 +314,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 24,
     overflow: 'hidden',
   },
-  box: {
-    width: 180,
-    height: 180,
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
   closeButton: {
     padding: 8,
     borderWidth: 1,
-    borderColor: `#8E8E93`,
-    borderRadius: 24,
-  },
-  codeBox: {
-    padding: 24,
-    borderRadius: 12,
-    backgroundColor: '#fff',
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  qrBox: {
-    marginVertical: 16,
-    padding: 16,
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 4,
-    height: 200,
-    width: 300,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  doneBtn: {
-    marginTop: 32,
-    paddingVertical: 14,
-    paddingHorizontal: 48,
-    borderRadius: 24,
-    alignItems: 'center',
+    borderColor: '#E6E6E6',
+    borderRadius: 20,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -347,7 +326,93 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0,
+  },
+  couponWrapper: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  couponCardContainer: {
+    position: 'relative',
+  },
+  couponTopBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 0,
+  },
+  couponCard: {
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+    marginTop: 20,
+  },
+  couponTopSection: {
+    paddingTop: 40,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  couponLabel: {
+    fontSize: 14,
+    color: '#666666',
+    marginBottom: 8,
+  },
+  codeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  couponCode: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#FF9500',
+    letterSpacing: 1,
+  },
+  copyButton: {
+    padding: 4,
+  },
+  couponBottomSection: {
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  scanLabel: {
+    fontSize: 14,
+    color: '#333333',
+    marginBottom: 16,
+  },
+  barcodeContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  redeemSection: {
+    backgroundColor: '#FFFFFF',
+  },
+  redeemDivider: {
+    height: 1,
+    backgroundColor: '#E6E6E6',
+  },
+  redeemButton: {
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  redeemButtonText: {
+    color: '#333333',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
