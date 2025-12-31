@@ -581,17 +581,17 @@ const styles = StyleSheet.create({
   },
   premiumBadge: {
     position: 'absolute',
-    top: 10,
+    bottom: 10,
     left: 10,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
-    backgroundColor: '#FF8C00',
+    backgroundColor: '#FFF',
   },
   premiumText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#FFF',
+    color: '#FF9500',
     letterSpacing: 0.5,
   },
   featuredBadge: {
