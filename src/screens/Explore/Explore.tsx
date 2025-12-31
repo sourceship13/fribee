@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,13 +7,17 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  Dimensions,
+  ScrollView,
 } from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
-import ApiConfig from '../../libs/utils/api.utils';
-import { iOSUIKit } from 'react-native-typography';
-import VersionFooter from '../../components/VersionFooter';
 import AnalyticsService from '../../services/analytics.service';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+const { width: screenWidth } = Dimensions.get('window');
+const CARD_WIDTH = (screenWidth - 48) / 2;
 
 const ExploreScreen = ({ navigation }: any) => {
   const {
@@ -24,8 +28,11 @@ const ExploreScreen = ({ navigation }: any) => {
     dealsLoading,
     refreshDeals,
     heartedDeals,
+    isDealHearted,
+    toggleHeartDeal,
   } = useAuth();
   const colors = getColors(isDarkMode);
+  const tabScrollRef = useRef<ScrollView>(null);
 
   // Filter available categories to show only the ones the user has enabled
   // If no categories are set (empty object), show all available categories
@@ -33,6 +40,9 @@ const ExploreScreen = ({ navigation }: any) => {
     Object.keys(categories).length === 0
       ? availableCategories
       : availableCategories.filter(cat => categories[cat.slug]);
+
+  // Add "All" tab at the beginning
+  const tabCategories = [{ id: 'all', name: 'All', slug: null }, ...activeCategories];
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -115,14 +125,11 @@ const ExploreScreen = ({ navigation }: any) => {
   });
 
   const renderDealCard = ({ item, index }: { item: any; index: number }) => {
-    // Debug card rendering for problematic positions
-
     const isFeatured = item.priority_score && item.priority_score > 0;
     const isPremium =
       item.is_premium === true || item.is_premium_business === true;
 
     const handleDealPress = () => {
-      // Track the tap from Explore screen
       AnalyticsService.trackDealTap(
         item.id || item.deal_id,
         item.business_name || item.business,
@@ -134,75 +141,11 @@ const ExploreScreen = ({ navigation }: any) => {
 
     return (
       <TouchableOpacity
-        style={[
-          styles.card,
-          isDarkMode ? styles.glassCardDark : styles.glassCard,
-          {
-            // backgroundColor: isDarkMode
-            //   ? 'rgba(255, 255, 255, 0.06)'
-            //   : 'rgba(255, 255, 255, 0.15)',
-            borderWidth: 0,
-          },
-        ]}
+        style={styles.card}
         onPress={handleDealPress}
-        activeOpacity={0.7}
+        activeOpacity={0.9}
       >
-        {/* Gradient overlays temporarily removed */}
-
-        {/* Subtle glow effect for dark mode - much more transparent */}
-        {isDarkMode && (
-          <>
-            <View style={[styles.innerGlow]} />
-            <View
-              style={[
-                styles.shimmerEffect,
-                {
-                  backgroundColor: 'rgba(255, 255, 255, 0.015)',
-                },
-              ]}
-            />
-          </>
-        )}
-
-        {isPremium ? (
-          <View
-            style={[
-              styles.premiumBadge,
-              {
-                backgroundColor: '#FF8C00',
-                borderWidth: 1,
-                borderColor: isDarkMode
-                  ? 'rgba(255, 255, 255, 0.3)'
-                  : '#FF7700',
-              },
-            ]}
-          >
-            <Text
-              style={[styles.premiumText, { color: '#FFFFFF', fontSize: 12 }]}
-            >
-              PREMIUM
-            </Text>
-          </View>
-        ) : isFeatured ? (
-          <View
-            style={[
-              styles.featuredBadge,
-              {
-                backgroundColor: isDarkMode
-                  ? colors.primary + 'E6' // More opaque in dark mode
-                  : colors.primary + '95',
-                borderWidth: 1,
-                borderColor: isDarkMode
-                  ? 'rgba(255, 255, 255, 0.3)'
-                  : colors.primary + '40',
-              },
-            ]}
-          >
-            <Text style={[styles.featuredText, { color: colors.background }]}>
-              Featured
-            </Text>
-          </View>
-        ) : null}
+        {/* Deal Image Container */}
         <View style={styles.imageContainer}>
           {getDealImageUrl(item) ? (
             <Image
@@ -217,36 +160,55 @@ const ExploreScreen = ({ navigation }: any) => {
               </Text>
             </View>
           )}
+          
+          {/* Heart Button */}
+          <TouchableOpacity 
+            style={styles.heartButton}
+            onPress={() => toggleHeartDeal(item.id || item.deal_id)}
+            activeOpacity={0.7}
+          >
+            <MaterialIcons 
+              name={isDealHearted(item.id || item.deal_id) ? "favorite" : "favorite-border"} 
+              size={20} 
+              color={isDealHearted(item.id || item.deal_id) ? "#FF3B30" : "#666"} 
+            />
+          </TouchableOpacity>
+          
+          {/* Badge */}
+          {isPremium ? (
+            <View style={styles.premiumBadge}>
+              <Text style={styles.premiumText}>Premium</Text>
+            </View>
+          ) : isFeatured ? (
+            <View style={styles.featuredBadge}>
+              <Text style={styles.featuredText}>Featured</Text>
+            </View>
+          ) : null}
         </View>
-        <Text
-          style={[styles.itemBusiness, { color: colors.text, marginTop: 120 }]}
-          numberOfLines={1}
-        >
-          {item.business_name || item.business || 'Unknown Business'}
-        </Text>
-        <Text
-          style={[styles.itemDescription, { color: colors.textSecondary }]}
-          numberOfLines={2}
-        >
-          {item.description || item.descrption || 'No description available'}
-        </Text>
-        <View style={styles.dealDetails}>
-          {item.deal_type ? (
-            <Text style={[styles.dealType, { color: colors.primary }]}>
-              {formatDealType(item.deal_type)}
-            </Text>
-          ) : null}
-          {item.min_shares_required ? (
-            <Text
-              style={[styles.sharesRequired, { color: colors.textPlaceholder }]}
-            >
-              {item.min_shares_required} shares
-            </Text>
-          ) : null}
+        
+        {/* Deal Info */}
+        <View style={styles.cardContent}>
+          <Text
+            style={[styles.itemBusiness, { color: colors.text }]}
+            numberOfLines={1}
+          >
+            {item.business_name || item.business || 'Unknown Business'}
+          </Text>
+          <Text
+            style={[styles.itemDescription, { color: colors.subText }]}
+            numberOfLines={2}
+          >
+            {item.description || item.descrption || 'No description available'}
+          </Text>
+          <Text style={styles.sharesText}>
+            FREE for {item.min_shares_required || 3} shares
+          </Text>
         </View>
       </TouchableOpacity>
     );
   };
+
+
 
   // Get the best available deal image URL (DEAL-SPECIFIC images only, matching DealDetail logic)
   const getDealImageUrl = (deal: any): string | null => {
@@ -334,148 +296,71 @@ const ExploreScreen = ({ navigation }: any) => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: colors.background,
-        paddingBottom: 100,
-      }}
-    >
-      {/* Header with Settings Button */}
-      <View
-        style={[
-          styles.header,
-          { backgroundColor: colors.surface, borderBottomColor: colors.border },
-        ]}
-      >
-        <Text
-          style={[
-            styles.headerTitle,
-            { color: colors.text, fontFamily: 'Roboto-Thin' },
-          ]}
-        >
-          Explore
-        </Text>
+    <View style={styles.screenContainer}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Ionicons name="gift-outline" size={28} color="#FF9500" />
+        <Text style={styles.headerTitle}>Explore Deals</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}
           style={styles.settingsButton}
         >
-          <Text style={[iOSUIKit.title3, { color: colors.primary }]}>⚙️</Text>
+          <Ionicons name="settings-outline" size={24} color="#666" />
         </TouchableOpacity>
       </View>
 
-      {/* Category Filter Bar */}
-      <View
-      >
-        {activeCategories.length === 0 ? (
-          <View style={{ alignItems: 'center' }}>
-            <Text
-              style={{
-                color: colors.text,
-                fontStyle: 'italic',
-                textAlign: 'center',
-              }}
-            >
-              No categories available.
-            </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Settings')}
-              style={{ marginTop: 4 }}
-            >
-              <Text
-                style={{
-                  color: colors.primary,
-                  textDecorationLine: 'underline',
-                }}
+      {/* Tab View Categories */}
+      <View style={styles.tabContainer}>
+        <ScrollView
+          ref={tabScrollRef}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabScrollContent}
+        >
+          {tabCategories.map((cat, index) => {
+            const isSelected =
+              cat.slug === null
+                ? selectedCategory === null
+                : selectedCategory === cat.slug;
+
+            const handleTabPress = () => {
+              AnalyticsService.trackEvent('category_filter', {
+                category_slug: cat.slug || 'all',
+                category_name: cat.name,
+                screen: 'explore',
+              });
+              setSelectedCategory(cat.slug);
+            };
+
+            return (
+              <TouchableOpacity
+                key={cat.id || 'all'}
+                onPress={handleTabPress}
+                style={styles.tab}
+                activeOpacity={0.7}
               >
-                Go to Settings to manage categories
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <FlatList
-            data={[{ id: 'all', name: 'All', slug: null }, ...activeCategories]}
-            keyExtractor={cat => cat.id || 'all'}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item: cat }) => {
-              const isSelected =
-                cat.slug === null
-                  ? selectedCategory === null
-                  : selectedCategory === cat.slug;
-
-              const handleCategoryPress = () => {
-                // Track category filter selection
-                AnalyticsService.trackEvent('category_filter', {
-                  category_slug: cat.slug || 'all',
-                  category_name: cat.name,
-                  screen: 'explore',
-                });
-                setSelectedCategory(cat.slug);
-              };
-
-              return (
-                <TouchableOpacity
-                  onPress={handleCategoryPress}
+                <Text
                   style={[
-                    styles.categoryChip,
-                    {
-                      backgroundColor: isSelected
-                        ? (cat as any).color_hex || colors.primary
-                        : colors.chip,
-                      borderColor: isSelected
-                        ? (cat as any).color_hex || colors.primary
-                        : colors.borderStrong,
-                    },
+                    styles.tabText,
+                    isSelected && styles.tabTextSelected,
                   ]}
-                  activeOpacity={0.7}
                 >
-                  <Text
-                    style={[
-                      iOSUIKit.caption2,
-                      {
-                        color: isSelected ? colors.background : colors.text,
-                        fontWeight: 'bold',
-                      },
-                    ]}
-                  >
-                    {cat.name}
-                  </Text>
-                  {(() => {
-                    const count = getCategoryDealCount(cat.name);
-                    return count > 0 ? (
-                      <Text
-                        style={[
-                          iOSUIKit.caption2,
-                          {
-                            color: isSelected
-                              ? colors.background
-                              : colors.textPlaceholder,
-                            fontSize: 10,
-                            marginLeft: 4,
-                          },
-                        ]}
-                      >
-                        ({count})
-                      </Text>
-                    ) : null;
-                  })()}
-                </TouchableOpacity>
-              );
-            }}
-            contentContainerStyle={{ paddingVertical: 2 }}
-          />
-        )}
+                  {cat.name}
+                </Text>
+                {isSelected && <View style={styles.tabIndicator} />}
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+        <View style={styles.tabBottomLine} />
       </View>
 
-      {/* Deals List */}
+      {/* Deals Grid */}
       <View style={styles.container}>
         {dealsLoading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
-            <Text
-              style={[iOSUIKit.body, { color: colors.text, marginTop: 12 }]}
-            >
+            <Text style={[styles.loadingText, { color: colors.text }]}>
               Loading deals...
             </Text>
           </View>
@@ -485,99 +370,128 @@ const ExploreScreen = ({ navigation }: any) => {
               {error}
             </Text>
             <TouchableOpacity
-              style={[styles.retryButton, { backgroundColor: colors.primary }]}
+              style={styles.retryButton}
               onPress={() => {
                 setError(null);
                 refreshDeals();
               }}
             >
-              <Text style={{ color: colors.background }}>Retry</Text>
+              <Text style={{ color: '#FFF' }}>Retry</Text>
             </TouchableOpacity>
           </View>
         ) : sortedDeals.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Text style={{ fontSize: 48, marginBottom: 12 }}>🔍</Text>
-            <Text style={[iOSUIKit.body, { color: colors.text }]}>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>
               {selectedCategory
-                ? `No deals in this category`
+                ? 'No deals in this category'
                 : 'No deals available'}
             </Text>
-            <Text
-              style={[
-                iOSUIKit.subhead,
-                {
-                  color: colors.textPlaceholder,
-                  marginTop: 8,
-                  textAlign: 'center',
-                },
-              ]}
-            >
+            <Text style={[styles.emptySubtitle, { color: colors.subText }]}>
               {selectedCategory
                 ? 'Try selecting a different category'
                 : 'Check back later for new deals!'}
             </Text>
           </View>
         ) : (
-          <>
-            <Text
-              style={[styles.resultsCount, { color: colors.textSecondary }]}
-            >
-              {sortedDeals.length} {sortedDeals.length === 1 ? 'deal' : 'deals'}{' '}
-              available
-              {selectedCategory &&
-                ' in ' +
-                  activeCategories.find(c => c.slug === selectedCategory)?.name}
-            </Text>
-            <FlatList
-              data={sortedDeals}
-              keyExtractor={(item, index) => {
-                // Create unique key combining multiple identifiers
-                const baseKey =
-                  item.id?.toString() || `${item.business_name}-${index}`;
-                return `deal-${baseKey}-${index}`;
-              }}
-              numColumns={2}
-              renderItem={renderDealCard}
-              contentContainerStyle={styles.grid}
-              columnWrapperStyle={styles.row}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              removeClippedSubviews={true}
-            />
-          </>
+          <FlatList
+            data={sortedDeals}
+            keyExtractor={(item, index) => {
+              const baseKey = item.id?.toString() || `${item.business_name}-${index}`;
+              return `deal-${baseKey}-${index}`;
+            }}
+            numColumns={2}
+            renderItem={renderDealCard}
+            contentContainerStyle={styles.grid}
+            columnWrapperStyle={styles.row}
+            showsVerticalScrollIndicator={false}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+          />
         )}
       </View>
-      <VersionFooter />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  topBar: {
+  screenContainer: {
+    flex: 1,
+    backgroundColor: '#FFF',
+  },
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    minHeight: 44,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: 60,
+    paddingBottom: 16,
+    backgroundColor: '#FFF',
   },
-  categoryChip: {
-    borderRadius: 16,
-    borderWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    marginRight: 8,
-    marginBottom: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1a1a1a',
+    flex: 1,
+    marginLeft: 12,
   },
+  settingsButton: {
+    padding: 8,
+  },
+  // Tab styles
+  tabContainer: {
+    position: 'relative',
+    backgroundColor: '#FFF',
+  },
+  tabScrollContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 0,
+  },
+  tab: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    position: 'relative',
+  },
+  tabText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#999',
+  },
+  tabTextSelected: {
+    color: '#FF9500',
+    fontWeight: '600',
+  },
+  tabIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    left: 16,
+    right: 16,
+    height: 3,
+    backgroundColor: '#FF9500',
+    borderRadius: 1.5,
+  },
+  tabBottomLine: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: '#E5E5E5',
+  },
+  // Content styles
   container: {
     flex: 1,
-    padding: 8,
+    backgroundColor: '#FFF',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 14,
+    color: '#666',
   },
   errorContainer: {
     flex: 1,
@@ -585,209 +499,55 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  retryButton: {
+    marginTop: 16,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 20,
+    backgroundColor: '#FF9500',
+  },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
-  retryButton: {
-    marginTop: 16,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 8,
   },
-  resultsCount: StyleSheet.flatten([
-    iOSUIKit.caption2,
-    {
-      marginBottom: 8,
-      paddingHorizontal: 4,
-    },
-  ]),
+  emptySubtitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    color: '#666',
+  },
+  // Grid styles
   grid: {
-    paddingBottom: 20,
-    paddingTop: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 8,
   },
   row: {
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     paddingHorizontal: 8,
-    marginBottom: 8,
+    marginBottom: 16,
   },
+  // Card styles
   card: {
-    width: '47%', // Fixed width instead of flex
-    paddingTop: 12,
-    paddingHorizontal: 8,
-    paddingBottom: 6, // Reduced from 12 to 6 to bring deal details closer to bottom
-    minHeight: 140,
-    position: 'relative',
-  },
-  glassCard: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    elevation: 3,
+    width: CARD_WIDTH,
+    backgroundColor: '#FFF',
     overflow: 'hidden',
-  },
-  glassCardDark: {
-    shadowColor: '#fff',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 8,
-    elevation: 5,
-    overflow: 'hidden',
-  },
-  gradientTop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '40%',
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    opacity: 0.8,
-    zIndex: 0,
-  },
-  gradientMiddle: {
-    position: 'absolute',
-    top: '20%',
-    left: 0,
-    right: 0,
-    height: '60%',
-    borderRadius: 6,
-    opacity: 0.6,
-    zIndex: 0,
-  },
-
-  innerGlow: {
-    position: 'absolute',
-    top: 1,
-    left: 1,
-    right: 1,
-    bottom: 1,
-    borderRadius: 11,
-    borderWidth: 0,
-    zIndex: 0,
-  },
-  shimmerEffect: {
-    position: 'absolute',
-    top: -10,
-    left: '20%',
-    width: '60%',
-    height: '120%',
-    borderRadius: 12,
-    transform: [{ rotate: '25deg' }],
-    opacity: 0.5,
-    zIndex: 0,
-  },
-  featuredBadge: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
-    zIndex: 2,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
     elevation: 3,
-    margin: 2,
   },
-  featuredText: StyleSheet.flatten([
-    iOSUIKit.caption2,
-    {
-      fontWeight: 'bold',
-    },
-  ]),
-  premiumBadge: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
-    zIndex: 2,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    margin: 2,
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  premiumText: StyleSheet.flatten([
-    iOSUIKit.caption2,
-    {
-      fontWeight: 'bold',
-      letterSpacing: 0.5,
-      fontSize: 9, // Keep smaller for premium badge
-    },
-  ]),
-  itemImage: {
-    fontSize: 28,
-    marginBottom: 8,
-    textAlign: 'center',
-    zIndex: 1,
-  },
-  itemBusiness: StyleSheet.flatten([
-    iOSUIKit.footnoteEmphasized,
-    {
-      marginBottom: 4,
-      textAlign: 'left',
-      zIndex: 1,
-    },
-  ]),
-  itemDescription: StyleSheet.flatten([
-    iOSUIKit.caption2,
-    {
-      marginBottom: 8,
-      textAlign: 'left',
-      lineHeight: 14,
-      zIndex: 1,
-    },
-  ]),
-  dealDetails: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 'auto',
-    zIndex: 1,
-  },
-  dealType: StyleSheet.flatten([
-    iOSUIKit.caption2,
-    {
-      fontWeight: '600',
-      fontSize: 10, // Keep smaller for deal type
-    },
-  ]),
-  sharesRequired: StyleSheet.flatten([
-    iOSUIKit.caption2,
-    {
-      fontSize: 9, // Keep smaller for shares info
-    },
-  ]),
   imageContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 120, // Increased to take up the area of the removed spacer (96 + 24)
-    overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: '100%',
+    height: 190,
+    backgroundColor: '#F5F5F5',
+    position: 'relative',
   },
   dealImage: {
     width: '100%',
@@ -798,24 +558,75 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F9F9F9',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  itemImage: {
+    fontSize: 48,
+  },
+  heartButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#FFF',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    paddingTop: 50, // Account for status bar
-    borderBottomWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
-  headerTitle: StyleSheet.flatten([
-    iOSUIKit.largeTitleEmphasized,
-    {
-      fontSize: 24, // Override default size for header
-    },
-  ]),
-  settingsButton: {
-    padding: 8,
+  premiumBadge: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    backgroundColor: '#FF8C00',
+  },
+  premiumText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#FFF',
+    letterSpacing: 0.5,
+  },
+  featuredBadge: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    backgroundColor: '#FF9500',
+  },
+  featuredText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#FFF',
+  },
+  cardContent: {
+    padding: 12,
+  },
+  itemBusiness: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1a1a1a',
+    marginBottom: 4,
+  },
+  itemDescription: {
+    fontSize: 13,
+    color: '#666',
+    lineHeight: 18,
+    marginBottom: 8,
+  },
+  sharesText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#FF9500',
   },
 });
 
