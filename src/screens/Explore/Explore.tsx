@@ -596,7 +596,7 @@ const styles = StyleSheet.create({
   },
   featuredBadge: {
     position: 'absolute',
-    top: 10,
+    bottom: 10,
     left: 10,
     paddingHorizontal: 10,
     paddingVertical: 4,
