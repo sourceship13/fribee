@@ -3,7 +3,7 @@
 
 export const Colors = {
   light: {
-    background: '#E6E9EF',
+    background: '#FFFFFF',
     backgroundSecondary: '#2a3413',
     backgroundSecondary2: '#F2F2F28C',
     primary: '#E4760F',
@@ -12,6 +12,7 @@ export const Colors = {
     inactive: `#c4c4c9`,
     text: `#2A2A2A`,
     subText: `#8E8E93`,
+    navButton: `#E6E9EF`,
     surface: '#f5f5f5',
     title: `#2A2A2A`,
     titleSecondary: `#8E8E93`,
@@ -46,6 +47,7 @@ export const Colors = {
     lightContactBadge: `#00162b`,
     text: `#d5d5d5`,
     subText: `#71716c`,
+    navButton: `#E6E9EF`,
     surface: 'rgba(30, 31, 32, 0.95)',
     title: `#FFFFFF`,
     titleSecondary: `#E5E5EA`,

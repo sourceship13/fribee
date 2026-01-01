@@ -68,7 +68,7 @@ const MainTabNavigator = () => {
           let iconName;
           let IconComponent = MaterialIcons;
 
-          color = colors.background
+          color = colors.navButton;
 
           if (route.name === 'SwipeTab') {
             iconName = 'swipe';
