@@ -21,6 +21,7 @@ import * as Sentry from "@sentry/react-native";
 import AnalyticsService from '../../services/analytics.service';
 import ApproveButton from '../../../assets/imgs/approve-butt.svg';
 import DeclineButton from '../../../assets/imgs/decline-butt.svg';
+import IconLogo from '../../../assets/imgs/icon_logo.svg';
 import LinearGradient from 'react-native-linear-gradient';
 
 const PLACEHOLDER_DEAL = {
@@ -185,11 +186,7 @@ const SwipeScreen = ({ navigation }: any) => {
           { backgroundColor: colors.background, borderBottomColor: colors.border },
         ]}
       >
-        <Image 
-          source={require('../../../assets/imgs//icon_logo.png')} 
-          style={{ width: 32, height: 36, tintColor: 'orange' }} 
-          resizeMode="contain"
-        />
+        <IconLogo width={21} height={24} fill="#FF9500" />
 
         <Text style={[iOSUIKit.title3Emphasized, { color: colors.title }]}>Discover Deals</Text>
 
