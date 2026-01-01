@@ -1,116 +1,138 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
-import Toolbar from '../../components/Toolbar';
-import { iOSUIKit } from 'react-native-typography';
-import VersionFooter from '../../components/VersionFooter';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const ProfileScreen = ({ navigation }: any) => {
-  const { isDarkMode, user } = useAuth();
+  const { isDarkMode, user, heartedDeals } = useAuth();
   const colors = getColors(isDarkMode);
 
+  // Get actual stats
+  const savedDealsCount = heartedDeals?.length || 0;
+  const redeemedCount = heartedDeals?.filter(
+    (d: any) => d.redemption_status?.toLowerCase() === 'redeemed'
+  ).length || 0;
+  const referralsCount = 24; // TODO: Get from API
+
+  // Format member since date
+  const getMemberSince = () => {
+    if (user?.created_at) {
+      const date = new Date(user.created_at);
+      return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    }
+    return 'December 2025';
+  };
+
+  const menuItems = [
+    {
+      label: 'Saved Deals',
+      onPress: () => navigation.navigate('SavedTab'),
+    },
+    {
+      label: 'Preferences',
+      onPress: () => navigation.navigate('Settings'),
+    },
+    {
+      label: 'Invite Friends',
+      onPress: () => {},
+    },
+    {
+      label: 'Business Access',
+      onPress: () => navigation.navigate('BusinessCreationScreen1'),
+    },
+  ];
+
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <View
-        style={[
-          styles.header,
-          { backgroundColor: colors.surface, borderBottomColor: colors.border },
-        ]}
-      >
-        <Text style={[styles.headerTitle, { color: colors.text }]}>
-          Profile
-        </Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Ionicons name="flame-outline" size={28} color="#FF9500" />
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Profile</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}
           style={styles.settingsButton}
         >
-          <Text style={[iOSUIKit.title3, { color: colors.primary }]}>⚙️</Text>
+          <Ionicons name="settings-outline" size={24} color="#666" />
         </TouchableOpacity>
       </View>
-      <View style={styles.container}>
-        <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
-          <Text style={[styles.avatarText, { color: colors.background }]}>
-            {user?.first_name ? user.first_name.charAt(0) : 'U'}
-            {user?.last_name ? user.last_name.charAt(0) : ''}
-          </Text>
-        </View>
-        {/* Show user's name under badge */}
-        <Text style={[styles.userName, { color: colors.text }]}>
-          {' '}
-          {user?.first_name + ' ' + user?.last_name ||
-            user?.username ||
-            user?.email ||
-            'User'}{' '}
-        </Text>
-        <Text style={[styles.accountType, { color: colors.textSecondary }]}>
-          Regular Account
-        </Text>
 
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Avatar Section */}
+        <View style={styles.avatarSection}>
+          <View style={styles.avatarContainer}>
+            <Ionicons name="person-outline" size={40} color="#FF9500" />
+          </View>
+          <Text style={[styles.userName, { color: colors.text }]}>
+            {user?.first_name && user?.last_name
+              ? `${user.first_name} ${user.last_name}`
+              : user?.username || user?.email || 'John Doe'}
+          </Text>
+          <TouchableOpacity style={styles.editProfileButton}>
+            <Text style={styles.editProfileText}>Edit Profile</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Stats Row */}
         <View style={styles.statsRow}>
           <View style={styles.stat}>
-            <Text style={[styles.statValue, { color: colors.secondary }]}>
-              12
+            <Text style={[styles.statValue, { color: '#FF9500' }]}>
+              {savedDealsCount}
             </Text>
-            <Text style={[styles.statLabel, { color: colors.disabled }]}>
+            <Text style={[styles.statLabel, { color: colors.subText }]}>
               Deals Saved
             </Text>
           </View>
+          <View style={styles.statDivider} />
           <View style={styles.stat}>
-            <Text style={[styles.statValue, { color: colors.secondary }]}>
-              8
+            <Text style={[styles.statValue, { color: '#FF9500' }]}>
+              {redeemedCount}
             </Text>
-            <Text style={[styles.statLabel, { color: colors.disabled }]}>
+            <Text style={[styles.statLabel, { color: colors.subText }]}>
               Redeemed
             </Text>
           </View>
+          <View style={styles.statDivider} />
           <View style={styles.stat}>
-            <Text style={[styles.statValue, { color: colors.secondary }]}>
-              24
+            <Text style={[styles.statValue, { color: '#FF9500' }]}>
+              {referralsCount}
             </Text>
-            <Text style={[styles.statLabel, { color: colors.disabled }]}>
+            <Text style={[styles.statLabel, { color: colors.subText }]}>
               Referrals
             </Text>
           </View>
         </View>
 
-        <TouchableOpacity
-          style={[styles.menuBtn, { backgroundColor: colors.surface }]}
-          onPress={() => navigation.navigate('SavedTab')}
-        >
-          <Text style={[styles.menuBtnText, { color: colors.text }]}>
-            Saved Deals
-          </Text>
-        </TouchableOpacity>
+        {/* Menu Items */}
+        <View style={styles.menuSection}>
+          {menuItems.map((item, index) => (
+            <TouchableOpacity
+              key={item.label}
+              style={[
+                styles.menuItem,
+                index < menuItems.length - 1 && styles.menuItemBorder,
+              ]}
+              onPress={item.onPress}
+              activeOpacity={0.6}
+            >
+              <Text style={[styles.menuItemText, { color: colors.text }]}>
+                {item.label}
+              </Text>
+              <MaterialIcons name="arrow-forward" size={22} color="#999" />
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
 
-        <TouchableOpacity
-          style={[styles.menuBtn, { backgroundColor: colors.surface }]}
-          onPress={() => navigation.navigate('Settings')}
-        >
-          <Text style={[styles.menuBtnText, { color: colors.text }]}>
-            Preferences
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.menuBtn, { backgroundColor: colors.surface }]}
-        >
-          <Text style={[styles.menuBtnText, { color: colors.text }]}>
-            Invite Friends
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.menuBtn, { backgroundColor: colors.surface }]}
-          onPress={() => navigation.navigate('BusinessCreationScreen1')}
-        >
-          <Text style={[styles.menuBtnText, { color: colors.text }]}>
-            Business Access
-          </Text>
-        </TouchableOpacity>
-
+      {/* Footer */}
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>Member Since {getMemberSince()}</Text>
       </View>
-      <VersionFooter />
     </View>
   );
 };
@@ -118,78 +140,115 @@ const ProfileScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    padding: 24,
   },
-  title: StyleSheet.flatten([
-    iOSUIKit.largeTitleEmphasized,
-    {
-      marginBottom: 16,
-    },
-  ]),
-  avatar: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: 60,
+    paddingBottom: 16,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    flex: 1,
+    textAlign: 'center',
+  },
+  settingsButton: {
+    padding: 8,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 20,
+  },
+  // Avatar Section
+  avatarSection: {
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  avatarContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#FFF5E6',
     justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  userName: {
+    fontSize: 22,
+    fontWeight: '700',
     marginBottom: 12,
   },
-  avatarText: StyleSheet.flatten([
-    iOSUIKit.title3Emphasized,
-    {
-      fontSize: 26,
-    },
-  ]),
-  userName: StyleSheet.flatten([
-    iOSUIKit.title3Emphasized,
-    {
-      marginBottom: 4,
-    },
-  ]),
-  accountType: StyleSheet.flatten([
-    iOSUIKit.subhead,
-    {
-      marginBottom: 16,
-    },
-  ]),
+  editProfileButton: {
+    paddingHorizontal: 28,
+    paddingVertical: 10,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: '#E5E5E5',
+  },
+  editProfileText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1a1a1a',
+  },
+  // Stats Row
   statsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 24,
+    paddingHorizontal: 20,
   },
   stat: {
     alignItems: 'center',
     flex: 1,
   },
-  statValue: iOSUIKit.title3EmphasizedObject,
-  statLabel: iOSUIKit.caption2Object,
-  menuBtn: {
-    width: '100%',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    marginBottom: 12,
+  statValue: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 4,
   },
-  menuBtnText: iOSUIKit.calloutObject,
-  header: {
+  statLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  statDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: '#E5E5E5',
+  },
+  // Menu Section
+  menuSection: {
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  menuItem: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    paddingTop: 50, // Account for status bar
-    borderBottomWidth: 1,
+    justifyContent: 'space-between',
+    paddingVertical: 20,
   },
-  headerTitle: StyleSheet.flatten([
-    iOSUIKit.largeTitleEmphasized,
-    {
-      fontSize: 24, // Override default size for header
-    },
-  ]),
-  settingsButton: {
-    padding: 8,
+  menuItemBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  menuItemText: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  // Footer
+  footer: {
+    backgroundColor: '#F5F5F5',
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 13,
+    color: '#999',
   },
 });
 
