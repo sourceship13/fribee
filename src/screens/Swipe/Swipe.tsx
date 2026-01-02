@@ -177,6 +177,42 @@ const SwipeScreen = ({ navigation }: any) => {
     );
   };
 
+  const renderDealImage = ({ item }: { item: string }) => (
+    <ImageBackground
+      source={{ uri: item }}
+      style={styles.fullScreenImage}
+      resizeMode="cover"
+    >
+      <LinearGradient
+        colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
+        locations={[0, 0.5, 1]}
+        style={styles.imageOverlay}
+      />
+      {/* Swipe feedback icons on top of image */}
+      <View
+        style={styles.imageIconsOverlay}
+        pointerEvents="none"
+      >
+        <Animated.View
+          style={[
+            styles.imageLikeIcon,
+            { opacity: likeOpacity },
+          ]}
+        >
+          <Text style={styles.likeIconText}>♥</Text>
+        </Animated.View>
+        <Animated.View
+          style={[
+            styles.imageDislikeIcon,
+            { opacity: dislikeOpacity },
+          ]}
+        >
+          <Text style={styles.dislikeIconText}>✕</Text>
+        </Animated.View>
+      </View>
+    </ImageBackground>
+  );
+
   return (
     <View
       style={[styles.screenContainer, { backgroundColor: colors.background }]}
@@ -315,41 +351,7 @@ const SwipeScreen = ({ navigation }: any) => {
                         style={styles.imageCarousel}
                         scrollEnabled={false}
                         pointerEvents="none"
-                        renderItem={({ item }) => (
-                          <ImageBackground
-                            source={{ uri: item }}
-                            style={styles.fullScreenImage}
-                            resizeMode="cover"
-                          >
-                            <LinearGradient
-                              colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
-                              locations={[0, 0.5, 1]}
-                              style={styles.imageOverlay}
-                            />
-                            {/* Swipe feedback icons on top of image */}
-                            <View
-                              style={styles.imageIconsOverlay}
-                              pointerEvents="none"
-                            >
-                              <Animated.View
-                                style={[
-                                  styles.imageLikeIcon,
-                                  { opacity: likeOpacity },
-                                ]}
-                              >
-                                <Text style={styles.likeIconText}>♥</Text>
-                              </Animated.View>
-                              <Animated.View
-                                style={[
-                                  styles.imageDislikeIcon,
-                                  { opacity: dislikeOpacity },
-                                ]}
-                              >
-                                <Text style={styles.dislikeIconText}>✕</Text>
-                              </Animated.View>
-                            </View>
-                          </ImageBackground>
-                        )}
+                        renderItem={renderDealImage}
                       />
                     );
                   } else {
@@ -616,18 +618,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 40,
     zIndex: 10,
-  },
-  actionButton: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 8,
   },
   dislikeButton: {
     backgroundColor: '#fff',
