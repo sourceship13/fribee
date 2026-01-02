@@ -67,7 +67,9 @@ const MainTabNavigator = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          const iconColor = focused ? colors.navButton : colors.subText;
+          const iconColor = focused 
+            ? (isDarkMode ? '#FFFFFF' : colors.selectedNavButton) 
+            : (isDarkMode ? '#8E8E93' : colors.subText);
           const iconSize = 24;
 
           if (route.name === 'SwipeTab') {
@@ -82,8 +84,8 @@ const MainTabNavigator = () => {
 
           return null;
         },
-        tabBarActiveTintColor: colors.navButton,
-        tabBarInactiveTintColor: colors.subText,
+        tabBarActiveTintColor: isDarkMode ? '#FFFFFF' : colors.selectedNavButton,
+        tabBarInactiveTintColor: isDarkMode ? '#8E8E93' : colors.subText,
         tabBarStyle: {
           backgroundColor: colors.background,
           borderTopColor: 'transparent',
