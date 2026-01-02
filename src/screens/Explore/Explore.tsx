@@ -15,6 +15,7 @@ import { getColors } from '../../libs/colors';
 import AnalyticsService from '../../services/analytics.service';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import IconLogo from '../../../assets/imgs/icon_logo.svg';
 
 const { width: screenWidth } = Dimensions.get('window');
 const CARD_WIDTH = (screenWidth - 48) / 2;
@@ -299,7 +300,7 @@ const ExploreScreen = ({ navigation }: any) => {
     <View style={styles.screenContainer}>
       {/* Header */}
       <View style={styles.header}>
-        <Ionicons name="gift-outline" size={28} color="#FF9500" />
+        <IconLogo width={21} height={24} fill="#FF9500" />
         <Text style={styles.headerTitle}>Explore Deals</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}
