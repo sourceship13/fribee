@@ -22,6 +22,8 @@ import AnalyticsService from '../../services/analytics.service';
 import ApproveButton from '../../../assets/imgs/approve-butt.svg';
 import DeclineButton from '../../../assets/imgs/decline-butt.svg';
 import IconLogo from '../../../assets/imgs/icon_logo.svg';
+import SwipeCard2 from '../../../assets/imgs/swipe-card-2.svg';
+import SwipeCard3 from '../../../assets/imgs/swipe-card-3.svg';
 import LinearGradient from 'react-native-linear-gradient';
 
 const PLACEHOLDER_DEAL = {
@@ -250,6 +252,15 @@ const SwipeScreen = ({ navigation }: any) => {
             </View>
           ) : (
             <>
+              {/* Stacked cards behind main card */}
+              <View style={styles.stackedCardsContainer} pointerEvents="none">
+                <View style={{ width: (screenWidth - 20) * 0.75 }}>
+                  <SwipeCard3 width="100%" height={10} preserveAspectRatio="none" />
+                </View>
+                <View style={[styles.stackedCard2, { width: (screenWidth - 20) * 0.9 }]}>
+                  <SwipeCard2 width="100%" height={16} preserveAspectRatio="none" />
+                </View>
+              </View>
               {/* Full-screen image background */}
               <View style={styles.imageContainer} pointerEvents="box-none">
                 {(() => {
@@ -452,6 +463,22 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 60,
   },
+  // Stacked cards effect
+  stackedCardsContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 1,
+    paddingTop: 10,
+  },
+  stackedCard3: {
+    // Smallest/lightest card at very top
+  },
+  stackedCard2: {
+     // Overlap with card3
+  },
   topBar: {
     width: '100%',
     flexDirection: 'row',
@@ -494,8 +521,10 @@ const styles = StyleSheet.create({
     position: 'relative',
     overflow: 'hidden',
     borderRadius: 20,
-    margin: 10,
+    marginHorizontal: 10,
+    marginTop: 36, // Space for stacked cards above
     marginBottom: 40,
+    zIndex: 2,
   },
   imageCarousel: {
     flex: 1,
