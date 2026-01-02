@@ -76,7 +76,7 @@ const BusinessCreationScreen2 = ({ navigation, route }: any) => {
 
   const handleNext = () => {
     if (!logoFile) {
-      Alert.alert('Missing Logo', 'Please upload your business logo before continuing');
+      Alert.alert('Missing Logo', 'Please upload your Business Logo before continuing.');
       return;
     }
     navigation.navigate('BusinessCreationScreen3', {
