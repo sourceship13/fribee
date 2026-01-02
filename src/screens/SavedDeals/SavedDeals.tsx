@@ -149,7 +149,7 @@ const SavedDealsScreen = ({ navigation }: any) => {
 
   const tabs: { key: TabType; label: string }[] = [
     { key: 'ready', label: 'Ready to Redeem' },
-    { key: 'share', label: 'Share More' },
+    { key: 'share', label: 'Needs More Love' },
     { key: 'redeemed', label: 'Redeemed' },
   ];
 
