@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, Platform, ScrollView, KeyboardAvoidingView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Alert,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { useAuth } from '../../../libs/hooks/useAuth';
 import { getColors } from '../../../libs/colors';
 import Toolbar from '../../../components/Toolbar';
-import { iOSUIKit } from 'react-native-typography';
 import { launchImageLibrary, Asset } from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ProfileScreen from '../../Profile/Profile';
-import VersionFooter from '../../../components/VersionFooter';
 
 const BusinessCreationScreen2 = ({ navigation, route }: any) => {
   const { isDarkMode } = useAuth();
   const colors = getColors(isDarkMode);
-  
+
   // Get props from Screen1
   const {
     businessName,
@@ -24,8 +30,8 @@ const BusinessCreationScreen2 = ({ navigation, route }: any) => {
     postalCode,
     phoneNumber,
     businessUrl,
-  } = route.params;
-  
+  } = route.params || {};
+
   const [logoFile, setLogoFile] = useState<Asset | null>(null);
   const [coverFile, setCoverFile] = useState<Asset | null>(null);
 
@@ -38,7 +44,6 @@ const BusinessCreationScreen2 = ({ navigation, route }: any) => {
       });
 
       if (result.didCancel) {
-        console.log('User cancelled image picker');
         return;
       }
 
@@ -49,16 +54,10 @@ const BusinessCreationScreen2 = ({ navigation, route }: any) => {
 
       if (result.assets && result.assets.length > 0) {
         const asset = result.assets[0];
-        
-        // Accept SVG, PNG, JPG, and other image files
-        if (asset.type && (asset.type.includes('svg') || asset.type.includes('image'))) {
-          if (type === 'logo') {
-            setLogoFile(asset);
-          } else {
-            setCoverFile(asset);
-          }
+        if (type === 'logo') {
+          setLogoFile(asset);
         } else {
-          Alert.alert('Invalid File', 'Please select an image file (SVG, PNG, JPG, etc.)');
+          setCoverFile(asset);
         }
       }
     } catch (error) {
@@ -80,7 +79,6 @@ const BusinessCreationScreen2 = ({ navigation, route }: any) => {
       Alert.alert('Missing Logo', 'Please upload your business logo before continuing');
       return;
     }
-    // Navigate to next step and pass all data forward
     navigation.navigate('BusinessCreationScreen3', {
       businessName,
       description,
@@ -96,174 +94,200 @@ const BusinessCreationScreen2 = ({ navigation, route }: any) => {
     });
   };
 
+  const renderUploadBox = (
+    file: Asset | null,
+    type: 'logo' | 'cover',
+    isRequired: boolean = false
+  ) => {
+    const hasFile = file !== null;
+
+    return (
+      <TouchableOpacity
+        style={styles.uploadBox}
+        onPress={() => pickImage(type)}
+        activeOpacity={0.7}
+      >
+        {hasFile ? (
+          <View style={styles.imagePreviewContainer}>
+            <Image
+              source={{ uri: file.uri }}
+              style={styles.previewImage}
+              resizeMode="contain"
+            />
+            <TouchableOpacity
+              style={styles.removeButton}
+              onPress={() => removeImage(type)}
+            >
+              <Icon name="close" size={16} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.uploadPlaceholder}>
+            <View style={styles.cloudIconContainer}>
+              <Icon name="cloud-upload" size={32} color="#E4760F" />
+            </View>
+            <Text style={styles.uploadText}>
+              Drag & drop files or{' '}
+              <Text style={styles.browseText}>Browse</Text>
+            </Text>
+            <Text style={styles.supportedText}>
+              Supported formates: SVG, PNG, JPG
+            </Text>
+          </View>
+        )}
+      </TouchableOpacity>
+    );
+  };
+
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
       <Toolbar
-        title="Business Access"
+        title="Business Creation"
         onBack={() => navigation.goBack()}
         showSettings={false}
       />
-      <KeyboardAvoidingView 
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        <ScrollView 
-          style={{ flex: 1 }}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={true}
-          bounces={true}
+        {/* Step Header */}
+        <View style={styles.headerSection}>
+          <Text style={[styles.stepTitle, { color: colors.text }]}>
+            Step 2. <Text style={styles.stepTitleBold}>Logo & Cover Photo</Text>
+          </Text>
+          <Text style={[styles.stepSubtitle, { color: '#666' }]}>
+            Upload your business logo and cover photo to make your profile stand out. This helps customers recognize your brand easily
+          </Text>
+        </View>
+
+        {/* Logo Upload Section */}
+        <View style={styles.uploadSection}>
+          <Text style={[styles.labelText, { color: colors.text }]}>
+            Business Logo <Text style={styles.requiredAsterisk}>*</Text>
+          </Text>
+          {renderUploadBox(logoFile, 'logo', true)}
+        </View>
+
+        {/* Cover Photo Upload Section */}
+        <View style={styles.uploadSection}>
+          <Text style={[styles.labelText, { color: colors.text }]}>
+            Cover Photo <Text style={styles.optionalText}>(Optional)</Text>
+          </Text>
+          {renderUploadBox(coverFile, 'cover', false)}
+        </View>
+      </ScrollView>
+
+      {/* Bottom Buttons */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+          <Text style={styles.nextButtonText}>Next Step</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
         >
-          <View style={styles.container}>
-            <Text style={[iOSUIKit.largeTitleEmphasized, { color: colors.text, marginBottom: 16 }]}>
-              Business Creation - Step 2
-            </Text>
-            <Text style={[iOSUIKit.body, { color: colors.text, marginVertical: 20 }]}>
-              Upload your business logo and cover photo to make your profile stand out. This helps customers recognize your brand easily.
-            </Text>
-            
-            {/* Logo Upload */}
-            <View style={styles.uploadSection}>
-              <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8, fontWeight: '600' }]}>
-                Business Logo *
-              </Text>
-              <TouchableOpacity
-                style={[styles.uploadBox, { borderColor: colors.border }]}
-                onPress={() => pickImage('logo')}
-              >
-                {logoFile ? (
-                  <View style={styles.imagePreview}>
-                    <Image
-                      source={{ uri: logoFile.uri }}
-                      style={styles.previewImage}
-                      resizeMode="contain"
-                    />
-                    <TouchableOpacity
-                      style={[styles.removeButton, { backgroundColor: colors.error }]}
-                      onPress={() => removeImage('logo')}
-                    >
-                      <Icon name="close" size={16} color="#fff" />
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <View style={styles.uploadPlaceholder}>
-                    <Icon name="add-photo-alternate" size={48} color={colors.textSecondary} />
-                    <Text style={[iOSUIKit.footnote, { color: colors.textSecondary, marginTop: 8 }]}>
-                      Tap to upload logo (SVG, PNG, JPG)
-                    </Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-            </View>
-
-            {/* Cover Photo Upload */}
-            <View style={styles.uploadSection}>
-              <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8, fontWeight: '600' }]}>
-                Cover Photo (Optional)
-              </Text>
-              <TouchableOpacity
-                style={[styles.uploadBoxCover, { borderColor: colors.border }]}
-                onPress={() => pickImage('cover')}
-              >
-                {coverFile ? (
-                  <View style={styles.imagePreviewCover}>
-                    <Image
-                      source={{ uri: coverFile.uri }}
-                      style={styles.previewImageCover}
-                      resizeMode="cover"
-                    />
-                    <TouchableOpacity
-                      style={[styles.removeButton, { backgroundColor: colors.error }]}
-                      onPress={() => removeImage('cover')}
-                    >
-                      <Icon name="close" size={16} color="#fff" />
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <View style={styles.uploadPlaceholder}>
-                    <Icon name="add-photo-alternate" size={48} color={colors.textSecondary} />
-                    <Text style={[iOSUIKit.footnote, { color: colors.textSecondary, marginTop: 8 }]}>
-                      Tap to upload cover photo (SVG, PNG, JPG)
-                    </Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity
-              style={{
-                backgroundColor: colors.primary,
-                padding: 15,
-                borderRadius: 10,
-                marginTop: 24,
-                marginBottom: 40,
-                alignItems: 'center',
-              }}
-              onPress={handleNext}
-            >
-              <Text style={{ color: colors.background, fontWeight: 'bold', fontSize: 16 }}>
-                Next Step
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          <Text style={[styles.backButtonText, { color: colors.text }]}>
+            Back to Previous Step
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 150,
+  mainContainer: {
+    flex: 1,
   },
-  container: {
-    padding: 24,
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  headerSection: {
+    marginTop: 24,
+    marginBottom: 24,
+  },
+  stepTitle: {
+    fontSize: 22,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 8,
+  },
+  stepTitleBold: {
+    fontWeight: '700',
+  },
+  stepSubtitle: {
+    fontSize: 15,
+    lineHeight: 22,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   uploadSection: {
     marginBottom: 24,
   },
+  labelText: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 12,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  requiredAsterisk: {
+    color: '#E4760F',
+  },
+  optionalText: {
+    color: '#999',
+    fontWeight: '400',
+  },
   uploadBox: {
-    borderWidth: 2,
+    borderWidth: 1.5,
+    borderColor: '#F5C9A0',
     borderStyle: 'dashed',
     borderRadius: 12,
-    padding: 16,
-    height: 200,
-    justifyContent: 'center',
+    padding: 24,
     alignItems: 'center',
-    overflow: 'hidden',
+    justifyContent: 'center',
+    minHeight: 140,
+    backgroundColor: '#FEFAF6',
   },
   uploadPlaceholder: {
-    justifyContent: 'center',
     alignItems: 'center',
   },
-  imagePreview: {
+  cloudIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#FFF5EB',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  uploadText: {
+    fontSize: 14,
+    color: '#333',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 4,
+  },
+  browseText: {
+    color: '#E4760F',
+    fontWeight: '600',
+  },
+  supportedText: {
+    fontSize: 12,
+    color: '#999',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  imagePreviewContainer: {
     width: '100%',
-    height: 168, // 200 - (16 padding * 2)
+    height: 120,
     position: 'relative',
   },
   previewImage: {
     width: '100%',
-    height: 168,
-    borderRadius: 8,
-  },
-  uploadBoxCover: {
-    borderWidth: 2,
-    borderStyle: 'dashed',
-    borderRadius: 12,
-    padding: 16,
-    height: 150,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  imagePreviewCover: {
-    width: '100%',
-    height: 118, // 150 - (16 padding * 2)
-    position: 'relative',
-  },
-  previewImageCover: {
-    width: '100%',
-    height: 118,
+    height: 120,
     borderRadius: 8,
   },
   removeButton: {
@@ -273,8 +297,35 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
+    backgroundColor: '#e74c3c',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  buttonContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: Platform.OS === 'ios' ? 24 : 16,
+  },
+  nextButton: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 24,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  nextButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  backButton: {
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  backButtonText: {
+    fontSize: 15,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
 });
 
