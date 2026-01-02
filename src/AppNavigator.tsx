@@ -67,7 +67,7 @@ const MainTabNavigator = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          const iconColor = colors.navButton;
+          const iconColor = focused ? colors.navButton : colors.subText;
           const iconSize = 24;
 
           if (route.name === 'SwipeTab') {
@@ -82,9 +82,10 @@ const MainTabNavigator = () => {
 
           return null;
         },
-        tabBarActiveTintColor: '#FFFFFF', // White for both dark and light mode
-        tabBarInactiveTintColor: '#FFFFFF', // White for both dark and light mode
+        tabBarActiveTintColor: colors.navButton,
+        tabBarInactiveTintColor: colors.subText,
         tabBarStyle: {
+          backgroundColor: colors.background,
           borderTopColor: 'transparent',
           borderTopWidth: 0,
           borderRadius: 0,
@@ -99,14 +100,12 @@ const MainTabNavigator = () => {
           shadowRadius: 0,
           elevation: 0,
         },
-        tabBarLabelStyle: [
-          iOSUIKit.largeTitleEmphasized,
-          {
-            fontSize: 12, // Override the large title size for tab bar
-            color: colors.subText, // White for both dark and light mode
-            marginTop: -12, // Reduce space between icon and label
-          }
-        ],
+        tabBarLabelStyle: {
+          fontFamily: Platform.OS === 'ios' ? 'SF Pro Display' : 'Roboto',
+          fontWeight: '700',
+          fontSize: 12,
+          marginTop: 5, // Reduce space between icon and label
+        },
         tabBarIconStyle: {
           marginBottom: 2, // Reduce bottom margin of icons
         },
