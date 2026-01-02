@@ -24,6 +24,7 @@ import DeclineButton from '../../../assets/imgs/decline-butt.svg';
 import IconLogo from '../../../assets/imgs/icon_logo.svg';
 import SwipeCard2 from '../../../assets/imgs/swipe-card-2.svg';
 import SwipeCard3 from '../../../assets/imgs/swipe-card-3.svg';
+import SettingsIcon from '../../../assets/imgs/settings-icon.svg';
 import LinearGradient from 'react-native-linear-gradient';
 
 const PLACEHOLDER_DEAL = {
@@ -232,11 +233,7 @@ const SwipeScreen = ({ navigation }: any) => {
           onPress={() => navigation.navigate('Settings')}
           style={styles.settingsButton}
         >
-         <Image 
-          source={require('../../../assets/imgs/settings-icon.png')} 
-          style={{ width: 32, height: 36, tintColor: colors.inactive }} 
-          resizeMode="contain"
-        />
+          <SettingsIcon width={24} height={24} color={colors.inactive} />
         </TouchableOpacity>
         
       </View>
