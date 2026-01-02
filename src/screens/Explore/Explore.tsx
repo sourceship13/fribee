@@ -142,12 +142,12 @@ const ExploreScreen = ({ navigation }: any) => {
 
     return (
       <TouchableOpacity
-        style={styles.card}
+        style={[styles.card, { backgroundColor: colors.card }]}
         onPress={handleDealPress}
         activeOpacity={0.9}
       >
         {/* Deal Image Container */}
-        <View style={styles.imageContainer}>
+        <View style={[styles.imageContainer, { backgroundColor: colors.surface }]}>
           {getDealImageUrl(item) ? (
             <Image
               source={{ uri: getDealImageUrl(item)! }}
@@ -155,7 +155,7 @@ const ExploreScreen = ({ navigation }: any) => {
               resizeMode="cover"
             />
           ) : (
-            <View style={styles.emojiContainer}>
+            <View style={[styles.emojiContainer, { backgroundColor: colors.surface }]}>
               <Text style={styles.itemImage}>
                 {getCategoryEmoji(item.category_name)}
               </Text>
@@ -164,14 +164,14 @@ const ExploreScreen = ({ navigation }: any) => {
           
           {/* Heart Button */}
           <TouchableOpacity 
-            style={styles.heartButton}
+            style={[styles.heartButton, { backgroundColor: colors.background }]}
             onPress={() => toggleHeartDeal(item.id || item.deal_id)}
             activeOpacity={0.7}
           >
             <MaterialIcons 
               name={isDealHearted(item.id || item.deal_id) ? "favorite" : "favorite-border"} 
               size={20} 
-              color={isDealHearted(item.id || item.deal_id) ? "#FF3B30" : "#666"} 
+              color={isDealHearted(item.id || item.deal_id) ? "#FF3B30" : colors.subText} 
             />
           </TouchableOpacity>
           
@@ -297,21 +297,21 @@ const ExploreScreen = ({ navigation }: any) => {
   };
 
   return (
-    <View style={styles.screenContainer}>
+    <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: colors.background }]}>
         <IconLogo width={21} height={24} fill="#FF9500" />
-        <Text style={styles.headerTitle}>Explore Deals</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Explore Deals</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}
           style={styles.settingsButton}
         >
-          <Ionicons name="settings-outline" size={24} color="#666" />
+          <Ionicons name="settings-outline" size={24} color={colors.subText} />
         </TouchableOpacity>
       </View>
 
       {/* Tab View Categories */}
-      <View style={styles.tabContainer}>
+      <View style={[styles.tabContainer, { backgroundColor: colors.background }]}>
         <ScrollView
           ref={tabScrollRef}
           horizontal
@@ -343,6 +343,7 @@ const ExploreScreen = ({ navigation }: any) => {
                 <Text
                   style={[
                     styles.tabText,
+                    { color: colors.subText },
                     isSelected && styles.tabTextSelected,
                   ]}
                 >
@@ -353,11 +354,11 @@ const ExploreScreen = ({ navigation }: any) => {
             );
           })}
         </ScrollView>
-        <View style={styles.tabBottomLine} />
+        <View style={[styles.tabBottomLine, { backgroundColor: colors.border }]} />
       </View>
 
       {/* Deals Grid */}
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         {dealsLoading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={colors.primary} />
@@ -418,7 +419,6 @@ const ExploreScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: '#FFF',
   },
   header: {
     flexDirection: 'row',
@@ -427,12 +427,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 60,
     paddingBottom: 16,
-    backgroundColor: '#FFF',
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#1a1a1a',
     flex: 1,
     marginLeft: 12,
   },
@@ -442,7 +440,6 @@ const styles = StyleSheet.create({
   // Tab styles
   tabContainer: {
     position: 'relative',
-    backgroundColor: '#FFF',
   },
   tabScrollContent: {
     paddingHorizontal: 16,
@@ -456,7 +453,6 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#999',
   },
   tabTextSelected: {
     color: '#FF9500',
@@ -477,12 +473,10 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 1,
-    backgroundColor: '#E5E5E5',
   },
   // Content styles
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
   },
   loadingContainer: {
     flex: 1,
@@ -492,7 +486,6 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 12,
     fontSize: 14,
-    color: '#666',
   },
   errorContainer: {
     flex: 1,
@@ -521,7 +514,6 @@ const styles = StyleSheet.create({
   emptySubtitle: {
     fontSize: 14,
     textAlign: 'center',
-    color: '#666',
   },
   // Grid styles
   grid: {
@@ -536,7 +528,6 @@ const styles = StyleSheet.create({
   // Card styles
   card: {
     width: CARD_WIDTH,
-    backgroundColor: '#FFF',
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -547,7 +538,6 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: '100%',
     height: 190,
-    backgroundColor: '#F5F5F5',
     position: 'relative',
   },
   dealImage: {
@@ -559,7 +549,6 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F9F9F9',
   },
   itemImage: {
     fontSize: 48,
@@ -571,7 +560,6 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#FFF',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -615,12 +603,10 @@ const styles = StyleSheet.create({
   itemBusiness: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#1a1a1a',
     marginBottom: 4,
   },
   itemDescription: {
     fontSize: 13,
-    color: '#666',
     lineHeight: 18,
     marginBottom: 8,
   },
