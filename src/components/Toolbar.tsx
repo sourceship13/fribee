@@ -51,8 +51,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
   const wrapperProps = skipSafeArea ? {} : { edges: ['top'] as const };
 
   return (
-    <Wrapper {...wrapperProps} style={{ backgroundColor: toolbarBg }}>
-      <View style={[styles.toolbar, { backgroundColor: toolbarBg, borderBottomWidth: 0 }]}>  
+    <Wrapper {...wrapperProps} style={{ }}>
+      <View style={[styles.toolbar, { borderBottomWidth: 0 }]}>  
         <View style={styles.leftContainer}>
           {onBack ? (
             <TouchableOpacity
