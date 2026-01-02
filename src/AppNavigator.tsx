@@ -3,8 +3,10 @@ import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import DiscoverIcon from '../assets/imgs/nav/discover.svg';
+import ExploreIcon from '../assets/imgs/nav/explore.svg';
+import SavedIcon from '../assets/imgs/nav/saved.svg';
+import ProfileIcon from '../assets/imgs/nav/profile.svg';
 import SignInScreen from './screens/SignIn/SignIn';
 import SignUpScreen from './screens/SignUp/SignUp';
 import SwipeScreen from './screens/Swipe/Swipe';
@@ -65,23 +67,20 @@ const MainTabNavigator = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-          let IconComponent = MaterialIcons;
-
-          color = colors.navButton;
+          const iconColor = colors.navButton;
+          const iconSize = 24;
 
           if (route.name === 'SwipeTab') {
-            iconName = 'swipe';
+            return <DiscoverIcon width={iconSize} height={iconSize} color={iconColor} />;
           } else if (route.name === 'ExploreTab') {
-            iconName = 'explore';
+            return <ExploreIcon width={iconSize} height={iconSize} color={iconColor} />;
           } else if (route.name === 'SavedTab') {
-            iconName = 'favorite';
+            return <SavedIcon width={iconSize} height={iconSize} color={iconColor} />;
           } else if (route.name === 'ProfileTab') {
-            IconComponent = Ionicons;
-            iconName = 'person';
+            return <ProfileIcon width={iconSize} height={iconSize} color={iconColor} />;
           }
 
-          return <IconComponent name={iconName} size={size} color={color} />;
+          return null;
         },
         tabBarActiveTintColor: '#FFFFFF', // White for both dark and light mode
         tabBarInactiveTintColor: '#FFFFFF', // White for both dark and light mode
