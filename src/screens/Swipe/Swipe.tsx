@@ -22,8 +22,6 @@ import AnalyticsService from '../../services/analytics.service';
 import ApproveButton from '../../../assets/imgs/approve-butt.svg';
 import DeclineButton from '../../../assets/imgs/decline-butt.svg';
 import IconLogo from '../../../assets/imgs/icon_logo.svg';
-import SwipeCard2 from '../../../assets/imgs/swipe-card-2.svg';
-import SwipeCard3 from '../../../assets/imgs/swipe-card-3.svg';
 import SettingsIcon from '../../../assets/imgs/settings-icon.svg';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -72,6 +70,38 @@ const SwipeScreen = ({ navigation }: any) => {
     unheartedDeals.length > 0
       ? unheartedDeals[currentDealIndex]
       : PLACEHOLDER_DEAL;
+
+  // Get the next deal to show behind the current one
+  const nextDealIndex = unheartedDeals.length > 0 
+    ? (currentDealIndex + 1) % unheartedDeals.length 
+    : 0;
+  const nextDeal = unheartedDeals.length > 1 
+    ? unheartedDeals[nextDealIndex] 
+    : null;
+
+  // Helper function to get deal image URL
+  const getDealImageUrl = (deal: any): string | null => {
+    if (!deal) return null;
+    const deal_images = deal.deal_images;
+    const deal_image_url = deal.deal_image_url;
+    const image_url = deal.image_url;
+    const images = deal.images;
+    
+    if (deal_images && Array.isArray(deal_images) && deal_images.length > 0) {
+      const validImages = deal_images
+        .filter((img: any) => img && typeof img === 'object' && img.image_url)
+        .map((img: any) => img.image_url)
+        .filter((url: string) => url && typeof url === 'string' && url.trim().length > 0);
+      if (validImages.length > 0) return validImages[0];
+    }
+    if (images && Array.isArray(images) && images.length > 0) {
+      const validImages = images.filter((url: string) => url && typeof url === 'string' && url.trim().length > 0);
+      if (validImages.length > 0) return validImages[0];
+    }
+    if (deal_image_url && typeof deal_image_url === 'string') return deal_image_url;
+    if (image_url && typeof image_url === 'string') return image_url;
+    return null;
+  };
 
   const resetAnimations = () => {
     Animated.parallel([
@@ -238,6 +268,35 @@ const SwipeScreen = ({ navigation }: any) => {
         
       </View>
 
+      {/* Next deal card rendered BEHIND the main card */}
+      {!dealsLoading && !error && nextDeal && (
+        <View style={styles.nextDealContainer} pointerEvents="none">
+          <View style={styles.nextDealCard}>
+            {getDealImageUrl(nextDeal) ? (
+              <ImageBackground
+                source={{ uri: getDealImageUrl(nextDeal)! }}
+                style={styles.nextDealImage}
+                resizeMode="cover"
+              >
+                <LinearGradient
+                  colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
+                  locations={[0, 0.5, 1]}
+                  style={styles.nextDealGradient}
+                />
+              </ImageBackground>
+            ) : (
+              <View style={[styles.nextDealImage, { backgroundColor: nextDeal.backgroundColor || colors.primary }]}>
+                <LinearGradient
+                  colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
+                  locations={[0, 0.5, 1]}
+                  style={styles.nextDealGradient}
+                />
+              </View>
+            )}
+          </View>
+        </View>
+      )}
+
       {/* 3. Full-screen content area */}
       <PanGestureHandler
         onGestureEvent={onGestureEvent}
@@ -285,15 +344,6 @@ const SwipeScreen = ({ navigation }: any) => {
             </View>
           ) : (
             <>
-              {/* Stacked cards behind main card */}
-              <View style={styles.stackedCardsContainer} pointerEvents="none">
-                <View style={{ width: (screenWidth - 20) * 0.75 }}>
-                  <SwipeCard3 width="100%" height={10} preserveAspectRatio="none" />
-                </View>
-                <View style={[styles.stackedCard2, { width: (screenWidth - 20) * 0.9 }]}>
-                  <SwipeCard2 width="100%" height={16} preserveAspectRatio="none" />
-                </View>
-              </View>
               {/* Full-screen image background */}
               <View style={styles.imageContainer} pointerEvents="box-none">
                 {(() => {
@@ -462,21 +512,27 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 60,
   },
-  // Stacked cards effect
-  stackedCardsContainer: {
+  // Next deal card behind current card
+  nextDealContainer: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
+    top: 145, // Below header, aligned with main card
+    left: 20,
+    right: 20,
+    bottom: 155,
     zIndex: 1,
-    paddingTop: 10,
   },
-  stackedCard3: {
-    // Smallest/lightest card at very top
+  nextDealCard: {
+    flex: 1,
+    borderRadius: 20,
+    overflow: 'hidden',
   },
-  stackedCard2: {
-     // Overlap with card3
+  nextDealImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  nextDealGradient: {
+    ...StyleSheet.absoluteFillObject,
   },
   topBar: {
     width: '100%',
@@ -506,7 +562,7 @@ const styles = StyleSheet.create({
   ]),
   contentContainer: {
     flex: 1,
-    zIndex: 2, // Above background icons
+    zIndex: 2, // Above next deal card
   },
   centerContent: {
     flex: 1,
