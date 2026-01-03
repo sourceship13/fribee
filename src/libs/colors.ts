@@ -11,6 +11,8 @@ export const Colors = {
     card: '#f5f5f5',
     chip: '#fff',
     overlayButton: 'rgba(255,255,255,0.5)',
+    subscriptionBorder: '#2A2A2A',
+    subscriptionBorderGrey: '#8E8E93',
 
     // Text
     text: '#2A2A2A',
@@ -65,6 +67,9 @@ export const Colors = {
     card: '#222',
     chip: '#222',
     overlayButton: 'rgba(0,0,0,0.5)',
+    subscriptionBorder: '#2A2A2A',
+    subscriptionBorderGrey: '#71716c',
+
 
     // Text
     text: '#d5d5d5',

@@ -116,34 +116,33 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
   // Get all business data from previous screens
   const businessData = route.params;
 
-  // Hardcoded plans for fallback (will be replaced with actual IAP products)
   // Hardcoded plans for fallback
   const plans: SubscriptionPlan[] = [
     {
       id: ACTIVE_SKUS.regular,
-      title: 'Regular Business',
+      title: 'Regular',
       price: '$0.99/month',
       description: 'Essential features for small businesses',
       features: [
-        'Up to 4 deals per month',
-        'Basic analytics',
+        'Unlimited deals creation',
+        'Analytics dashboard',
+        'Push notifications',
         'Email support',
-        'Business profile',
+        'Business profile customization',
       ],
       recommended: false,
     },
     {
       id: ACTIVE_SKUS.premium,
-      title: 'Premium Business',
+      title: 'Premium',
       price: '$1.99/month',
       description: 'Full-featured for growing businesses',
       features: [
-        'Up to 8 deals per month',
-        'Advanced analytics dashboard',
+        'Unlimited deals creation',
+        'Analytics dashboard',
         'Push notifications',
-        'Priority email support',
+        'Email support',
         'Business profile customization',
-        'Featured placement',
       ],
       recommended: true,
     },
@@ -885,7 +884,7 @@ Please share this information with support.
           showSettings={false}
         />
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          <ActivityIndicator size="large" color="#E4760F" />
           <Text style={[styles.loadingText, { color: colors.text }]}>
             Loading subscription plans...
           </Text>
@@ -893,6 +892,80 @@ Please share this information with support.
       </View>
     );
   }
+
+  // Redesigned plan card component matching the screenshot
+  const PlanCard = ({
+    plan,
+    isPremium,
+    product,
+  }: {
+    plan: SubscriptionPlan;
+    isPremium: boolean;
+    product?: any;
+  }) => {
+    const planId = product?.id || product?.productId || plan.id;
+    const displayPrice = product?.displayPrice || plan.price.replace('/month', '');
+    const isSelected = isPurchasing && selectedPlan === planId;
+
+    return (
+      <View
+        style={[
+          styles.planCard,
+          {
+            backgroundColor: colors.background,
+            borderColor: isPremium ? colors.subscriptionBorder : colors.subscriptionBorderGrey,
+          },
+        ]}
+      >
+        {/* Most Popular Badge - only for Premium */}
+        {isPremium && (
+          <View style={[styles.mostPopularBadge, { backgroundColor: colors.text }]}>
+            <Text style={styles.mostPopularText}>MOST POPULAR</Text>
+          </View>
+        )}
+
+        {/* Plan Name */}
+        <Text style={[styles.planName, { color: colors.text, marginTop: isPremium ? 32 : 0 }]}>
+          {isPremium ? 'Premium' : 'Regular'}
+        </Text>
+
+        {/* Price */}
+        <View style={styles.priceRow}>
+          <Text style={[styles.priceAmount, { color: colors.text }]}>
+            {displayPrice.replace('$', '$')}
+          </Text>
+          <Text style={[styles.pricePerMonth, { color: '#666' }]}>/ month</Text>
+        </View>
+
+        {/* Subscribe Button */}
+        <TouchableOpacity
+          style={styles.subscribeButton}
+          onPress={() => handlePurchase(planId)}
+          disabled={isPurchasing}
+        >
+          {isSelected ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Text style={styles.subscribeButtonText}>Subscribe Now</Text>
+          )}
+        </TouchableOpacity>
+
+        {/* Features List */}
+        <View style={styles.featuresContainer}>
+          {plan.features.map((feature, index) => (
+            <View key={index} style={styles.featureRow}>
+              <View style={styles.checkCircle}>
+                <Icon name="check" size={14} color="#E4760F" />
+              </View>
+              <Text style={[styles.featureText, { color: colors.text }]}>
+                {feature}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -905,315 +978,62 @@ Please share this information with support.
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
       >
-        {/* IAP Environment Indicator */}
-        <View
-          style={{
-            backgroundColor: IS_PRODUCTION ? '#D4EDDA' : '#FFF3CD',
-            padding: 8,
-            borderRadius: 8,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: 8,
-          }}
-        >
-          <Icon
-            name={IS_PRODUCTION ? 'store' : 'science'}
-            size={16}
-            color={IS_PRODUCTION ? '#155724' : '#856404'}
-          />
-          <Text
-            style={{
-              color: IS_PRODUCTION ? '#155724' : '#856404',
-              fontSize: 12,
-              fontWeight: '600',
-              marginLeft: 6,
-            }}
-          >
-            {IS_PRODUCTION ? '🏪 PRODUCTION' : '🧪 STAGING'} SKUs | {USE_SANDBOX ? 'Sandbox' : 'Live'} Mode
-          </Text>
-        </View>
-
-        {/* Sandbox/Dev Mode Indicator */}
-        {(USE_SANDBOX || shouldBypassIAP) && (
-          <View
-            style={[
-              styles.sandboxBanner,
-              {
-                backgroundColor: shouldBypassIAP ? '#FFF3CD' : '#D1ECF1',
-              },
-            ]}
-          >
-            <Icon
-              name={shouldBypassIAP ? 'developer-mode' : 'science'}
-              size={20}
-              color={shouldBypassIAP ? '#856404' : '#0C5460'}
-            />
-            <Text
-              style={[
-                styles.sandboxText,
-                {
-                  color: shouldBypassIAP ? '#856404' : '#0C5460',
-                },
-              ]}
-            >
-              {shouldBypassIAP
-                ? Platform.OS === 'android' 
-                  ? 'Android Dev Mode: IAP requires Play Store publish'
-                  : 'Development Mode: IAP Disabled'
-                : 'Sandbox Mode: Testing with App Store Connect'}
-            </Text>
-          </View>
-        )}
-
-        {/* Debug Info - Show if no products loaded */}
-        {!isLoading && subscriptions.length === 0 && (
-          <View
-            style={[
-              styles.debugBanner,
-              { backgroundColor: '#FFF3CD', borderColor: '#856404' },
-            ]}
-          >
-            <Icon name="warning" size={24} color="#856404" />
-            <View style={{ flex: 1, marginLeft: 12 }}>
-              <Text style={[styles.debugTitle, { color: '#856404' }]}>
-                No Products Found
-              </Text>
-              <Text style={[styles.debugText, { color: '#856404' }]}>
-                SKU: {SUBSCRIPTION_SKUS[0]}
-              </Text>
-              <Text
-                style={[
-                  styles.debugText,
-                  { color: '#856404', fontSize: 12, marginTop: 4 },
-                ]}
-              >
-                Check App Store Connect:
-              </Text>
-              <Text
-                style={[styles.debugText, { color: '#856404', fontSize: 11 }]}
-              >
-                • Product created with exact SKU
-              </Text>
-              <Text
-                style={[styles.debugText, { color: '#856404', fontSize: 11 }]}
-              >
-                • Status: "Ready to Submit"
-              </Text>
-              <Text
-                style={[styles.debugText, { color: '#856404', fontSize: 11 }]}
-              >
-                • Signed in with sandbox account
-              </Text>
-              <Text
-                style={[styles.debugText, { color: '#856404', fontSize: 11 }]}
-              >
-                • Waited 30+ min after creating product
-              </Text>
-            </View>
-          </View>
-        )}
-
+        {/* Header */}
         <View style={styles.header}>
-          <Icon name="stars" size={48} color={colors.primary} />
           <Text style={[styles.title, { color: colors.text }]}>
             Choose Your Plan
           </Text>
-          <Text style={[styles.subtitle, { color: colors.disabled }]}>
+          <Text style={[styles.subtitle, { color: '#666' }]}>
             Subscribe to unlock all features for your business
           </Text>
         </View>
 
-        {/* Show actual IAP products if available, otherwise show hardcoded plans */}
-        {subscriptions.length > 0
-          ? // Display actual IAP products
-            subscriptions.map((product, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.planCard,
-                    {
-                      backgroundColor: colors.surface,
-                      borderColor: colors.primary,
-                      borderWidth: 2,
-                    },
-                  ]}
-                  onPress={() => {
-                    // Extract productId directly in the handler
-                    const pid =
-                      product.id ||
-                      product.productId ||
-                      product.productID ||
-                      SUBSCRIPTION_SKUS[0];
-                    console.log('🔘 Tapping with extracted ID:', pid);
-                    handlePurchase(pid);
-                  }}
-                  disabled={isPurchasing}
-                >
-                  <View
-                    style={[
-                      styles.recommendedBadge,
-                      { backgroundColor: colors.primary },
-                    ]}
-                  >
-                    <Text style={styles.recommendedText}>FROM APP STORE</Text>
-                  </View>
+        {/* Premium Plan Card */}
+        <PlanCard
+          plan={plans.find(p => p.recommended) || plans[1]}
+          isPremium={true}
+          product={subscriptions.find(
+            s =>
+              (s.id || s.productId || '').toLowerCase().includes('premium'),
+          )}
+        />
 
-                  <Text style={[styles.planTitle, { color: colors.text }]}>
-                    {product.title ||
-                      product.displayName ||
-                      'Premium Subscription'}
-                  </Text>
-                  <Text style={[styles.planPrice, { color: colors.primary }]}>
-                    {product.displayPrice || `$${product.price}`}
-                  </Text>
-                  <Text
-                    style={[styles.planDescription, { color: colors.disabled }]}
-                  >
-                    {product.description ||
-                      'Unlock all premium features for your business'}
-                  </Text>
+        {/* Regular Plan Card */}
+        <PlanCard
+          plan={plans.find(p => !p.recommended) || plans[0]}
+          isPremium={false}
+          product={subscriptions.find(
+            s =>
+              (s.id || s.productId || '').toLowerCase().includes('regular'),
+          )}
+        />
 
-                  <View style={styles.featuresContainer}>
-                    {[
-                      'Unlimited deals creation',
-                      'Analytics dashboard',
-                      'Push notifications',
-                      'Email support',
-                      'Business profile customization',
-                    ].map((feature, idx) => (
-                      <View key={idx} style={styles.featureRow}>
-                        <Icon name="check-circle" size={20} color="#4CAF50" />
-                        <Text
-                          style={[styles.featureText, { color: colors.text }]}
-                        >
-                          {feature}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-
-                  {isPurchasing &&
-                  selectedPlan === (product.id || SUBSCRIPTION_SKUS[0]) ? (
-                    <ActivityIndicator
-                      size="small"
-                      color={colors.primary}
-                      style={styles.purchaseLoader}
-                    />
-                  ) : (
-                    <View
-                      style={[
-                        styles.subscribeButton,
-                        { backgroundColor: colors.primary },
-                      ]}
-                    >
-                      <Text style={styles.subscribeButtonText}>
-                        Subscribe Now
-                      </Text>
-                    </View>
-                  )}
-                </TouchableOpacity>
-              );
-            })
-          : // Fallback to hardcoded plans if IAP products not loaded
-            plans.map(plan => (
-              <TouchableOpacity
-                key={plan.id}
-                style={[
-                  styles.planCard,
-                  {
-                    backgroundColor: colors.surface,
-                    borderColor: plan.recommended
-                      ? colors.primary
-                      : colors.border,
-                    borderWidth: plan.recommended ? 2 : 1,
-                  },
-                ]}
-                onPress={() => handlePurchase(plan.id)}
-                disabled={isPurchasing}
-              >
-                {plan.recommended && (
-                  <View
-                    style={[
-                      styles.recommendedBadge,
-                      { backgroundColor: colors.primary },
-                    ]}
-                  >
-                    <Text style={styles.recommendedText}>RECOMMENDED</Text>
-                  </View>
-                )}
-
-                <Text style={[styles.planTitle, { color: colors.text }]}>
-                  {plan.title}
-                </Text>
-                <Text style={[styles.planPrice, { color: colors.primary }]}>
-                  {plan.price}
-                </Text>
-                <Text
-                  style={[styles.planDescription, { color: colors.disabled }]}
-                >
-                  {plan.description}
-                </Text>
-
-                <View style={styles.featuresContainer}>
-                  {plan.features.map((feature, index) => (
-                    <View key={index} style={styles.featureRow}>
-                      <Icon name="check-circle" size={20} color="#4CAF50" />
-                      <Text
-                        style={[styles.featureText, { color: colors.text }]}
-                      >
-                        {feature}
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-
-                {isPurchasing && selectedPlan === plan.id ? (
-                  <ActivityIndicator
-                    size="small"
-                    color={colors.primary}
-                    style={styles.purchaseLoader}
-                  />
-                ) : (
-                  <View
-                    style={[
-                      styles.subscribeButton,
-                      { backgroundColor: colors.primary },
-                    ]}
-                  >
-                    <Text style={styles.subscribeButtonText}>
-                      Subscribe Now
-                    </Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-            ))}
-
+        {/* Skip Button */}
         <TouchableOpacity
           style={styles.skipButton}
           onPress={skipForNow}
           disabled={isPurchasing}
         >
-          <Text style={[styles.skipButtonText, { color: colors.disabled }]}>
+          <Text style={[styles.skipButtonText, { color: colors.text }]}>
             I'll set this up later
           </Text>
         </TouchableOpacity>
 
+        {/* Info Section */}
         <View style={styles.infoSection}>
-          <Text style={[styles.infoText, { color: colors.disabled }]}>
+          <Text style={[styles.infoText, { color: '#999' }]}>
             • Cancel anytime from your device settings
           </Text>
-          <Text style={[styles.infoText, { color: colors.disabled }]}>
+          <Text style={[styles.infoText, { color: '#999' }]}>
             • Payment will be charged to your iTunes Account or Google Play
           </Text>
-          <Text style={[styles.infoText, { color: colors.disabled }]}>
+          <Text style={[styles.infoText, { color: '#999' }]}>
             • Subscription automatically renews unless cancelled
           </Text>
         </View>
       </ScrollView>
-      <VersionFooter />
     </View>
   );
 };
@@ -1226,7 +1046,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
   loadingContainer: {
     flex: 1,
@@ -1236,110 +1057,105 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-  },
-  sandboxBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-    gap: 8,
-  },
-  sandboxText: {
-    fontSize: 14,
-    fontWeight: '600',
-    flex: 1,
-  },
-  debugBanner: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
-    borderWidth: 1,
-  },
-  debugTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    marginBottom: 8,
-  },
-  debugText: {
-    fontSize: 13,
-    lineHeight: 18,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginTop: 24,
+    marginBottom: 24,
   },
   title: {
-    fontSize: 34,
+    fontSize: 24,
     fontWeight: '700',
-    marginTop: 16,
     textAlign: 'center',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   subtitle: {
-    fontSize: 17,
+    fontSize: 15,
     marginTop: 8,
     textAlign: 'center',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   planCard: {
     borderRadius: 16,
-    padding: 24,
+    borderWidth: 1,
+    padding: 20,
     marginBottom: 16,
     position: 'relative',
+    overflow: 'visible',
   },
-  recommendedBadge: {
+  mostPopularBadge: {
     position: 'absolute',
-    top: -12,
-    left: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
+    top: 0,
+    left: 0,
+    right: 0,
+    paddingVertical: 10,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    alignItems: 'center',
   },
-  recommendedText: {
+  mostPopularText: {
     color: '#fff',
     fontSize: 12,
     fontWeight: '700',
+    letterSpacing: 1,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
-  planTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 8,
+  planName: {
+    fontSize: 16,
+    fontWeight: '400',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
-  planPrice: {
-    fontSize: 32,
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginTop: 4,
+    marginBottom: 16,
+  },
+  priceAmount: {
+    fontSize: 36,
     fontWeight: '700',
-    marginBottom: 8,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
-  planDescription: {
-    fontSize: 15,
+  pricePerMonth: {
+    fontSize: 16,
+    marginLeft: 4,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  subscribeButton: {
+    backgroundColor: '#E4760F',
+    paddingVertical: 14,
+    borderRadius: 25,
+    alignItems: 'center',
     marginBottom: 20,
+  },
+  subscribeButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   featuresContainer: {
-    marginBottom: 20,
+    gap: 12,
   },
   featureRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+  },
+  checkCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#E4760F',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
   },
   featureText: {
-    fontSize: 17,
-    marginLeft: 12,
+    fontSize: 15,
     flex: 1,
-  },
-  subscribeButton: {
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  subscribeButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  purchaseLoader: {
-    marginVertical: 16,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   skipButton: {
     paddingVertical: 16,
@@ -1347,18 +1163,19 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   skipButtonText: {
-    fontSize: 17,
-    textDecorationLine: 'underline',
+    fontSize: 15,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   infoSection: {
     marginTop: 24,
     paddingTop: 24,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)',
+    borderTopColor: '#E5E5E5',
   },
   infoText: {
-    fontSize: 13,
-    marginBottom: 8,
+    fontSize: 12,
+    marginBottom: 6,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
 });
 
