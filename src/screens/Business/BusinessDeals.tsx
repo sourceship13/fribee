@@ -264,24 +264,26 @@ const BusinessDeals = ({ navigation }: any) => {
 
   const renderEmptyState = () => (
     <View style={styles.emptyContainer}>
-      <Icon name="local-offer" size={64} color={colors.textSecondary} />
-      <Text style={[iOSUIKit.title3, { color: colors.text, marginTop: 16, textAlign: 'center' }]}>
-        No Deals Yet
+      <View style={[styles.emptyIconContainer, { borderColor: colors.textSecondary }]}>
+        <Icon name="local-offer" size={32} color={colors.textSecondary} />
+      </View>
+      <Text style={[iOSUIKit.title3Emphasized, { color: colors.text, marginTop: 20, textAlign: 'center' }]}>
+        No deals yet
       </Text>
       <Text
         style={[
-          iOSUIKit.body,
-          { color: colors.textSecondary, marginTop: 8, textAlign: 'center', paddingHorizontal: 32 },
+          iOSUIKit.subhead,
+          { color: colors.textSecondary, marginTop: 8, textAlign: 'center' },
         ]}
       >
         Create your first deal to start attracting customers
       </Text>
       <TouchableOpacity
-        style={[styles.createButton, { backgroundColor: colors.primary }]}
+        style={styles.createDealButton}
         onPress={() => navigation.navigate('DealPostPurchase')}
       >
-        <Icon name="add" size={20} color={colors.background} style={{ marginRight: 8 }} />
-        <Text style={[iOSUIKit.body, { color: colors.background, fontWeight: '600' }]}>
+        <Icon name="add" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
+        <Text style={[iOSUIKit.bodyEmphasized, { color: '#FFFFFF' }]}>
           Create Deal
         </Text>
       </TouchableOpacity>
@@ -329,24 +331,29 @@ const BusinessDeals = ({ navigation }: any) => {
       <Toolbar title="My Deals" onBack={() => navigation.goBack()} showSettings={false} />
 
       {/* Header Stats */}
-      <View style={[styles.headerStats, { backgroundColor: colors.surface }]}>
+      <View style={styles.headerStats}>
         <View style={styles.statBox}>
-          <Text style={[iOSUIKit.title3Emphasized, { color: colors.text }]}>{businessDeals.length}</Text>
-          <Text style={[iOSUIKit.footnote, { color: colors.textSecondary }]}>Total Deals</Text>
+          <Text style={[styles.statNumber, { color: colors.primary }]}>{businessDeals.length}</Text>
+          <Text style={[iOSUIKit.caption2, { color: colors.textSecondary }]}>Total Deals</Text>
         </View>
+        <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
         <View style={styles.statBox}>
-          <Text style={[iOSUIKit.title3Emphasized, { color: colors.text }]}>
+          <Text style={[styles.statNumber, { color: colors.primary }]}>
             {businessDeals.filter((d) => d.priority_score > 0).length}
           </Text>
-          <Text style={[iOSUIKit.footnote, { color: colors.textSecondary }]}>Featured</Text>
+          <Text style={[iOSUIKit.caption2, { color: colors.textSecondary }]}>Featured</Text>
         </View>
+        <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
         <View style={styles.statBox}>
-          <Text style={[iOSUIKit.title3Emphasized, { color: colors.text }]}>
+          <Text style={[styles.statNumber, { color: colors.primary }]}>
             {businessDeals.filter((d) => d.is_hearted).length}
           </Text>
-          <Text style={[iOSUIKit.footnote, { color: colors.textSecondary }]}>Hearted</Text>
+          <Text style={[iOSUIKit.caption2, { color: colors.textSecondary }]}>Liked</Text>
         </View>
       </View>
+
+      {/* Divider */}
+      <View style={[styles.sectionDivider, { backgroundColor: colors.border }]} />
 
       <FlatList
         data={businessDeals}
@@ -431,15 +438,27 @@ const styles = StyleSheet.create({
   },
   headerStats: {
     flexDirection: 'row',
-    padding: 16,
-    marginHorizontal: 16,
-    marginTop: 8,
-    marginBottom: 16,
-    borderRadius: 12,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
     justifyContent: 'space-around',
+    alignItems: 'center',
   },
   statBox: {
     alignItems: 'center',
+    flex: 1,
+  },
+  statNumber: {
+    fontSize: 20,
+    fontStyle: 'italic',
+    fontWeight: '400',
+  },
+  statDivider: {
+    width: 1,
+    height: 32,
+  },
+  sectionDivider: {
+    height: 1,
+    marginHorizontal: 0,
   },
   listContent: {
     paddingHorizontal: 16,
@@ -502,7 +521,26 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    paddingHorizontal: 32,
+  },
+  emptyIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  createDealButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1A1A1A',
+    marginTop: 24,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 28,
+    width: '100%',
   },
   createButton: {
     flexDirection: 'row',
