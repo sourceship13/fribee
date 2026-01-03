@@ -279,7 +279,7 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
             {deal.is_premium_business && (
               <MaterialIcons
                 name="verified"
-                size={24}
+                size={22}
                 color="#0095f6"
                 style={styles.verifiedIcon}
               />
@@ -288,7 +288,7 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
 
           {/* Description / Tagline */}
           {(deal.business_description || deal.businessDescription) && (
-            <Text style={[styles.tagline, { color: colors.subText }]}>
+            <Text style={[styles.tagline, { color: colors.textSecondary }]}>
               {deal.business_description || deal.businessDescription}
             </Text>
           )}
@@ -533,13 +533,10 @@ const styles = StyleSheet.create({
   // Map Section
   mapSection: {
     marginBottom: 24,
-    borderRadius: 16,
-    overflow: 'hidden',
+    marginHorizontal: -20,
   },
   mapContainer: {
     height: 180,
-    borderRadius: 16,
-    overflow: 'hidden',
   },
   map: {
     flex: 1,
@@ -552,6 +549,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 30,
     marginTop: 12,
+    marginHorizontal: 20,
     gap: 8,
   },
   directionsButtonText: {
@@ -568,13 +566,11 @@ const styles = StyleSheet.create({
   },
   galleryImageContainer: {
     marginRight: 12,
-    borderRadius: 12,
     overflow: 'hidden',
   },
   galleryImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 12,
+    width: 150,
+    height: 150,
   },
 });
 
