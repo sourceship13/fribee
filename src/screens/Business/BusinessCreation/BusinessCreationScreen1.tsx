@@ -36,15 +36,15 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
   const { isDarkMode } = useAuth();
   const colors = getColors(isDarkMode);
 
-  const [businessName, setBusinessName] = useState('');
-  const [description, setDescription] = useState('');
-  const [address, setAddress] = useState('');
-  const [city, setCity] = useState('');
+  const [businessName, setBusinessName] = useState('Debug Business');
+  const [description, setDescription] = useState('This is a debug description for the business.');
+  const [address, setAddress] = useState('19208 Kenya St');
+  const [city, setCity] = useState('Northridge');
   const [country, setCountry] = useState('United States');
-  const [state, setState] = useState('');
-  const [postalCode, setPostalCode] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [businessUrl, setBusinessUrl] = useState('');
+  const [state, setState] = useState('Califiornia');
+  const [postalCode, setPostalCode] = useState('91326');
+  const [phoneNumber, setPhoneNumber] = useState('3466901439');
+  const [businessUrl, setBusinessUrl] = useState('https://sera.dev');
 
   const [showCountryPicker, setShowCountryPicker] = useState(false);
   const [showStatePicker, setShowStatePicker] = useState(false);

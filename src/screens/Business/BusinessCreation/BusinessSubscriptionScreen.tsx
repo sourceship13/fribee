@@ -115,6 +115,11 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
 
   // Get all business data from previous screens
   const businessData = route.params;
+  
+  // Debug logging for route params
+  console.log('🚀 BusinessSubscriptionScreen MOUNTED');
+  console.log('📦 route.params:', JSON.stringify(route.params, null, 2));
+  console.log('📦 businessData keys:', Object.keys(businessData || {}));
 
   // Hardcoded plans for fallback
   const plans: SubscriptionPlan[] = [
@@ -279,7 +284,8 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
             await RNIap.finishTransaction({ purchase });
 
             console.log('✅ Transaction finished, now submitting business data');
-            console.log('📦 Business data:', businessData);
+            console.log('📦 Business data:', JSON.stringify(businessData, null, 2));
+            console.log('📦 Business data keys:', Object.keys(businessData || {}));
             
             // Store the plan ID before it gets cleared
             const planId = selectedPlan || purchase.productId;
@@ -289,15 +295,27 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
               // Create FormData for multipart/form-data upload
               const formData = new FormData();
               
-              // Add text fields
-              if (businessData?.businessName) formData.append('businessName', businessData.businessName);
-              if (businessData?.description) formData.append('description', businessData.description);
-              if (businessData?.address) formData.append('address', businessData.address);
-              if (businessData?.city) formData.append('city', businessData.city);
-              if (businessData?.state) formData.append('state', businessData.state);
-              if (businessData?.postalCode) formData.append('postalCode', businessData.postalCode);
-              if (businessData?.country) formData.append('country', businessData.country);
-              if (businessData?.phoneNumber) formData.append('phoneNumber', businessData.phoneNumber);
+              // Add text fields - always append if they have values
+              console.log('📋 Adding text fields to FormData:');
+              console.log('  - businessName:', businessData?.businessName);
+              console.log('  - description:', businessData?.description);
+              console.log('  - address:', businessData?.address);
+              console.log('  - city:', businessData?.city);
+              console.log('  - state:', businessData?.state);
+              console.log('  - postalCode:', businessData?.postalCode);
+              console.log('  - country:', businessData?.country);
+              console.log('  - phoneNumber:', businessData?.phoneNumber);
+              console.log('  - businessUrl:', businessData?.businessUrl);
+              
+              // Always include required fields with defaults
+              formData.append('businessName', businessData?.businessName || 'My Business');
+              formData.append('description', businessData?.description || '');
+              formData.append('address', businessData?.address || '');
+              formData.append('city', businessData?.city || '');
+              formData.append('state', businessData?.state || '');
+              formData.append('postalCode', businessData?.postalCode || '');
+              formData.append('country', businessData?.country || 'United States');
+              formData.append('phoneNumber', businessData?.phoneNumber || '');
               if (businessData?.businessUrl) formData.append('websiteUrl', businessData.businessUrl);
               
               // Add images
@@ -317,23 +335,21 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
                 } as any);
               }
               
-              if (businessData?.businessImage1) {
-                formData.append('businessImage1', {
-                  uri: Platform.OS === 'ios' ? businessData.businessImage1.uri.replace('file://', '') : businessData.businessImage1.uri,
-                  type: businessData.businessImage1.type || 'image/jpeg',
-                  name: businessData.businessImage1.fileName || 'business_image_1.jpg',
-                } as any);
-              }
-              
-              if (businessData?.businessImage2) {
-                formData.append('businessImage2', {
-                  uri: Platform.OS === 'ios' ? businessData.businessImage2.uri.replace('file://', '') : businessData.businessImage2.uri,
-                  type: businessData.businessImage2.type || 'image/jpeg',
-                  name: businessData.businessImage2.fileName || 'business_image_2.jpg',
-                } as any);
+              // Add business photos from array
+              if (businessData?.businessPhotos && Array.isArray(businessData.businessPhotos)) {
+                businessData.businessPhotos.forEach((photo: any, index: number) => {
+                  if (photo && index < 2) { // API supports up to 2 business images
+                    formData.append(`businessImage${index + 1}`, {
+                      uri: Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri,
+                      type: photo.type || 'image/jpeg',
+                      name: photo.fileName || `business_image_${index + 1}.jpg`,
+                    } as any);
+                  }
+                });
               }
 
               console.log('🚀 Submitting business data to API...');
+              console.log('📋 FormData country:', businessData?.country || 'United States (default)');
               const businessResponse = await apiService.registerBusiness(formData);
               console.log('📥 Business registration response:', businessResponse);
 
@@ -767,20 +783,33 @@ Please share this information with support.
     // Create the business profile before navigating
     try {
       console.log('✅ Subscription verified, now creating business profile...');
-      console.log('📦 Business data:', businessData);
+      console.log('📦 Business data:', JSON.stringify(businessData, null, 2));
+      console.log('📦 Business data keys:', Object.keys(businessData || {}));
       
       // Create FormData for multipart/form-data upload
       const formData = new FormData();
       
-      // Add text fields
-      if (businessData?.businessName) formData.append('businessName', businessData.businessName);
-      if (businessData?.description) formData.append('description', businessData.description);
-      if (businessData?.address) formData.append('address', businessData.address);
-      if (businessData?.city) formData.append('city', businessData.city);
-      if (businessData?.state) formData.append('state', businessData.state);
-      if (businessData?.postalCode) formData.append('postalCode', businessData.postalCode);
-      if (businessData?.country) formData.append('country', businessData.country);
-      if (businessData?.phoneNumber) formData.append('phoneNumber', businessData.phoneNumber);
+      // Add text fields - always append with defaults
+      console.log('📋 Adding text fields to FormData:');
+      console.log('  - businessName:', businessData?.businessName);
+      console.log('  - description:', businessData?.description);
+      console.log('  - address:', businessData?.address);
+      console.log('  - city:', businessData?.city);
+      console.log('  - state:', businessData?.state);
+      console.log('  - postalCode:', businessData?.postalCode);
+      console.log('  - country:', businessData?.country);
+      console.log('  - phoneNumber:', businessData?.phoneNumber);
+      console.log('  - businessUrl:', businessData?.businessUrl);
+      
+      // Always include required fields with defaults
+      formData.append('businessName', businessData?.businessName || 'My Business');
+      formData.append('description', businessData?.description || '');
+      formData.append('address', businessData?.address || '');
+      formData.append('city', businessData?.city || '');
+      formData.append('state', businessData?.state || '');
+      formData.append('postalCode', businessData?.postalCode || '');
+      formData.append('country', businessData?.country || 'United States');
+      formData.append('phoneNumber', businessData?.phoneNumber || '');
       if (businessData?.businessUrl) formData.append('websiteUrl', businessData.businessUrl);
       
       // Add images
@@ -800,23 +829,21 @@ Please share this information with support.
         } as any);
       }
       
-      if (businessData?.businessImage1) {
-        formData.append('businessImage1', {
-          uri: Platform.OS === 'ios' ? businessData.businessImage1.uri.replace('file://', '') : businessData.businessImage1.uri,
-          type: businessData.businessImage1.type || 'image/jpeg',
-          name: businessData.businessImage1.fileName || 'business_image_1.jpg',
-        } as any);
-      }
-      
-      if (businessData?.businessImage2) {
-        formData.append('businessImage2', {
-          uri: Platform.OS === 'ios' ? businessData.businessImage2.uri.replace('file://', '') : businessData.businessImage2.uri,
-          type: businessData.businessImage2.type || 'image/jpeg',
-          name: businessData.businessImage2.fileName || 'business_image_2.jpg',
-        } as any);
+      // Add business photos from array
+      if (businessData?.businessPhotos && Array.isArray(businessData.businessPhotos)) {
+        businessData.businessPhotos.forEach((photo: any, index: number) => {
+          if (photo && index < 2) { // API supports up to 2 business images
+            formData.append(`businessImage${index + 1}`, {
+              uri: Platform.OS === 'ios' ? photo.uri.replace('file://', '') : photo.uri,
+              type: photo.type || 'image/jpeg',
+              name: photo.fileName || `business_image_${index + 1}.jpg`,
+            } as any);
+          }
+        });
       }
 
       console.log('🚀 Submitting business data to API...');
+      console.log('📋 FormData country:', businessData?.country || 'United States (default)');
       const businessResponse = await apiService.registerBusiness(formData);
       console.log('📥 Business registration response:', businessResponse);
 
