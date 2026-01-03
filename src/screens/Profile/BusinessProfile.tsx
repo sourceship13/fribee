@@ -349,17 +349,17 @@ const BusinessProfile = ({ navigation, route }: any) => {
         {/* Bottom Action Buttons */}
         <View style={styles.actionButtons}>
           <TouchableOpacity
-            style={[styles.actionButton, { borderColor: colors.text }]}
+            style={[styles.actionButton, styles.primaryButton]}
             onPress={() => navigation.navigate('BusinessDeals')}
           >
-            <Icon name="local-offer" size={18} color={colors.text} style={{ marginRight: 8 }} />
-            <Text style={[iOSUIKit.bodyEmphasized, { color: colors.text }]}>
+            <Icon name="local-offer" size={18} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Text style={[iOSUIKit.bodyEmphasized, { color: '#FFFFFF' }]}>
               View My Deals
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.actionButton, { borderColor: colors.text }]}
+            style={[styles.actionButton, styles.outlineButton, { borderColor: colors.text }]}
             onPress={() => navigation.navigate('EditBusiness', { businessId: business.id })}
           >
             <Icon name="edit" size={18} color={colors.text} style={{ marginRight: 8 }} />
@@ -437,7 +437,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 8,
     borderRadius: 12,
-    borderWidth: 1,
     overflow: 'hidden',
   },
   infoRow: {
@@ -465,9 +464,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   photoContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 12,
+    width: 150,
+    height: 150,
     overflow: 'hidden',
   },
   businessPhoto: {
@@ -489,8 +487,13 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderRadius: 24,
-    borderWidth: 1,
+  },
+  primaryButton: {
+    backgroundColor: '#1A1A1A',
+  },
+  outlineButton: {
     backgroundColor: 'transparent',
+    borderWidth: 1,
   },
   debugButton: {
     flexDirection: 'row',
