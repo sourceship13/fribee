@@ -15,9 +15,20 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const COUNTRIES = ['United States', 'Canada', 'Mexico', 'United Kingdom'];
 const STATES: Record<string, string[]> = {
-  'United States': ['Texas', 'California', 'New York', 'Florida', 'Illinois'],
-  'Canada': ['Ontario', 'Quebec', 'British Columbia', 'Alberta'],
-  'Mexico': ['Mexico City', 'Jalisco', 'Nuevo León'],
+  'United States': [
+    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+    'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia',
+    'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
+    'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
+    'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri',
+    'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey',
+    'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio',
+    'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina',
+    'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+    'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+  ],
+  Canada: ['Ontario', 'Quebec', 'British Columbia', 'Alberta', 'Manitoba', 'Saskatchewan'],
+  Mexico: ['Mexico City', 'Jalisco', 'Nuevo León', 'Puebla', 'Guanajuato'],
   'United Kingdom': ['England', 'Scotland', 'Wales', 'Northern Ireland'],
 };
 
@@ -29,7 +40,7 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
+  const [country, setCountry] = useState('United States');
   const [state, setState] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -182,7 +193,7 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
               value={city}
               onChangeText={setCity}
             />
-            {renderDropdown(country, 'Country', () => setShowCountryPicker(true), 1)}
+            {/* {renderDropdown(country, 'Country', () => setShowCountryPicker(true), 1)} */}
             {renderDropdown(state, 'State', () => setShowStatePicker(true), 1)}
           </View>
 
@@ -255,7 +266,7 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
       {renderPickerModal(
         showStatePicker,
         () => setShowStatePicker(false),
-        STATES[country] || [],
+        STATES[country] || STATES['United States'],
         setState,
         'Select State'
       )}
