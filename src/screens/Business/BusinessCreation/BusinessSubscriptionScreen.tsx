@@ -1011,7 +1011,7 @@ Please share this information with support.
         />
 
         {/* Skip Button */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.skipButton}
           onPress={skipForNow}
           disabled={isPurchasing}
@@ -1019,7 +1019,7 @@ Please share this information with support.
           <Text style={[styles.skipButtonText, { color: colors.text }]}>
             I'll set this up later
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         {/* Info Section */}
         <View style={styles.infoSection}>
