@@ -154,22 +154,27 @@ const SwipeScreen = ({ navigation }: any) => {
   );
 
   const onHandlerStateChange = (event: any) => {
-    // nativeEvent is already declared above
     const { nativeEvent } = event;
 
+    // Only register like/dislike when user RELEASES their finger (State.END)
     if (nativeEvent.state === State.END) {
       const { translationX } = nativeEvent;
+      
+      // Edge threshold - card must be moved close to screen edge
+      // screenWidth/2 - 50 means the card center is near the screen edge
+      const { width } = Dimensions.get('window');
+      const edgeThreshold = width / 2 - 50;
 
-      if (translationX > 150) {
-        // Swipe right - like
+      if (translationX > edgeThreshold) {
+        // Swiped to right edge and released - LIKE
         handleSwipe('right');
         resetAnimations();
-      } else if (translationX < -150) {
-        // Swipe left - dislike
+      } else if (translationX < -edgeThreshold) {
+        // Swiped to left edge and released - DISLIKE
         handleSwipe('left');
         resetAnimations();
       } else {
-        // Snap back to center
+        // Didn't reach edge - snap back to center
         resetAnimations();
       }
     }
