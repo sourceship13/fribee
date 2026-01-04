@@ -312,6 +312,29 @@ const SwipeScreen = ({ navigation }: any) => {
         </View>
       )}
 
+      {/* Stacked cards behind main card - OUTSIDE animated view so they don't move */}
+      <View style={styles.stackedCardsContainer} pointerEvents="none">
+        <View style={[styles.stackedCard3, { width: (screenWidth - 20) * 0.75 }]}>
+          <SwipeCard3
+            width="100%"
+            height={10}
+            preserveAspectRatio="none"
+          />
+        </View>
+        <View
+          style={[
+            styles.stackedCard2,
+            { width: (screenWidth - 20) * 0.9 },
+          ]}
+        >
+          <SwipeCard2
+            width="100%"
+            height={16}
+            preserveAspectRatio="none"
+          />
+        </View>
+      </View>
+
       {/* 3. Full-screen content area */}
       <PanGestureHandler
         onGestureEvent={onGestureEvent}
@@ -359,28 +382,6 @@ const SwipeScreen = ({ navigation }: any) => {
             </View>
           ) : (
             <>
-              {/* Stacked cards behind main card */}
-              <View style={styles.stackedCardsContainer} pointerEvents="none">
-                <View style={{ width: (screenWidth - 20) * 0.75 }}>
-                  <SwipeCard3
-                    width="100%"
-                    height={10}
-                    preserveAspectRatio="none"
-                  />
-                </View>
-                <View
-                  style={[
-                    styles.stackedCard2,
-                    { width: (screenWidth - 20) * 0.9 },
-                  ]}
-                >
-                  <SwipeCard2
-                    width="100%"
-                    height={16}
-                    preserveAspectRatio="none"
-                  />
-                </View>
-              </View>
               {/* Full-screen image background */}
               <View style={styles.imageContainer} pointerEvents="box-none">
                 {(() => {
@@ -562,18 +563,17 @@ const styles = StyleSheet.create({
   // Stacked cards effect
   stackedCardsContainer: {
     position: 'absolute',
-    top: 0,
+    top: 115, // Below header (header is ~100px with padding), above main card
     left: 0,
     right: 0,
     alignItems: 'center',
     zIndex: 1,
-    paddingTop: 10,
   },
   stackedCard3: {
-    // Smallest/lightest card at very top
+    // Smallest/lightest card at very top - no margin needed, renders first
   },
   stackedCard2: {
-    // Overlap with card3
+    marginTop: -6, // Slight overlap with card3 so card3 peeks above
   },
   nextDealCard: {
     flex: 1,
