@@ -255,7 +255,7 @@ const SwipeScreen = ({ navigation }: any) => {
     >
       <Toolbar
         title="Discover Deals"
-        onSettings={() => navigation.navigate('SwipeSettings')}
+        onSettings={() => navigation.navigate('Settings')}
         showSettings
         showLogo
       />
