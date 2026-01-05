@@ -20,6 +20,8 @@ import { iOSUIKit } from 'react-native-typography';
 import VersionFooter from '../../components/VersionFooter';
 import instagramAuthService from '../../services/instagram-auth.service';
 import apiService from '../../services/api.service';
+import AuthService from '../../services/auth.service';
+
 
 const signInBackground = require('../../../assets/imgs/signInBackground.png');
 
@@ -32,6 +34,9 @@ const SignInScreen = ({ navigation }: any) => {
   const [loading, setLoading] = useState(false);
   const [instagramLoading, setInstagramLoading] = useState(false);
   const [createUserModal, setCreateUserModal] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errors, setErrors] = useState<any>({});
+  const [phone, setPhone] = useState('');
 
   const [fields, setFields] = useState({
     firstName: '',
@@ -258,7 +263,7 @@ const SignInScreen = ({ navigation }: any) => {
             padding: 20,
             borderRadius: 36,
             opacity: 0.95,
-            height: '60%',
+            height: '85%',
           }}
         >
           {createUserModal ? (
@@ -315,9 +320,25 @@ const SignInScreen = ({ navigation }: any) => {
                 ]}
                 placeholder="Email"
                 placeholderTextColor={colors.textPlaceholder}
-                value={email}
-                onChangeText={setEmail}
+                value={fields.email}
+                onChangeText={(text) => setFields({ ...fields, email: text })}
                 keyboardType="email-address"
+                autoCapitalize="none"
+              />
+
+              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+                Phone Number
+              </Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  { color: colors.text, backgroundColor: colors.surface },
+                ]}
+                placeholder="Phone Number"
+                placeholderTextColor={colors.textPlaceholder}
+                value={fields.phone}
+                onChangeText={(text) => setFields({ ...fields, phone: text })}
+                keyboardType="phone-pad"
                 autoCapitalize="none"
               />
 
@@ -331,8 +352,23 @@ const SignInScreen = ({ navigation }: any) => {
                 ]}
                 placeholder="Password"
                 placeholderTextColor={colors.textPlaceholder}
-                value={password}
-                onChangeText={setPassword}
+                value={fields.password}
+                onChangeText={(text) => setFields({ ...fields, password: text })}
+                secureTextEntry
+              />
+
+              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+                Confirm Password
+              </Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  { color: colors.text, backgroundColor: colors.surface },
+                ]}
+                placeholder="Confirm Password"
+                placeholderTextColor={colors.textPlaceholder}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
                 secureTextEntry
               />
 
@@ -397,6 +433,22 @@ const SignInScreen = ({ navigation }: any) => {
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
+                autoCapitalize="none"
+              />
+              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+                Phone
+              </Text>
+
+              <TextInput
+                style={[
+                  styles.input,
+                  { color: colors.text, backgroundColor: colors.surface },
+                ]}
+                placeholder="Phone"
+                placeholderTextColor={colors.textPlaceholder}
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
                 autoCapitalize="none"
               />
               <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
