@@ -13,6 +13,8 @@ import { getColors } from '../../libs/colors';
 import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
 import VersionFooter from '../../components/VersionFooter';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const SettingsScreen = ({ navigation }: any) => {
   const {
@@ -25,8 +27,6 @@ const SettingsScreen = ({ navigation }: any) => {
     availableCategories,
   } = useAuth();
   const colors = getColors(isDarkMode);
-
-  // Debug categories
 
   const [locationEnabled, setLocationEnabled] = useState(true);
   const [radius, setRadius] = useState('5 miles');
@@ -59,7 +59,6 @@ const SettingsScreen = ({ navigation }: any) => {
         onPress: async () => {
           try {
             await logout();
-            // Navigation will be handled automatically by AppNavigator when user becomes null
           } catch (error) {
             console.error('❌ Settings: Logout failed:', error);
             Alert.alert(
@@ -72,232 +71,172 @@ const SettingsScreen = ({ navigation }: any) => {
     ]);
   };
 
+  const renderSettingRow = (
+    label: string,
+    value: boolean,
+    onValueChange: (value: boolean) => void,
+    subtitle?: string,
+    isLast?: boolean,
+  ) => (
+    <View>
+      <View style={styles.settingRow}>
+        <View style={styles.settingLabelContainer}>
+          <Text style={[styles.settingLabel, { color: colors.text }]}>
+            {label}
+          </Text>
+          {subtitle && (
+            <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
+              {subtitle}
+            </Text>
+          )}
+        </View>
+        <Switch
+          value={value}
+          onValueChange={onValueChange}
+          trackColor={{ false: '#E5E5EA', true: '#FF9500' }}
+          thumbColor="#FFFFFF"
+          ios_backgroundColor="#E5E5EA"
+        />
+      </View>
+      {!isLast && <View style={[styles.divider, { backgroundColor: colors.border }]} />}
+    </View>
+  );
+
+  const renderNavigationRow = (
+    label: string,
+    onPress: () => void,
+    isLast?: boolean,
+  ) => (
+    <View>
+      <TouchableOpacity style={styles.navigationRow} onPress={onPress}>
+        <Text style={[styles.settingLabel, { color: colors.text }]}>
+          {label}
+        </Text>
+        <Ionicons name="arrow-forward" size={20} color={colors.textSecondary} />
+      </TouchableOpacity>
+      {!isLast && <View style={[styles.divider, { backgroundColor: colors.border }]} />}
+    </View>
+  );
+
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
       <Toolbar
         title="Preferences"
         onBack={() => navigation.goBack()}
-        isModal={true}
       />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
       >
+        {/* Theme Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Theme
           </Text>
-          <View style={styles.row}>
-            <Text style={[iOSUIKit.body, { color: colors.text }]}>
-              Dark Mode
-            </Text>
-            <Switch value={isDarkMode} onValueChange={setDarkMode} />
-          </View>
+          {renderSettingRow('Saved Deals', isDarkMode, setDarkMode, undefined, true)}
         </View>
+
+        {/* Location Settings Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Location Settings
           </Text>
-          <View style={styles.row}>
-            <Text style={[iOSUIKit.body, { color: colors.text }]}>
-              Use my location
-            </Text>
-            <Switch
-              value={locationEnabled}
-              onValueChange={setLocationEnabled}
-            />
-          </View>
-          <Text
-            style={[
-              iOSUIKit.footnote,
-              { color: colors.textSecondary, marginTop: 8 },
-            ]}
-          >
-            Search radius: {radius}
-          </Text>
+          {renderSettingRow(
+            'Use my location',
+            locationEnabled,
+            setLocationEnabled,
+            `Search radius: ${radius}`,
+            true,
+          )}
         </View>
+
+        {/* Deal Categories Section */}
         <View style={styles.section}>
-          <View style={styles.row}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              Deal Categories
-            </Text>
-            <TouchableOpacity
-              onPress={refreshCategories}
-              style={{ padding: 4 }}
-            >
-              <Text style={[iOSUIKit.subhead, { color: colors.primary }]}>
-                🔄 Refresh
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            Deal Categories
+          </Text>
 
           {Object.keys(categories).length === 0 &&
           availableCategories.length === 0 ? (
             <Text
-              style={[
-                iOSUIKit.footnote,
-                { color: colors.textSecondary, fontStyle: 'italic' },
-              ]}
+              style={[styles.settingSubtitle, { color: colors.textSecondary, fontStyle: 'italic' }]}
             >
-              Loading categories... Tap refresh if this persists.
+              Loading categories...
             </Text>
           ) : availableCategories.length > 0 ? (
-            // Use availableCategories for display names
-            availableCategories.map(category => (
-              <View style={styles.row} key={category.slug}>
-                <Text style={[iOSUIKit.body, { color: colors.text }]}>
-                  {category.name}
-                </Text>
-                <Switch
-                  value={categories[category.slug] ?? true}
-                  onValueChange={value =>
-                    setCategories({ ...categories, [category.slug]: value })
-                  }
-                />
-              </View>
+            availableCategories.map((category, index) => (
+              <React.Fragment key={category.slug}>
+                {renderSettingRow(
+                  category.name,
+                  categories[category.slug] ?? true,
+                  value => setCategories({ ...categories, [category.slug]: value }),
+                  undefined,
+                  index === availableCategories.length - 1,
+                )}
+              </React.Fragment>
             ))
           ) : (
-            // Fallback to categories object keys
-            Object.keys(categories).map(key => (
-              <View style={styles.row} key={key}>
-                <Text style={[iOSUIKit.body, { color: colors.text }]}>
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                </Text>
-                <Switch
-                  value={categories[key as keyof typeof categories]}
-                  onValueChange={value =>
-                    setCategories({ ...categories, [key]: value })
-                  }
-                />
-              </View>
+            Object.keys(categories).map((key, index) => (
+              <React.Fragment key={key}>
+                {renderSettingRow(
+                  key.charAt(0).toUpperCase() + key.slice(1),
+                  categories[key as keyof typeof categories],
+                  value => setCategories({ ...categories, [key]: value }),
+                  undefined,
+                  index === Object.keys(categories).length - 1,
+                )}
+              </React.Fragment>
             ))
           )}
         </View>
+
+        {/* Notifications Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Notifications
           </Text>
-          <View style={styles.row}>
-            <Text style={[iOSUIKit.body, { color: colors.text }]}>
-              New deals nearby
-            </Text>
-            <Switch
-              value={notifications.deals}
-              onValueChange={value =>
-                setNotifications({ ...notifications, deals: value })
-              }
-            />
-          </View>
-          <View style={styles.row}>
-            <Text style={[iOSUIKit.body, { color: colors.text }]}>
-              Deal expiry reminders
-            </Text>
-            <Switch
-              value={notifications.expiry}
-              onValueChange={value =>
-                setNotifications({ ...notifications, expiry: value })
-              }
-            />
-          </View>
-          <View style={styles.row}>
-            <Text style={[iOSUIKit.body, { color: colors.text }]}>
-              Friend referrals
-            </Text>
-            <Switch
-              value={notifications.referrals}
-              onValueChange={value =>
-                setNotifications({ ...notifications, referrals: value })
-              }
-            />
-          </View>
+          {renderSettingRow(
+            'New deals nearby',
+            notifications.deals,
+            value => setNotifications({ ...notifications, deals: value }),
+          )}
+          {renderSettingRow(
+            'Deal expiry reminders',
+            notifications.expiry,
+            value => setNotifications({ ...notifications, expiry: value }),
+          )}
+          {renderSettingRow(
+            'Friend referrals',
+            notifications.referrals,
+            value => setNotifications({ ...notifications, referrals: value }),
+            undefined,
+            true,
+          )}
         </View>
+
+        {/* Sign Out Button */}
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: colors.error }]}
+          style={styles.signOutButton}
           onPress={handleLogout}
         >
-          <Text
-            style={[iOSUIKit.callout, { color: '#fff', fontWeight: 'bold' }]}
-          >
-            Sign Out
-          </Text>
+          <MaterialIcons name="logout" size={20} color="#FFFFFF" style={styles.signOutIcon} />
+          <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
-        (__DEV__ ) && (
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Developer Options
-          </Text>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colors.error, marginBottom: 16 },
-            ]}
-            onPress={() => navigation.navigate('Debug')}
-          >
-            <Text
-              style={[
-                iOSUIKit.callout,
-                { color: colors.background, fontWeight: 'bold' },
-              ]}
-            >
-              🔧 Debug Console
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colors.error, marginBottom: 16 },
-            ]}
-            onPress={() => navigation.navigate('NetworkDebug')}
-          >
-            <Text
-              style={[iOSUIKit.callout, { color: '#fff', fontWeight: 'bold' }]}
-            >
-              🔧 Network Debug
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colors.primary, marginBottom: 8 },
-            ]}
-            onPress={() => navigation.navigate('FontDebug')}
-          >
-            <Text
-              style={[iOSUIKit.callout, { color: '#fff', fontWeight: 'bold' }]}
-            >
-              🔤 Font Debug
-            </Text>
-          </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colors.primary, marginBottom: 8 },
-            ]}
-            onPress={() => navigation.navigate('PermissionTest')}
-          >
-            <Text
-              style={[iOSUIKit.callout, { color: '#fff', fontWeight: 'bold' }]}
-            >
-              Test Permissions
+        {/* Developer Options Section */}
+        {__DEV__ && (
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              Developer Options
             </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colors.primary, marginBottom: 16 },
-            ]}
-            onPress={() => navigation.navigate('DemoShare')}
-          >
-            <Text
-              style={[iOSUIKit.callout, { color: '#fff', fontWeight: 'bold' }]}
-            >
-              Test Deal Sharing
-            </Text>
-          </TouchableOpacity>
-        </View>
-        )
+            {renderNavigationRow('Debug Console', () => navigation.navigate('Debug'))}
+            {renderNavigationRow('Network Debug', () => navigation.navigate('NetworkDebug'))}
+            {renderNavigationRow('Font Debug', () => navigation.navigate('FontDebug'))}
+            {renderNavigationRow('Test Permissions', () => navigation.navigate('PermissionTest'))}
+            {renderNavigationRow('Test Deal Sharing', () => navigation.navigate('DemoShare'), true)}
+          </View>
+        )}
       </ScrollView>
       <VersionFooter />
     </View>
@@ -305,34 +244,70 @@ const SettingsScreen = ({ navigation }: any) => {
 };
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+  },
   scrollView: {
     flex: 1,
   },
   container: {
-    padding: 24,
-    paddingBottom: 40, // Extra space at bottom
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
   section: {
     marginBottom: 24,
   },
-  sectionTitle: StyleSheet.flatten([
-    iOSUIKit.title3Emphasized,
-    {
-      marginBottom: 8,
-    },
-  ]),
-  row: {
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 16,
+    marginTop: 8,
+  },
+  settingRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    paddingVertical: 12,
   },
-  button: {
-    borderRadius: 12,
-    padding: 16,
+  settingLabelContainer: {
+    flex: 1,
+  },
+  settingLabel: {
+    fontSize: 16,
+    fontWeight: '400',
+  },
+  settingSubtitle: {
+    fontSize: 13,
+    marginTop: 2,
+  },
+  navigationRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    width: 180,
-    alignSelf: 'center',
+    paddingVertical: 16,
+  },
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    marginLeft: 0,
+  },
+  signOutButton: {
+    flexDirection: 'row',
+    backgroundColor: '#000000',
+    borderRadius: 30,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 24,
+    marginHorizontal: 20,
+  },
+  signOutIcon: {
+    marginRight: 8,
+  },
+  signOutText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
