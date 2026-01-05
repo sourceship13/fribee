@@ -26,6 +26,7 @@ import SettingsIcon from '../../../assets/imgs/settings-icon.svg';
 import LinearGradient from 'react-native-linear-gradient';
 import SwipeCard2 from '../../../assets/imgs/swipe-card-2.svg';
 import SwipeCard3 from '../../../assets/imgs/swipe-card-3.svg';
+import Toolbar from '../../components/Toolbar';
 
 const PLACEHOLDER_DEAL = {
   id: 0,
@@ -252,29 +253,12 @@ const SwipeScreen = ({ navigation }: any) => {
     <View
       style={[styles.screenContainer, { backgroundColor: colors.background }]}
     >
-      {/* 1. Header */}
-      <View
-        style={[
-          styles.header,
-          {
-            backgroundColor: colors.background,
-            borderBottomColor: colors.border,
-          },
-        ]}
-      >
-        <IconLogo width={21} height={24} fill="#FF9500" />
-
-        <Text style={[iOSUIKit.title3Emphasized, { color: colors.title }]}>
-          Discover Deals
-        </Text>
-
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Settings')}
-          style={styles.settingsButton}
-        >
-          <SettingsIcon width={24} height={24} color={colors.inactive} />
-        </TouchableOpacity>
-      </View>
+      <Toolbar
+        title="Discover Deals"
+        onSettings={() => navigation.navigate('SwipeSettings')}
+        showSettings
+        showLogo
+      />
 
       {/* Next deal card rendered BEHIND the main card */}
       {!dealsLoading && !error && nextDeal && (
@@ -314,13 +298,13 @@ const SwipeScreen = ({ navigation }: any) => {
 
       {/* Stacked cards behind main card - OUTSIDE animated view so they don't move */}
       <View style={styles.stackedCardsContainer} pointerEvents="none">
-        <View style={[styles.stackedCard3, { width: (screenWidth - 20) * 0.75 }]}>
+        {/* <View style={[styles.stackedCard3, { width: (screenWidth - 20) * 0.75 }]}>
           <SwipeCard3
             width="100%"
             height={10}
             preserveAspectRatio="none"
           />
-        </View>
+        </View> */}
         <View
           style={[
             styles.stackedCard2,
@@ -573,7 +557,7 @@ const styles = StyleSheet.create({
     // Smallest/lightest card at very top - no margin needed, renders first
   },
   stackedCard2: {
-    marginTop: -6, // Slight overlap with card3 so card3 peeks above
+    marginTop: 16, // Slight overlap with card3 so card3 peeks above
   },
   nextDealCard: {
     flex: 1,
