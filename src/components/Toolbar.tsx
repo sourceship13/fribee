@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useAuth } from '../libs/hooks/useAuth';
+import { useAuth, getColors } from '../libs/hooks/useAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { iOSUIKit } from 'react-native-typography';
+import IconLogo from '../../assets/imgs/icon_logo.svg';
+import SettingsIcon from '../../assets/imgs/settings-icon.svg';
 
 
 
@@ -12,6 +14,7 @@ interface ToolbarProps {
   onBack?: () => void;
   onSettings?: () => void;
   showSettings?: boolean;
+  showLogo?: boolean;
   onRedemptions?: () => void;
   showRedemptions?: boolean;
   dealId?: string;
@@ -30,6 +33,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onBack,
   onSettings,
   showSettings,
+  showLogo,
   onRedemptions,
   showRedemptions,
   dealId,
@@ -41,8 +45,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   skipSafeArea = false,
 }) => {
   const { isDarkMode } = useAuth();
-  // Use provided backgroundColor or fall back to transparent
-  const toolbarBg = backgroundColor || (isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)');
+  const colors = getColors(isDarkMode);
 
   // Heart icon logic
   const hearted = dealId && isDealHearted ? isDealHearted(dealId) : false;
@@ -51,10 +54,12 @@ const Toolbar: React.FC<ToolbarProps> = ({
   const wrapperProps = skipSafeArea ? {} : { edges: ['top'] as const };
 
   return (
-    <Wrapper {...wrapperProps} style={{ }}>
-      <View style={[styles.toolbar, { borderBottomWidth: 0 }]}>  
+    <Wrapper {...wrapperProps} style={{ backgroundColor: colors.background }}>
+      <View style={[styles.toolbar, { borderBottomColor: colors.border }]}>  
         <View style={styles.leftContainer}>
-          {onBack ? (
+          {showLogo ? (
+            <IconLogo width={21} height={24} fill="#FF9500" />
+          ) : onBack ? (
             <TouchableOpacity
               onPress={onBack}
               style={styles.backBtn}
@@ -71,7 +76,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
         </View>
 
         <View style={styles.titleContainer} pointerEvents="none">
-          <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#111' }]}>{title}</Text>
+          <Text style={[styles.title, { color: colors.title }]}>{title}</Text>
         </View>
 
         <View style={styles.rightButtons}>
@@ -96,7 +101,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
               delayPressIn={0}
               delayPressOut={50}
             >
-              <Ionicons name="settings-sharp" size={28} color={isDarkMode ? '#fff' : '#222'} />
+              <SettingsIcon width={24} height={24} color={colors.inactive} />
             </TouchableOpacity>
           ) : null}
 
@@ -127,24 +132,23 @@ const styles = StyleSheet.create({
   toolbar: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     height: 56,
     borderBottomWidth: 1,
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
   },
   backBtn: {
-    width: 56,
-    height: 56,
+    width: 40,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 28,
+    borderRadius: 20,
     zIndex: 10,
   },
   settingsBtn: {
-    width: 56,
-    height: 56,
+    padding: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 28,
     zIndex: 10,
   },
   rightButtons: {
