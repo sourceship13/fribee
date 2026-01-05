@@ -179,7 +179,7 @@ const SavedDealsScreen = ({ navigation }: any) => {
               onPress={() => setActiveTab(tab.key)}
               activeOpacity={0.7}
             >
-              <Text style={[styles.tabText, activeTab === tab.key && styles.tabTextSelected]}>
+              <Text style={[styles.tabText, activeTab === tab.key && styles.tabTextSelected, { color: activeTab === tab.key ? colors.text : '#999' }]}>
                 {tab.label}
               </Text>
               {activeTab === tab.key && <View style={styles.tabIndicator} />}

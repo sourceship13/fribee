@@ -27,6 +27,8 @@ export const Colors = {
     navButton: '#8E8E93',
     selectedNavButton: '#2A2A2A',
     inactive: '#c4c4c9',
+    tabNavigatorText: '#8E8E93',
+    tabNavigatorSelectedText: '#2A2A2A',
 
     // Buttons
     buttonBackground: '#2A2A2A',
@@ -84,6 +86,8 @@ export const Colors = {
     navButton: '#8E8E93',
     selectedNavButton: '#FFFFFF',
     inactive: '#3b3b36',
+    tabNavigatorText: '#8E8E93',
+    tabNavigatorSelectedText: '#FFFFFF',
 
     // Buttons
     buttonBackground: '#FFFFFF',
