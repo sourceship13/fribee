@@ -297,27 +297,22 @@ const SwipeScreen = ({ navigation }: any) => {
       )}
 
       {/* Stacked cards behind main card - OUTSIDE animated view so they don't move */}
-      <View style={styles.stackedCardsContainer} pointerEvents="none">
-        {/* <View style={[styles.stackedCard3, { width: (screenWidth - 20) * 0.75 }]}>
-          <SwipeCard3
-            width="100%"
-            height={10}
-            preserveAspectRatio="none"
-          />
-        </View> */}
-        <View
-          style={[
-            styles.stackedCard2,
-            { width: (screenWidth - 30) * 0.9 },
-          ]}
-        >
-          <SwipeCard2
-            width="100%"
-            height={12}
-            preserveAspectRatio="none"
-          />
+      {!dealsLoading && (
+        <View style={styles.stackedCardsContainer} pointerEvents="none">
+          <View
+            style={[
+              styles.stackedCard2,
+              { width: (screenWidth - 30) * 0.9 },
+            ]}
+          >
+            <SwipeCard2
+              width="100%"
+              height={12}
+              preserveAspectRatio="none"
+            />
+          </View>
         </View>
-      </View>
+      )}
 
       {/* 3. Full-screen content area */}
       <PanGestureHandler
