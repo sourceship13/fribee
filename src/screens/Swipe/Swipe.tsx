@@ -313,7 +313,7 @@ const SwipeScreen = ({ navigation }: any) => {
         >
           <SwipeCard2
             width="100%"
-            height={16}
+            height={12}
             preserveAspectRatio="none"
           />
         </View>
@@ -557,7 +557,7 @@ const styles = StyleSheet.create({
     // Smallest/lightest card at very top - no margin needed, renders first
   },
   stackedCard2: {
-    marginTop: 14, // Slight overlap with card3 so card3 peeks above
+    marginTop: 18, // Slight overlap with card3 so card3 peeks above
   },
   nextDealCard: {
     flex: 1,
