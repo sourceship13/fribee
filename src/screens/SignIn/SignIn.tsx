@@ -290,6 +290,8 @@ const SignInScreen = ({ navigation }: any) => {
                     value={fields.firstName}
                     onChangeText={(text) => setFields({ ...fields, firstName: text })}
                     autoCapitalize="words"
+                    textContentType="givenName"
+                    autoComplete="off"
                   />
                 </View>
                 <View style={{ flex: 1 }}>
@@ -306,6 +308,8 @@ const SignInScreen = ({ navigation }: any) => {
                     value={fields.lastName}
                     onChangeText={(text) => setFields({ ...fields, lastName: text })}
                     autoCapitalize="words"
+                    textContentType="familyName"
+                    autoComplete="off"
                   />
                 </View>
               </View>
@@ -324,6 +328,8 @@ const SignInScreen = ({ navigation }: any) => {
                 onChangeText={(text) => setFields({ ...fields, email: text })}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                textContentType="none"
+                autoComplete="off"
               />
 
               <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
