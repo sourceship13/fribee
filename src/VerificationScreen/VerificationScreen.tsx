@@ -123,8 +123,8 @@ const VerificationScreen = ({ navigation, route }: any) => {
       const result = await authService.verifyCode(identifier, codeToVerify);
 
       if (result.success) {
-        Alert.alert('Success', 'Account verified successfully!', [
-          { text: 'OK', onPress: () => navigation.navigate('Swipe') },
+        Alert.alert('Success', 'Account verified successfully! Please sign in.', [
+          { text: 'OK', onPress: () => navigation.navigate('SignIn') },
         ]);
       } else {
         Alert.alert('Error', result.message || 'Invalid verification code');
