@@ -6,6 +6,17 @@ buildscript {
         targetSdkVersion = 36
         ndkVersion = "27.1.12297006"
         kotlinVersion = "2.1.20"
+        // Bypass node resolution for libraries that need to find react-native
+        REACT_NATIVE_NODE_MODULES_DIR = new File(rootProject.projectDir, "../node_modules/react-native")
+        
+        // Node executable path for codegen - check multiple locations
+        def nodeLocations = [
+            "/usr/local/bin/node",
+            System.getProperty("user.home") + "/.nvm/versions/node/v20.19.5/bin/node",
+            "/opt/homebrew/bin/node",
+            "/usr/bin/node"
+        ]
+        NODE_BINARY = nodeLocations.find { new File(it).exists() } ?: "node"
     }
     repositories {
         google()
@@ -15,6 +26,17 @@ buildscript {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    }
+}
+
+// Apply node binary to all projects for codegen
+allprojects {
+    ext.NODE_BINARY = rootProject.ext.NODE_BINARY
+    
+    // Ensure PATH includes node directory for subprocesses
+    tasks.withType(Exec) {
+        def nodePath = new File(rootProject.ext.NODE_BINARY).parent
+        environment "PATH", nodePath + ":" + System.getenv("PATH")
     }
 }
 

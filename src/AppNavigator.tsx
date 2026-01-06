@@ -3,8 +3,10 @@ import { Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import DiscoverIcon from '../assets/imgs/nav/discover.svg';
+import ExploreIcon from '../assets/imgs/nav/explore.svg';
+import SavedIcon from '../assets/imgs/nav/saved.svg';
+import ProfileIcon from '../assets/imgs/nav/profile.svg';
 import SignInScreen from './screens/SignIn/SignIn';
 import SignUpScreen from './screens/SignUp/SignUp';
 import SwipeScreen from './screens/Swipe/Swipe';
@@ -65,54 +67,47 @@ const MainTabNavigator = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-          let IconComponent = MaterialIcons;
+          const iconColor = focused 
+            ? (isDarkMode ? '#FFFFFF' : colors.selectedNavButton) 
+            : (isDarkMode ? '#8E8E93' : colors.subText);
+          const iconSize = 24;
 
           if (route.name === 'SwipeTab') {
-            iconName = 'swipe';
+            return <DiscoverIcon width={iconSize} height={iconSize} color={iconColor} />;
           } else if (route.name === 'ExploreTab') {
-            iconName = 'explore';
+            return <ExploreIcon width={iconSize} height={iconSize} color={iconColor} />;
           } else if (route.name === 'SavedTab') {
-            iconName = 'favorite';
+            return <SavedIcon width={iconSize} height={iconSize} color={iconColor} />;
           } else if (route.name === 'ProfileTab') {
-            IconComponent = Ionicons;
-            iconName = 'person';
+            return <ProfileIcon width={iconSize} height={iconSize} color={iconColor} />;
           }
 
-          return <IconComponent name={iconName} size={size} color={color} />;
+          return null;
         },
-        tabBarActiveTintColor: '#FFFFFF', // White for both dark and light mode
-        tabBarInactiveTintColor: '#FFFFFF', // White for both dark and light mode
+        tabBarActiveTintColor: isDarkMode ? '#FFFFFF' : colors.selectedNavButton,
+        tabBarInactiveTintColor: isDarkMode ? '#8E8E93' : colors.subText,
         tabBarStyle: {
-          backgroundColor: Colors.dark.surface, // More visible dark gray with opacity
+          backgroundColor: colors.background,
           borderTopColor: 'transparent',
           borderTopWidth: 0,
-          borderRadius: 20,
-          // Optionally add blur effect for iOS
-          ...(Platform.OS === 'ios' ? { backdropFilter: 'blur(12px)' } : {}),
-          marginHorizontal: 16,
-          marginBottom: 20,
+          borderRadius: 0,
+          marginHorizontal: 0,
+          marginBottom: 0,
           paddingBottom: 8,
           paddingTop: 8,
-          height: 70,
+          height: 87,
           position: 'absolute',
-          shadowColor: '#000000',
-          shadowOffset: {
-            width: 0,
-            height: 6,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 12,
-          elevation: 12,
+          shadowColor: 'transparent',
+          shadowOpacity: 0,
+          shadowRadius: 0,
+          elevation: 0,
         },
-        tabBarLabelStyle: [
-          iOSUIKit.largeTitleEmphasized,
-          {
-            fontSize: 12, // Override the large title size for tab bar
-            color: '#FFFFFF', // White for both dark and light mode
-            marginTop: -12, // Reduce space between icon and label
-          }
-        ],
+        tabBarLabelStyle: {
+          fontFamily: Platform.OS === 'ios' ? 'SF Pro Display' : 'Roboto',
+          fontWeight: '700',
+          fontSize: 12,
+          marginTop: 5, // Reduce space between icon and label
+        },
         tabBarIconStyle: {
           marginBottom: 2, // Reduce bottom margin of icons
         },
@@ -167,7 +162,8 @@ const MainTabNavigator = () => {
 };
 
 const AppNavigator = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, isDarkMode } = useAuth();
+  const colors = getColors(isDarkMode);
 
   if (loading) {
     // Show loading screen while checking authentication
@@ -208,16 +204,18 @@ const AppNavigator = () => {
               name="DealDetail" 
               component={DealDetailScreen}
               options={{ 
-                presentation: 'modal',
+                presentation: 'fullScreenModal',
                 gestureEnabled: true,
+                contentStyle: { backgroundColor: colors.background },
               }}
             />
             <Stack.Screen 
               name="Settings" 
               component={SettingsScreen}
               options={{ 
-                presentation: 'modal',
+                presentation: 'fullScreenModal',
                 gestureEnabled: true,
+                contentStyle: { backgroundColor: colors.background },
               }}
             />
             
@@ -226,7 +224,17 @@ const AppNavigator = () => {
             <Stack.Screen name="FontDebug" component={FontDebug} />
             <Stack.Screen name="PermissionTest" component={PermissionTestScreen} />
             <Stack.Screen name="NetworkDebug" component={NetworkDebugScreen} />
-            <Stack.Screen name="Redemption" component={RedemptionScreen} />
+            <Stack.Screen 
+              name="Redemption" 
+              component={RedemptionScreen}
+              options={{
+                presentation: 'transparentModal',
+                gestureEnabled: true,
+                headerShown: false,
+                cardStyle: { backgroundColor: 'transparent' },
+                cardOverlayEnabled: true,
+              }}
+            />
             
             {/* Business screens */}
             <Stack.Screen name="BusinessProfile" component={BusinessProfile} />

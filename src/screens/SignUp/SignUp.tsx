@@ -17,6 +17,7 @@ import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import AuthService from '../../services/auth.service';
 import { iOSUIKit } from 'react-native-typography';
+import VersionFooter from '../../components/VersionFooter';
 
 const fieldKeys = ["firstName", "lastName", "email", "phone", "password"] as const;
 const fieldLabels = ["First Name", "Last Name", "Email", "Phone Number", "Password"];

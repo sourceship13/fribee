@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getColors } from '../colors';
 import AuthService from '../../services/auth.service';
 import ApiService from '../../services/api.service';
+import AnalyticsService from '../../services/analytics.service';
+import * as Sentry from '@sentry/react-native';
 
 export { getColors };
 import { Category, User, LoginCredentials, RegisterData } from '../../types/global.types';
@@ -119,6 +121,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       appStateSubscription.remove();
     };
   }, []);
+
+  // Sync user state to Sentry for session replay identification
+  useEffect(() => {
+    if (user) {
+      Sentry.setUser({
+        id: user.id,
+        email: user.email,
+        username: user.username || user.email,
+      });
+      console.log('🔍 Sentry user identified:', user.id);
+    } else {
+      Sentry.setUser(null);
+      console.log('🔍 Sentry user cleared');
+    }
+  }, [user]);
 
   // Helper to wait for storage to be ready
   const waitForStorageReady = async (): Promise<void> => {
@@ -573,6 +590,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       // Make API call - optimistic update already applied
       await ApiService.heartDeal(dealId);
+
+      // Track analytics for deal save
+      AnalyticsService.trackDealSave(dealId);
 
       return true;
     } catch (error: any) {

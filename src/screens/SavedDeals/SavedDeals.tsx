@@ -1,31 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  ImageBackground,
+  Image,
   ScrollView,
 } from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
-import { iOSUIKit } from 'react-native-typography';
-import VersionFooter from '../../components/VersionFooter';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+type TabType = 'ready' | 'share' | 'redeemed';
 
 const SavedDealsScreen = ({ navigation }: any) => {
-  const { isDarkMode, deals, heartedDeals } = useAuth();
+  const { isDarkMode, deals, heartedDeals, isDealHearted, toggleHeartDeal } = useAuth();
   const colors = getColors(isDarkMode);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [activeTab, setActiveTab] = useState<TabType>('ready');
 
   // Build a list of full deal objects for hearted deals
   const heartedDealIds = new Set((heartedDeals || []).map(d => d.deal_id || d.id));
   const allSavedDeals = deals.filter(deal => heartedDealIds.has(deal.id || deal.deal_id));
 
-  console.log('💾 SavedDeals: allSavedDeals:', allSavedDeals);
-
-
-  // Filter from SAVED deals only (not all deals) and strictly filter by redemption_status
+  // Filter deals by status
   const readyToRedeemDeals = allSavedDeals.filter(
     deal => deal.redemption_status && deal.redemption_status.toLowerCase() === 'ready to redeem'
   );
@@ -34,312 +33,386 @@ const SavedDealsScreen = ({ navigation }: any) => {
     deal => deal.redemption_status && deal.redemption_status.toLowerCase() === 'redeemed'
   );
 
-  const almostRedeemedDeals = allSavedDeals.filter(
-    deal => {
-      if (!deal.redemption_status) return false;
-      const status = deal.redemption_status.toLowerCase();
-      return status === 'almost there, a few more shares!' || 
-             status === 'not enough shares';
+  const shareMoreDeals = allSavedDeals.filter(deal => {
+    if (!deal.redemption_status) return true; // Newly hearted
+    const status = deal.redemption_status.toLowerCase();
+    return status === 'almost there, a few more shares!' || 
+           status === 'not enough shares' ||
+           status === '';
+  });
+
+  // Get current tab's deals
+  const getCurrentDeals = () => {
+    switch (activeTab) {
+      case 'ready':
+        return readyToRedeemDeals;
+      case 'share':
+        return shareMoreDeals;
+      case 'redeemed':
+        return redeemedDeals;
+      default:
+        return [];
     }
-  );
-  
-  // Deals that are hearted but don't have a redemption status yet (newly hearted)
-  const newlyHeartedDeals = allSavedDeals.filter(
-    deal => !deal.redemption_status || deal.redemption_status.toLowerCase() === ''
-  );
-  // Show empty state if no saved deals
-  if (allSavedDeals.length === 0) {
+  };
+
+  // Get deal image URL
+  const getDealImageUrl = (deal: any): string | null => {
+    if (deal.deal_images?.length > 0 && deal.deal_images[0]?.image_url) {
+      return deal.deal_images[0].image_url;
+    }
+    if (deal.deal_image_url) return deal.deal_image_url;
+    if (deal.image_url) return deal.image_url;
+    if (deal.business_images?.length > 0 && deal.business_images[0]?.image_url) {
+      return deal.business_images[0].image_url;
+    }
+    return null;
+  };
+
+  const renderDealCard = ({ item }: { item: any }) => {
+    const imageUrl = getDealImageUrl(item);
+    const isPremium = item.is_premium === true || item.is_premium_business === true;
+    const isFeatured = item.priority_score && item.priority_score > 0;
+    const currentShares = item.current_shares || item.shares_count || 0;
+    const requiredShares = item.min_shares_required || 3;
+    const isReady = activeTab === 'ready';
+    const isRedeemed = activeTab === 'redeemed';
+
     return (
-      <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <View
-          style={[
-            styles.header,
-            { backgroundColor: colors.surface, borderBottomColor: colors.border },
-          ]}
-        >
-          <Text style={[styles.headerTitle, { color: colors.text }]}> 
-            Saved
-          </Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Settings')}
-            style={styles.settingsButton}
+      <View style={[styles.card, { backgroundColor: colors.card }]}>
+        {/* Image Section */}
+        <View style={styles.cardImageContainer}>
+          {imageUrl ? (
+            <Image source={{ uri: imageUrl }} style={styles.cardImage} resizeMode="cover" />
+          ) : (
+            <View style={[styles.cardImage, styles.emojiContainer]}>
+              <Text style={styles.emojiText}>🎁</Text>
+            </View>
+          )}
+          
+          {/* Heart Button */}
+          <TouchableOpacity 
+            style={styles.heartButton}
+            onPress={() => toggleHeartDeal(item.id || item.deal_id)}
           >
-            <Text style={[iOSUIKit.title3, { color: colors.primary }]}>⚙️</Text>
+            <MaterialIcons 
+              name={isDealHearted(item.id || item.deal_id) ? "favorite" : "favorite-border"} 
+              size={18} 
+              color={isDealHearted(item.id || item.deal_id) ? "#FF9500" : "#666"} 
+            />
           </TouchableOpacity>
+
+          {/* Badge */}
+          {isPremium ? (
+            <View style={styles.premiumBadge}>
+              <Text style={styles.badgeText}>Premium</Text>
+            </View>
+          ) : isFeatured ? (
+            <View style={styles.featuredBadge}>
+              <Text style={styles.badgeText}>Featured</Text>
+            </View>
+          ) : null}
         </View>
-        <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-          <Text style={{ fontSize: 64, marginBottom: 16 }}>💖</Text>
-          <Text style={[iOSUIKit.title3Emphasized, { color: colors.text, textAlign: 'center', marginBottom: 8 }]}>
-            No Saved Deals Yet
+
+        {/* Content Section */}
+        <View style={styles.cardContent}>
+          <Text style={[styles.businessName, { color: colors.text }]} numberOfLines={1}>
+            {item.business_name || item.business || 'Unknown Business'}
           </Text>
-          <Text style={[iOSUIKit.body, { color: colors.textSecondary, textAlign: 'center', paddingHorizontal: 40 }]}>
-            Heart deals you love to save them here. Swipe through deals and tap the heart icon!
+          <Text style={[styles.dealDescription, { color: colors.subText }]} numberOfLines={2}>
+            {item.description || item.descrption || 'No description available'}
           </Text>
+          
+          <Text style={styles.sharesText}>
+            Shares: <Text style={styles.sharesCount}>{currentShares}/{requiredShares}</Text>
+          </Text>
+
+          {!isRedeemed && (
+            <TouchableOpacity
+              style={styles.redeemButton}
+              onPress={() => {
+                if (isReady) {
+                  navigation.navigate('Redemption', { deal: item });
+                } else {
+                  navigation.navigate('DealDetail', { deal: item });
+                }
+              }}
+            >
+              <Text style={styles.redeemButtonText}>
+                {isReady ? 'Redeem Now' : 'Share More'}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );
-  }
+  };
+
+  const tabs: { key: TabType; label: string }[] = [
+    { key: 'ready', label: 'Ready to Redeem' },
+    { key: 'share', label: 'Needs More Love' },
+    { key: 'redeemed', label: 'Redeemed' },
+  ];
+
+  const currentDeals = getCurrentDeals();
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <View
-        style={[
-          styles.header,
-          { backgroundColor: colors.surface, borderBottomColor: colors.border },
-        ]}
-      >
-        <Text style={[styles.headerTitle, { color: colors.text }]}> 
-          Saved
-        </Text>
+    <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
+      {/* Header */}
+      <View style={[styles.header, { backgroundColor: colors.background }]}>
+        <Ionicons name="flame-outline" size={28} color="#FF9500" />
+        <Text style={[styles.headerTitle, { color: colors.text }]}>Saved</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('Settings')}
           style={styles.settingsButton}
         >
-          <Text style={[iOSUIKit.title3, { color: colors.primary }]}>⚙️</Text>
+          <Ionicons name="settings-outline" size={24} color="#666" />
         </TouchableOpacity>
       </View>
-      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 80 }}>
-        <Text style={[styles.title, { color: colors.text }]}>Ready To Redeem</Text>
-        {isLoading ? (
-          <Text style={[iOSUIKit.body, { color: colors.text, textAlign: 'center' }]}>Loading saved deals...</Text>
-        ) : readyToRedeemDeals.length === 0 ? (
-          <Text style={[iOSUIKit.body, { color: colors.text, textAlign: 'center' }]}>No deals ready to redeem yet.</Text>
+
+      {/* Tab Navigation */}
+      <View style={styles.tabContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabScrollContent}>
+          {tabs.map(tab => (
+            <TouchableOpacity
+              key={tab.key}
+              style={styles.tab}
+              onPress={() => setActiveTab(tab.key)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.tabText, activeTab === tab.key && styles.tabTextSelected, { color: activeTab === tab.key ? colors.text : '#999' }]}>
+                {tab.label}
+              </Text>
+              {activeTab === tab.key && <View style={styles.tabIndicator} />}
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+        <View style={styles.tabBottomLine} />
+      </View>
+
+      {/* Deal List */}
+      <View style={styles.container}>
+        {currentDeals.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyEmoji}>
+              {activeTab === 'ready' ? '🎉' : activeTab === 'share' ? '📤' : '✅'}
+            </Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>
+              {activeTab === 'ready' 
+                ? 'No deals ready to redeem' 
+                : activeTab === 'share' 
+                  ? 'No deals need more shares' 
+                  : 'No redeemed deals yet'}
+            </Text>
+            <Text style={[styles.emptySubtitle, { color: colors.subText }]}>
+              {activeTab === 'ready' 
+                ? 'Share deals to unlock redemptions!' 
+                : activeTab === 'share' 
+                  ? 'Heart deals and share them with friends' 
+                  : 'Redeem your deals to see them here'}
+            </Text>
+          </View>
         ) : (
           <FlatList
-            data={readyToRedeemDeals}
-            keyExtractor={item => (item.id || item.deal_id).toString()}
-            renderItem={({ item }) => (
-              <View style={[styles.card, { backgroundColor: colors.card }]}> 
-                {item.deal_images && item.deal_images.length > 0 ? (
-                  <View>
-                    <ImageBackground
-                      source={{ uri: item.deal_images[0].image_url }}
-                      style={[styles.dealImage, { justifyContent: 'center', alignItems: 'center' }]}
-                      imageStyle={{ borderRadius: 8 }}
-                    />
-                  </View>
-                ) : item.deal_image_url ? (
-                  <View>
-                    <ImageBackground
-                      source={{ uri: item.deal_image_url }}
-                      style={[styles.dealImage, { justifyContent: 'center', alignItems: 'center' }]}
-                      imageStyle={{ borderRadius: 8 }}
-                    />
-                  </View>
-                ) : item.business_images && item.business_images.length > 0 ? (
-                  <View>
-                    <ImageBackground
-                      source={{ uri: item.business_images[0].image_url }}
-                      style={[styles.dealImage, { justifyContent: 'center', alignItems: 'center' }]}
-                      imageStyle={{ borderRadius: 8 }}
-                    />
-                  </View>
-                ) : (
-                  <Text style={styles.dealImage}>{item.image ? item.image : '💖'}</Text>
-                )}
-                <Text style={[styles.dealTitle, { color: colors.text }]}> 
-                  {item.deal_title || item.item || item.offer || item.description || 'Saved Deal'}
-                </Text>
-                <Text style={[styles.dealBusiness, { color: colors.disabled }]}>{item.business_name || item.business || ''}</Text>
-                <Text style={[styles.dealBusiness, { color: colors.secondary }]}>{item.category_name || ''}</Text>
-                <Text style={[styles.dealBusiness, { color: colors.text }]}>{item.description || ''}</Text>
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: colors.text }]}
-                  onPress={() => navigation.navigate('Redemption', { deal: item })}
-                >
-                  <Text style={[iOSUIKit.subhead, { color: colors.background, fontWeight: 'bold', textAlign: 'center' }]}>View Redemption</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-            contentContainerStyle={styles.list}
-            scrollEnabled={false}
+            data={currentDeals}
+            keyExtractor={(item, index) => (item.id || item.deal_id || index).toString()}
+            renderItem={renderDealCard}
+            contentContainerStyle={styles.listContent}
+            showsVerticalScrollIndicator={false}
           />
         )}
-        <Text style={[styles.title, { color: colors.text }]}>Share more to Redeem</Text>
-        {isLoading ? (
-          <Text style={[iOSUIKit.body, { color: colors.text, textAlign: 'center' }]}>Loading saved deals...</Text>
-        ) : (almostRedeemedDeals.length === 0 && newlyHeartedDeals.length === 0) ? (
-          <Text style={[iOSUIKit.body, { color: colors.text, textAlign: 'center' }]}>No saved deals yet.</Text>
-        ) : (
-          <FlatList
-            data={[...almostRedeemedDeals, ...newlyHeartedDeals]}
-            keyExtractor={item => (item.id || item.deal_id).toString()}
-            renderItem={({ item }) => (
-              <View style={[styles.card, { backgroundColor: colors.card }]}> 
-                {item.deal_images && item.deal_images.length > 0 ? (
-                  <View>
-                    <ImageBackground
-                      source={{ uri: item.deal_images[0].image_url }}
-                      style={[styles.dealImage, { justifyContent: 'center', alignItems: 'center' }]}
-                      imageStyle={{ borderRadius: 8 }}
-                    />
-                  </View>
-                ) : item.deal_image_url ? (
-                  <View>
-                    <ImageBackground
-                      source={{ uri: item.deal_image_url }}
-                      style={[styles.dealImage, { justifyContent: 'center', alignItems: 'center' }]}
-                      imageStyle={{ borderRadius: 8 }}
-                    />
-                  </View>
-                ) : item.business_images && item.business_images.length > 0 ? (
-                  <View>
-                    <ImageBackground
-                      source={{ uri: item.business_images[0].image_url }}
-                      style={[styles.dealImage, { justifyContent: 'center', alignItems: 'center' }]}
-                      imageStyle={{ borderRadius: 8 }}
-                    />
-                  </View>
-                ) : (
-                  <Text style={styles.dealImage}>{item.image ? item.image : '💖'}</Text>
-                )}
-                <Text style={[styles.dealTitle, { color: colors.text }]}> 
-                  {item.deal_title || item.item || item.offer || item.description || 'Saved Deal'}
-                </Text>
-                <Text style={[styles.dealBusiness, { color: colors.disabled }]}>{item.business_name || item.business || ''}</Text>
-                <Text style={[styles.dealBusiness, { color: colors.secondary }]}>{item.category_name || ''}</Text>
-                <Text style={[styles.dealBusiness, { color: colors.text }]}>{item.description || ''}</Text>
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: colors.text }]}
-                  onPress={() => navigation.navigate('DealDetail', { deal: item })}
-                >
-                  <Text style={[iOSUIKit.subhead, { color: colors.background, fontWeight: 'bold' }]}>Share More</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-            contentContainerStyle={styles.list}
-            scrollEnabled={false}
-          />
-        )}
-        <Text style={[styles.title, { color: colors.text }]}>Redeemed Deals</Text>
-        {isLoading ? (
-          <Text style={[iOSUIKit.body, { color: colors.text, textAlign: 'center' }]}>Loading saved deals...</Text>
-        ) : redeemedDeals.length === 0 ? (
-          <Text style={[iOSUIKit.body, { color: colors.text, textAlign: 'center' }]}>No saved deals yet.</Text>
-        ) : (
-          <FlatList
-            data={redeemedDeals}
-            keyExtractor={item => (item.deal_id || item.id || Math.random().toString()).toString()}
-            renderItem={({ item }) => (
-              <View style={[styles.card, { backgroundColor: colors.card }]}> 
-                {item.deal_images && item.deal_images.length > 0 ? (
-                  <View>
-                    <ImageBackground
-                      source={{ uri: item.deal_images[0].image_url }}
-                      style={[styles.dealImage, { justifyContent: 'center', alignItems: 'center' }]}
-                      imageStyle={{ borderRadius: 8 }}
-                    />
-                  </View>
-                ) : item.deal_image_url ? (
-                  <View>
-                    <ImageBackground
-                      source={{ uri: item.deal_image_url }}
-                      style={[styles.dealImage, { justifyContent: 'center', alignItems: 'center' }]}
-                      imageStyle={{ borderRadius: 8 }}
-                    />
-                  </View>
-                ) : item.business_images && item.business_images.length > 0 ? (
-                  <View>
-                    <ImageBackground
-                      source={{ uri: item.business_images[0].image_url }}
-                      style={[styles.dealImage, { justifyContent: 'center', alignItems: 'center' }]}
-                      imageStyle={{ borderRadius: 8 }}
-                    />
-                  </View>
-                ) : (
-                  <Text style={styles.dealImage}>{item.image ? item.image : '💖'}</Text>
-                )}
-                <Text style={[styles.dealTitle, { color: colors.text }]}> 
-                  {item.deal_title || item.item || item.offer || item.description || 'Saved Deal'}
-                </Text>
-                <Text style={[styles.dealBusiness, { color: colors.disabled }]}>{item.business_name || item.business || ''}</Text>
-                <Text style={[styles.dealBusiness, { color: colors.secondary }]}>{item.category_name || ''}</Text>
-                <Text style={[styles.dealBusiness, { color: colors.text }]}>{item.description || ''}</Text>
-              </View>
-            )}
-            contentContainerStyle={styles.list}
-            scrollEnabled={false}
-          />
-        )}
-      </ScrollView>
-      <VersionFooter />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  screenContainer: {
     flex: 1,
-    padding: 24,
-    paddingBottom: 80, // Add enough padding to sit above bottom nav bar
   },
-  title: StyleSheet.flatten([
-    iOSUIKit.largeTitleEmphasized,
-    {
-      marginBottom: 16,
-      alignSelf: 'center',
-    },
-  ]),
-  list: {
-    alignItems: 'center',
-  },
-  card: {
-    width: 280,
-    borderRadius: 16,
-    padding: 16,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  dealImage: {
-    fontSize: 36,
-    marginBottom: 8,
-    width: 160,
-    height: 120,
-  },
-  dealTitle: StyleSheet.flatten([
-    iOSUIKit.callout,
-    {
-      fontWeight: 'bold',
-      marginBottom: 4,
-    },
-  ]),
-  dealBusiness: StyleSheet.flatten([
-    iOSUIKit.caption2,
-    {
-      marginBottom: 8,
-    },
-  ]),
-  button: {
-    borderRadius: 12,
-    padding: 12,
-    alignItems: 'center',
-    marginTop: 8,
-    width: 120,
-  },
-  redeemed: StyleSheet.flatten([
-    iOSUIKit.subhead,
-    {
-      fontWeight: 'bold',
-      marginTop: 8,
-    },
-  ]),
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    paddingTop: 50, // Account for status bar
-    borderBottomWidth: 1,
+    paddingTop: 60,
+    paddingBottom: 16,
   },
-  headerTitle: StyleSheet.flatten([
-    iOSUIKit.largeTitleEmphasized,
-    {
-      fontSize: 24, // Override default size for header
-    },
-  ]),
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    flex: 1,
+    textAlign: 'center',
+  },
   settingsButton: {
     padding: 8,
+  },
+  // Tab styles
+  tabContainer: {
+    position: 'relative',
+  },
+  tabScrollContent: {
+    paddingHorizontal: 16,
+  },
+  tab: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    position: 'relative',
+  },
+  tabText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#999',
+  },
+  tabTextSelected: {
+    color: '#1a1a1a',
+    fontWeight: '600',
+  },
+  tabIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    left: 16,
+    right: 16,
+    height: 2,
+    backgroundColor: '#1a1a1a',
+  },
+  tabBottomLine: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: '#E5E5E5',
+  },
+  // Content
+  container: {
+    flex: 1,
+  },
+  listContent: {
+    padding: 16,
+  },
+  // Card styles
+  card: {
+    flexDirection: 'row',
+    borderRadius: 12,
+    marginBottom: 16,
+    overflow: 'hidden',
+    backgroundColor: '#FFF',
+  },
+  cardImageContainer: {
+    width: 140,
+    height: 160,
+    position: 'relative',
+  },
+  cardImage: {
+    width: '100%',
+    height: '100%',
+    borderTopLeftRadius: 12,
+    borderBottomLeftRadius: 12,
+  },
+  emojiContainer: {
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emojiText: {
+    fontSize: 40,
+  },
+  heartButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#FFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  premiumBadge: {
+    position: 'absolute',
+    bottom: 8,
+    left: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+    backgroundColor: '#FF8C00',
+  },
+  featuredBadge: {
+    position: 'absolute',
+    bottom: 8,
+    left: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+    backgroundColor: '#FF9500',
+  },
+  badgeText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#FFF',
+  },
+  cardContent: {
+    flex: 1,
+    padding: 12,
+    justifyContent: 'space-between',
+  },
+  businessName: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  dealDescription: {
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 8,
+  },
+  sharesText: {
+    fontSize: 13,
+    color: '#666',
+    marginBottom: 10,
+  },
+  sharesCount: {
+    color: '#FF9500',
+    fontWeight: '600',
+  },
+  redeemButton: {
+    borderWidth: 1.5,
+    borderColor: '#1a1a1a',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  redeemButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1a1a1a',
+  },
+  // Empty state
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 40,
+  },
+  emptyEmoji: {
+    fontSize: 48,
+    marginBottom: 16,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
 

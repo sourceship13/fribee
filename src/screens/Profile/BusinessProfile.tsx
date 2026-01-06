@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, ActivityIndicator, Platform, Linking, Alert } from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
-import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconLogo from '../../../assets/imgs/icon_logo.svg';
+import SettingsIcon from '../../../assets/imgs/settings-icon.svg';
 import ApiService from '../../services/api.service';
 import VersionFooter from '../../components/VersionFooter';
 import * as RNIap from 'react-native-iap';
@@ -162,34 +163,34 @@ const BusinessProfile = ({ navigation, route }: any) => {
 
   const InfoRow = ({ icon, label, value, onPress }: { icon: string; label: string; value: string; onPress?: () => void }) => (
     <TouchableOpacity 
-      style={[styles.infoRow, { borderBottomColor: colors.border }]} 
+      style={styles.infoRow} 
       onPress={onPress}
       disabled={!onPress}
     >
-      <View style={styles.infoIconContainer}>
-        <Icon name={icon} size={20} color={colors.primary} />
+      <View style={[styles.infoIconContainer, { backgroundColor: colors.primary + '15' }]}>
+        <Icon name={icon} size={18} color={colors.primary} />
       </View>
       <View style={styles.infoContent}>
-        <Text style={[iOSUIKit.footnote, { color: colors.textSecondary }]}>
+        <Text style={[iOSUIKit.caption2, { color: colors.textSecondary }]}>
           {label}
         </Text>
-        <Text style={[iOSUIKit.body, { color: colors.text, marginTop: 4 }]}>
+        <Text style={[iOSUIKit.body, { color: colors.text, marginTop: 2 }]}>
           {value}
         </Text>
       </View>
-      {onPress && <Icon name="chevron-right" size={20} color={colors.textSecondary} />}
     </TouchableOpacity>
   );
 
   if (isLoading) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <Toolbar
-          title="Business Profile"
-          onBack={() => navigation.goBack()}
-          showSettings={true}
-          onSettings={() => navigation.navigate('Settings')}
-        />
+        <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
+          <IconLogo width={21} height={24} fill="#FF9500" />
+          <Text style={[iOSUIKit.title3Emphasized, { color: colors.title }]}>Business Profile</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={styles.settingsButton}>
+            <SettingsIcon width={24} height={24} color={colors.inactive} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.centerContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
           <Text style={[iOSUIKit.body, { color: colors.textSecondary, marginTop: 16 }]}>
@@ -203,12 +204,13 @@ const BusinessProfile = ({ navigation, route }: any) => {
   if (error || !business) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <Toolbar
-          title="Business Profile"
-          onBack={() => navigation.goBack()}
-          showSettings={true}
-          onSettings={() => navigation.navigate('Settings')}
-        />
+        <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
+          <IconLogo width={21} height={24} fill="#FF9500" />
+          <Text style={[iOSUIKit.title3Emphasized, { color: colors.title }]}>Business Profile</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={styles.settingsButton}>
+            <SettingsIcon width={24} height={24} color={colors.inactive} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.centerContainer}>
           <Icon name="error-outline" size={64} color={colors.error} />
           <Text style={[iOSUIKit.title3, { color: colors.text, marginTop: 16, textAlign: 'center' }]}>
@@ -228,20 +230,23 @@ const BusinessProfile = ({ navigation, route }: any) => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <Toolbar
-        title="Business Profile"
-        showSettings={true}
-        onSettings={() => navigation.navigate('Settings')}
-      />
+    <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
+        <IconLogo width={21} height={24} fill="#FF9500" />
+        <Text style={[iOSUIKit.title3Emphasized, { color: colors.title }]}>Business Profile</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={styles.settingsButton}>
+          <SettingsIcon width={24} height={24} color={colors.inactive} />
+        </TouchableOpacity>
+      </View>
       <ScrollView 
         style={{ flex: 1 }} 
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Logo Circle Badge - Centered */}
-        <View style={styles.logoSection}>
-          <View style={[styles.logoCircle, { backgroundColor: colors.background, borderColor: colors.border }]}>
+        {/* Profile Section */}
+        <View style={styles.profileSection}>
+          {/* Logo Circle */}
+          <View style={[styles.logoCircle, { backgroundColor: colors.primary + '15', borderColor: colors.primary }]}>
             {business.logoUrl ? (
               <Image
                 source={{ uri: business.logoUrl }}
@@ -249,33 +254,36 @@ const BusinessProfile = ({ navigation, route }: any) => {
                 resizeMode="cover"
               />
             ) : (
-              <Icon name="business" size={64} color={colors.textSecondary} />
+              <Icon name="person" size={48} color={colors.primary} />
             )}
           </View>
           
+          {/* Business Name with Verified Badge */}
           <View style={styles.businessNameContainer}>
-            <Text style={[iOSUIKit.largeTitleEmphasized, { color: colors.text }]}>
+            <Text style={[iOSUIKit.title3Emphasized, { color: colors.text }]}>
               {business.businessName}
             </Text>
-            <Icon name="verified" size={20} color="#0095f6" style={{ marginLeft: 8 }} />
+            <Icon name="verified" size={18} color="#0095f6" style={{ marginLeft: 6 }} />
           </View>
 
+          {/* Description */}
           {business.description && (
-            <Text style={[iOSUIKit.body, { color: colors.textSecondary, marginTop: 8, textAlign: 'center', marginHorizontal: 24 }]}>
+            <Text style={[iOSUIKit.subhead, { color: colors.textSecondary, marginTop: 4, textAlign: 'center' }]}>
               {business.description}
             </Text>
           )}
-        </View>
 
-        <TouchableOpacity
-          style={[styles.editButton, { backgroundColor: colors.primary }]}
-          onPress={() => navigation.navigate('BusinessDeals', { businessId: business.id })}
-        >
-          <Icon name="edit" size={20} color={colors.background} style={{ marginRight: 8 }} />
-          <Text style={[iOSUIKit.body, { color: colors.background, fontWeight: '600' }]}>
-            Business Deals
-          </Text>
-        </TouchableOpacity>
+          {/* Business Deals Button */}
+          <TouchableOpacity
+            style={styles.businessDealsButton}
+            onPress={() => navigation.navigate('BusinessDeals', { businessId: business.id })}
+          >
+            <Icon name="edit" size={18} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Text style={[iOSUIKit.bodyEmphasized, { color: '#FFFFFF' }]}>
+              Business Deals
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Debug: Clear Stuck Purchases Button */}
         {Platform.OS === 'android' && (
@@ -290,74 +298,72 @@ const BusinessProfile = ({ navigation, route }: any) => {
           </TouchableOpacity>
         )}
 
-        {/* Contact Information */}
-        <View style={[styles.section, { backgroundColor: colors.surface }]}>
-          <Text style={[iOSUIKit.title3, { color: colors.text, marginBottom: 16, paddingHorizontal: 16 }]}>
-            Contact Information
-          </Text>
-          
+        {/* Contact Information Card */}
+        <View style={[styles.contactCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
           <InfoRow 
             icon="phone" 
             label="Phone Number" 
-            value={business.phoneNumber}
-            onPress={handlePhonePress}
+            value={business.phoneNumber || 'Not provided'}
+            onPress={business.phoneNumber ? handlePhonePress : undefined}
           />
           
-          {business.websiteUrl && (
-            <InfoRow 
-              icon="language" 
-              label="Website" 
-              value={business.websiteUrl}
-              onPress={handleWebsitePress}
-            />
-          )}
+          <InfoRow 
+            icon="language" 
+            label="Website" 
+            value={business.websiteUrl || 'Not provided'}
+            onPress={business.websiteUrl ? handleWebsitePress : undefined}
+          />
           
           <InfoRow 
             icon="location-on" 
             label="Address" 
-            value={`${business.address}, ${business.city}, ${business.state} ${business.country}`}
+            value={`${business.address}${business.city ? ', ' + business.city : ''}${business.state ? ', ' + business.state : ''}${business.country ? ', ' + business.country : ''}`}
           />
         </View>
 
-        {/* Business Photos - All images from businessImages array */}
+        {/* Business Photos Section */}
         {business.businessImages && business.businessImages.length > 0 && (
-          <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[iOSUIKit.title3, { color: colors.text, marginBottom: 16, paddingHorizontal: 16 }]}>
+          <View style={styles.photosSection}>
+            <Text style={[iOSUIKit.title3Emphasized, { color: colors.text, marginBottom: 16, paddingHorizontal: 16 }]}>
               Business Photos
             </Text>
             
-            <View style={styles.imagesGrid}>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.photosScrollContent}
+            >
               {business.businessImages.map((image) => (
-                <View key={image.id} style={styles.businessImageContainer}>
+                <View key={image.id} style={styles.photoContainer}>
                   <Image
                     source={{ uri: image.url }}
-                    style={styles.businessImage}
+                    style={styles.businessPhoto}
                     resizeMode="cover"
                   />
                 </View>
               ))}
-            </View>
+            </ScrollView>
           </View>
         )}
 
-        {/* Action Buttons */}
+        {/* Bottom Action Buttons */}
         <View style={styles.actionButtons}>
           <TouchableOpacity
-            style={[styles.actionButton, { backgroundColor: colors.primary }]}
+            style={[styles.actionButton, styles.primaryButton]}
             onPress={() => navigation.navigate('BusinessDeals')}
           >
-            <Icon name="local-offer" size={20} color={colors.background} style={{ marginRight: 8 }} />
-            <Text style={[iOSUIKit.body, { color: colors.background, fontWeight: '600' }]}>
+            <Icon name="local-offer" size={18} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Text style={[iOSUIKit.bodyEmphasized, { color: '#FFFFFF' }]}>
               View My Deals
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.actionButton, { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.primary }]}
+            style={[styles.actionButton, styles.outlineButton, { borderColor: colors.text }]}
             onPress={() => navigation.navigate('EditBusiness', { businessId: business.id })}
           >
-            <Icon name="edit" size={20} color={colors.primary} style={{ marginRight: 8 }} />
-            <Text style={[iOSUIKit.body, { color: colors.primary, fontWeight: '600' }]}>
+            <Icon name="edit" size={18} color={colors.text} style={{ marginRight: 8 }} />
+            <Text style={[iOSUIKit.bodyEmphasized, { color: colors.text }]}>
               Edit Profile
             </Text>
           </TouchableOpacity>
@@ -369,8 +375,24 @@ const BusinessProfile = ({ navigation, route }: any) => {
 };
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+    paddingBottom: 60,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 0,
+    paddingTop: 50, // Account for status bar
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  settingsButton: {
+    padding: 8,
+  },
   scrollContent: {
-    paddingBottom: 100., // Extra padding to ensure content is not hidden by tab bar
+    paddingBottom: 100,
   },
   centerContainer: {
     flex: 1,
@@ -378,31 +400,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 24,
   },
-  coverImage: {
-    width: '100%',
-    height: 200,
-  },
-  coverImagePlaceholder: {
-    width: '100%',
-    height: 200,
-    justifyContent: 'center',
+  profileSection: {
     alignItems: 'center',
-  },
-  headerContainer: {
-    alignItems: 'center',
-    marginTop: -40,
-    paddingBottom: 24,
-  },
-  logoSection: {
-    alignItems: 'center',
-    paddingVertical: 32,
+    paddingVertical: 24,
     paddingHorizontal: 24,
   },
   logoCircle: {
-    width: 128,
-    height: 128,
-    borderRadius: 64,
-    borderWidth: 3,
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    borderWidth: 0,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -411,39 +418,37 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  logoContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  logo: {
-    width: 92,
-    height: 92,
-  },
   businessNameContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 12,
+  },
+  businessDealsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1A1A1A',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 24,
     marginTop: 16,
   },
-  section: {
-    marginTop: 16,
-    paddingVertical: 16,
+  contactCard: {
+    marginHorizontal: 16,
+    marginTop: 8,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 16,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   infoIconContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -451,41 +456,44 @@ const styles = StyleSheet.create({
   infoContent: {
     flex: 1,
   },
-  imagesGrid: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    gap: 12,
+  photosSection: {
+    marginTop: 24,
   },
-  businessImageContainer: {
-    flex: 1,
-    borderRadius: 12,
+  photosScrollContent: {
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  photoContainer: {
+    width: 150,
+    height: 150,
     overflow: 'hidden',
   },
-  businessImage: {
+  businessPhoto: {
     width: '100%',
-    height: 200,
+    height: '100%',
   },
   actionButtons: {
     flexDirection: 'row',
     gap: 12,
-    marginHorizontal: 24,
-    marginVertical: 24,
+    marginHorizontal: 16,
+    marginTop: 24,
+    marginBottom: 24,
   },
   actionButton: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 24,
   },
-  editButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 24,
-    padding: 16,
-    borderRadius: 12,
+  primaryButton: {
+    backgroundColor: '#1A1A1A',
+  },
+  outlineButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
   },
   debugButton: {
     flexDirection: 'row',

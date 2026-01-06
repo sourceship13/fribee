@@ -26,8 +26,9 @@ import {
 } from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
-import Toolbar from '../../components/Toolbar';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { iOSUIKit } from 'react-native-typography';
 import apiService from '../../services/api.service';
 import * as RNIap from 'react-native-iap';
 import VersionFooter from '../../components/VersionFooter';
@@ -478,14 +479,21 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
     );
   };
 
+  // Custom header component
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Ionicons name="chevron-back" size={24} color={colors.text} />
+      </TouchableOpacity>
+      <Text style={[iOSUIKit.title3Emphasized, { color: colors.text }]}>Deal Creation</Text>
+      <View style={styles.headerPlaceholder} />
+    </View>
+  );
+
   if (isLoading) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Toolbar
-          title="Create Deal Post"
-          onBack={() => navigation.goBack()}
-          showSettings={false}
-        />
+        {renderHeader()}
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
           <Text style={[styles.loadingText, { color: colors.text }]}>
@@ -498,101 +506,36 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Toolbar
-        title="Create Deal Post"
-        onBack={() => navigation.goBack()}
-        showSettings={false}
-      />
+      {renderHeader()}
       
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        {/* Sandbox Mode Indicator */}
-        {(USE_SANDBOX || FORCE_DEV_MODE) && (
-          <View style={[styles.sandboxBanner, { 
-            backgroundColor: FORCE_DEV_MODE ? '#FFF3CD' : '#D1ECF1' 
-          }]}>
-            <Icon 
-              name={FORCE_DEV_MODE ? "developer-mode" : "science"} 
-              size={20} 
-              color={FORCE_DEV_MODE ? "#856404" : "#0C5460"} 
-            />
-            <Text style={[styles.sandboxText, { 
-              color: FORCE_DEV_MODE ? "#856404" : "#0C5460" 
-            }]}>
-              {FORCE_DEV_MODE 
-                ? "Development Mode: IAP Disabled" 
-                : "Sandbox Mode: Testing with App Store Connect"}
-            </Text>
-          </View>
-        )}
-        
-        <View style={styles.header}>
-          <Icon name="campaign" size={64} color={colors.primary} />
-          <Text style={[styles.title, { color: colors.text }]}>
-            Create a Deal Post
+        {/* Hero Section */}
+        <View style={styles.heroSection}>
+          <Text style={[styles.heroTitle, { color: colors.text }]}>
+            Create Deal Post
           </Text>
-          <Text style={[styles.subtitle, { color: colors.disabled }]}>
-            Reach thousands of local customers with your special offer
+          <Text style={[styles.heroSubtitle, { color: colors.textSecondary }]}>
+            Reach thousands of local customers with{"\n"}your special offer
           </Text>
         </View>
 
+        {/* Product Card */}
         <View style={[styles.productCard, { 
-          backgroundColor: colors.surface,
-          borderColor: colors.primary,
-          borderWidth: 2,
+          backgroundColor: colors.background,
+          shadowColor: '#000',
+          borderWidth: 1,
+          borderColor: colors.subscriptionBorderGrey,
         }]}>
-          <View style={styles.priceSection}>
-            <Text style={[styles.priceLabel, { color: colors.disabled }]}>
-              One-Time Purchase
-            </Text>
-            <Text style={[styles.price, { color: colors.primary }]}>
-              $0.99
-            </Text>
-            <Text style={[styles.priceDescription, { color: colors.disabled }]}>
-              per deal post
-            </Text>
+          {/* Price Section */}
+          <Text style={[styles.priceLabel, { color: colors.text }]}>
+            One-time purchase
+          </Text>
+          <View style={styles.priceRow}>
+            <Text style={[styles.price, { color: colors.text }]}>$0.99</Text>
+            <Text style={[styles.priceUnit, { color: colors.textSecondary }]}> / deal post</Text>
           </View>
 
-          <View style={styles.featuresContainer}>
-            <Text style={[styles.featuresTitle, { color: colors.text }]}>
-              What's Included:
-            </Text>
-            
-            <View style={styles.featureRow}>
-              <Icon name="visibility" size={24} color="#4CAF50" />
-              <Text style={[styles.featureText, { color: colors.text }]}>
-                Reach local customers in your area
-              </Text>
-            </View>
-            
-            <View style={styles.featureRow}>
-              <Icon name="trending-up" size={24} color="#4CAF50" />
-              <Text style={[styles.featureText, { color: colors.text }]}>
-                Boost your business visibility
-              </Text>
-            </View>
-            
-            <View style={styles.featureRow}>
-              <Icon name="schedule" size={24} color="#4CAF50" />
-              <Text style={[styles.featureText, { color: colors.text }]}>
-                Set custom expiration dates
-              </Text>
-            </View>
-            
-            <View style={styles.featureRow}>
-              <Icon name="photo-library" size={24} color="#4CAF50" />
-              <Text style={[styles.featureText, { color: colors.text }]}>
-                Add photos to showcase your deal
-              </Text>
-            </View>
-            
-            <View style={styles.featureRow}>
-              <Icon name="analytics" size={24} color="#4CAF50" />
-              <Text style={[styles.featureText, { color: colors.text }]}>
-                Track deal performance
-              </Text>
-            </View>
-          </View>
-
+          {/* Purchase Button */}
           <TouchableOpacity
             style={[styles.purchaseButton, { 
               backgroundColor: isPurchasing ? colors.disabled : colors.primary 
@@ -603,35 +546,83 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
             {isPurchasing ? (
               <ActivityIndicator size="small" color="#FFFFFF" />
             ) : (
-              <Text style={styles.purchaseButtonText}>
-                Purchase for $0.99
-              </Text>
+              <Text style={styles.purchaseButtonText}>Purchase Now</Text>
             )}
           </TouchableOpacity>
+
+          {/* Features List */}
+          <View style={styles.featuresContainer}>
+            <View style={styles.featureRow}>
+              <View style={[styles.checkCircle, { borderColor: colors.primary }]}>
+                <Icon name="check" size={14} color={colors.primary} />
+              </View>
+              <Text style={[styles.featureText, { color: colors.text }]}>
+                Reach local customers in your area
+              </Text>
+            </View>
+            
+            <View style={styles.featureRow}>
+              <View style={[styles.checkCircle, { borderColor: colors.primary }]}>
+                <Icon name="check" size={14} color={colors.primary} />
+              </View>
+              <Text style={[styles.featureText, { color: colors.text }]}>
+                Boost your business visibility
+              </Text>
+            </View>
+            
+            <View style={styles.featureRow}>
+              <View style={[styles.checkCircle, { borderColor: colors.primary }]}>
+                <Icon name="check" size={14} color={colors.primary} />
+              </View>
+              <Text style={[styles.featureText, { color: colors.text }]}>
+                Set custom expiration dates
+              </Text>
+            </View>
+            
+            <View style={styles.featureRow}>
+              <View style={[styles.checkCircle, { borderColor: colors.primary }]}>
+                <Icon name="check" size={14} color={colors.primary} />
+              </View>
+              <Text style={[styles.featureText, { color: colors.text }]}>
+                Add photos to showcase your deal
+              </Text>
+            </View>
+            
+            <View style={styles.featureRow}>
+              <View style={[styles.checkCircle, { borderColor: colors.primary }]}>
+                <Icon name="check" size={14} color={colors.primary} />
+              </View>
+              <Text style={[styles.featureText, { color: colors.text }]}>
+                Track deal performance
+              </Text>
+            </View>
+          </View>
         </View>
 
+        {/* Cancel Link */}
         <TouchableOpacity
-          style={styles.skipButton}
+          style={styles.cancelButton}
           onPress={handleSkip}
           disabled={isPurchasing}
         >
-          <Text style={[styles.skipButtonText, { color: colors.disabled }]}>
+          <Text style={[styles.cancelButtonText, { color: colors.textSecondary }]}>
             Cancel
           </Text>
         </TouchableOpacity>
-
-        <View style={styles.infoSection}>
-          <Text style={[styles.infoText, { color: colors.disabled }]}>
-            • One-time purchase per deal post
-          </Text>
-          <Text style={[styles.infoText, { color: colors.disabled }]}>
-            • Payment charged to your iTunes Account or Google Play
-          </Text>
-          <Text style={[styles.infoText, { color: colors.disabled }]}>
-            • No recurring charges or subscriptions
-          </Text>
-        </View>
       </ScrollView>
+
+      {/* Footer Info */}
+      <View style={[styles.footerInfo, { backgroundColor: colors.border + '30' }]}>
+        <Text style={[styles.footerText, { color: colors.textSecondary }]}>
+          • One-time purchase per deal post
+        </Text>
+        <Text style={[styles.footerText, { color: colors.textSecondary }]}>
+          • Payment will be charged to your iTunes Account or Google Play
+        </Text>
+        <Text style={[styles.footerText, { color: colors.textSecondary }]}>
+          • No recurring charges or subscriptions
+        </Text>
+      </View>
       <VersionFooter />
     </View>
   );
@@ -641,11 +632,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: 50,
+    paddingBottom: 12,
+  },
+  backButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerPlaceholder: {
+    width: 36,
+  },
   scrollView: {
     flex: 1,
   },
   content: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   loadingContainer: {
     flex: 1,
@@ -656,107 +668,93 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 16,
   },
-  sandboxBanner: {
-    flexDirection: 'row',
+  heroSection: {
     alignItems: 'center',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-    gap: 8,
+    paddingVertical: 24,
   },
-  sandboxText: {
-    fontSize: 14,
-    fontWeight: '600',
-    flex: 1,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 28,
+  heroTitle: {
+    fontSize: 24,
     fontWeight: '700',
-    marginTop: 16,
     textAlign: 'center',
   },
-  subtitle: {
-    fontSize: 16,
+  heroSubtitle: {
+    fontSize: 15,
     marginTop: 8,
     textAlign: 'center',
-    paddingHorizontal: 20,
+    lineHeight: 22,
   },
   productCard: {
     borderRadius: 16,
     padding: 24,
-    marginBottom: 16,
-  },
-  priceSection: {
-    alignItems: 'center',
-    paddingBottom: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
-    marginBottom: 24,
+    marginTop: 8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 3,
   },
   priceLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    marginBottom: 8,
+    fontSize: 15,
+    fontWeight: '400',
+  },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginTop: 4,
+    marginBottom: 20,
   },
   price: {
-    fontSize: 48,
+    fontSize: 32,
     fontWeight: '700',
-    marginVertical: 8,
   },
-  priceDescription: {
-    fontSize: 16,
+  priceUnit: {
+    fontSize: 15,
   },
-  featuresContainer: {
+  purchaseButton: {
+    paddingVertical: 16,
+    borderRadius: 28,
+    alignItems: 'center',
     marginBottom: 24,
   },
-  featuresTitle: {
-    fontSize: 18,
+  purchaseButtonText: {
+    color: '#fff',
+    fontSize: 17,
     fontWeight: '600',
-    marginBottom: 16,
+  },
+  featuresContainer: {
+    gap: 16,
   },
   featureRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+  },
+  checkCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
   featureText: {
-    fontSize: 16,
-    marginLeft: 12,
+    fontSize: 15,
     flex: 1,
   },
-  purchaseButton: {
-    paddingVertical: 16,
-    borderRadius: 12,
+  cancelButton: {
+    paddingVertical: 20,
     alignItems: 'center',
   },
-  purchaseButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
+  cancelButtonText: {
+    fontSize: 16,
+    fontWeight: '500',
   },
-  skipButton: {
+  footerInfo: {
+    paddingHorizontal: 20,
     paddingVertical: 16,
-    alignItems: 'center',
-    marginTop: 8,
   },
-  skipButtonText: {
-    fontSize: 17,
-    textDecorationLine: 'underline',
-  },
-  infoSection: {
-    marginTop: 24,
-    paddingTop: 24,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)',
-  },
-  infoText: {
-    fontSize: 13,
-    marginBottom: 8,
+  footerText: {
+    fontSize: 11,
+    marginBottom: 4,
   },
 });
 

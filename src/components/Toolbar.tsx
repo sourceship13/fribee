@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useAuth } from '../libs/hooks/useAuth';
+import { useAuth, getColors } from '../libs/hooks/useAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { iOSUIKit } from 'react-native-typography';
+import IconLogo from '../../assets/imgs/icon_logo.svg';
+import SettingsIcon from '../../assets/imgs/settings-icon.svg';
 
 
 
@@ -12,6 +14,7 @@ interface ToolbarProps {
   onBack?: () => void;
   onSettings?: () => void;
   showSettings?: boolean;
+  showLogo?: boolean;
   onRedemptions?: () => void;
   showRedemptions?: boolean;
   dealId?: string;
@@ -19,6 +22,8 @@ interface ToolbarProps {
   showHearted?: boolean;
   onToggleHearted?: (dealId: string, dealObject?: any) => void;
   isDealHearted?: (dealId: string) => boolean;
+  backgroundColor?: string;
+  skipSafeArea?: boolean;
 }
 
 
@@ -28,6 +33,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onBack,
   onSettings,
   showSettings,
+  showLogo,
   onRedemptions,
   showRedemptions,
   dealId,
@@ -35,19 +41,25 @@ const Toolbar: React.FC<ToolbarProps> = ({
   showHearted,
   onToggleHearted,
   isDealHearted,
+  backgroundColor,
+  skipSafeArea = false,
 }) => {
   const { isDarkMode } = useAuth();
-  // Transparent background with 5% opacity
-  const transparentBg = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+  const colors = getColors(isDarkMode);
 
   // Heart icon logic
   const hearted = dealId && isDealHearted ? isDealHearted(dealId) : false;
 
+  const Wrapper = skipSafeArea ? View : SafeAreaView;
+  const wrapperProps = skipSafeArea ? {} : { edges: ['top'] as const };
+
   return (
-    <SafeAreaView edges={["top"]} style={{ backgroundColor: transparentBg }}>
-      <View style={[styles.toolbar, { backgroundColor: transparentBg, borderBottomWidth: 0 }]}>  
+    <Wrapper {...wrapperProps} style={{ backgroundColor: colors.background }}>
+      <View style={[styles.toolbar, { borderBottomColor: colors.border }]}>  
         <View style={styles.leftContainer}>
-          {onBack ? (
+          {showLogo ? (
+            <IconLogo width={21} height={24} fill="#FF9500" />
+          ) : onBack ? (
             <TouchableOpacity
               onPress={onBack}
               style={styles.backBtn}
@@ -64,7 +76,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
         </View>
 
         <View style={styles.titleContainer} pointerEvents="none">
-          <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#111' }]}>{title}</Text>
+          <Text style={[styles.title, { color: colors.title }]}>{title}</Text>
         </View>
 
         <View style={styles.rightButtons}>
@@ -89,7 +101,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
               delayPressIn={0}
               delayPressOut={50}
             >
-              <Ionicons name="settings-sharp" size={28} color={isDarkMode ? '#fff' : '#222'} />
+              <SettingsIcon width={24} height={24} color={colors.inactive} />
             </TouchableOpacity>
           ) : null}
 
@@ -112,7 +124,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
           {!showSettings && !showRedemptions && !showHearted ? <View style={{ width: 40 }} /> : null}
         </View>
       </View>
-    </SafeAreaView>
+    </Wrapper>
   );
 };
 
@@ -120,26 +132,23 @@ const styles = StyleSheet.create({
   toolbar: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     height: 56,
     borderBottomWidth: 1,
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
   },
   backBtn: {
-    width: 56,
-    height: 56,
+    width: 40,
+    height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 28,
-    backgroundColor: 'rgba(0,0,0,0.1)',
+    borderRadius: 20,
     zIndex: 10,
   },
   settingsBtn: {
-    width: 56,
-    height: 56,
+    padding: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 28,
-    backgroundColor: 'rgba(0,0,0,0.1)',
     zIndex: 10,
   },
   rightButtons: {

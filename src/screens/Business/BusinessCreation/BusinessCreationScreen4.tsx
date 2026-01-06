@@ -1,11 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import { useAuth } from '../../../libs/hooks/useAuth';
 import { getColors } from '../../../libs/colors';
 import Toolbar from '../../../components/Toolbar';
-import { iOSUIKit } from 'react-native-typography';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import VersionFooter from '../../../components/VersionFooter';
 
 const BusinessCreationScreen4 = ({ navigation, route }: any) => {
   const { isDarkMode } = useAuth();
@@ -24,9 +29,8 @@ const BusinessCreationScreen4 = ({ navigation, route }: any) => {
     businessUrl,
     logo,
     cover,
-    businessImage1,
-    businessImage2,
-  } = route.params;
+    businessPhotos = [],
+  } = route.params || {};
 
   const handleNext = () => {
     // Navigate to subscription screen with all business data
@@ -42,148 +46,290 @@ const BusinessCreationScreen4 = ({ navigation, route }: any) => {
       businessUrl,
       logo,
       cover,
-      businessImage1,
-      businessImage2,
+      businessPhotos,
     });
   };
 
-  const SummaryRow = ({ label, value }: { label: string; value: string }) => (
-    <View style={styles.summaryRow}>
-      <Text style={[iOSUIKit.subhead, { color: colors.textSecondary, flex: 1 }]}>
-        {label}
-      </Text>
-      <Text style={[iOSUIKit.body, { color: colors.text, flex: 2, textAlign: 'right' }]}>
-        {value}
-      </Text>
-    </View>
-  );
-
-  const ImagePreview = ({ uri, label }: { uri: string; label: string }) => (
-    <View style={styles.imagePreviewContainer}>
-      <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8, fontWeight: '600' }]}>
-        {label}
-      </Text>
-      <Image
-        source={{ uri }}
-        style={styles.summaryImage}
-        resizeMode="cover"
-      />
+  const InfoRow = ({ label, value }: { label: string; value: string }) => (
+    <View style={styles.infoRow}>
+      <Text style={styles.infoLabel}>{label}</Text>
+      <Text style={[styles.infoValue, { color: colors.text }]}>{value || '-'}</Text>
+      <View style={styles.rowDivider} />
     </View>
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
       <Toolbar
-        title="Business Access"
+        title="Business Creation"
         onBack={() => navigation.goBack()}
         showSettings={false}
       />
-      <ScrollView 
-        style={{ flex: 1 }}
+
+      <ScrollView
+        style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={true}
+        showsVerticalScrollIndicator={false}
       >
-        <View style={styles.container}>
-          <Text style={[iOSUIKit.largeTitleEmphasized, { color: colors.text, marginBottom: 16 }]}>
-            Review & Submit
+        {/* Step Header */}
+        <View style={styles.headerSection}>
+          <Text style={[styles.stepTitle, { color: colors.text }]}>
+            Step 3. <Text style={styles.stepTitleBold}>Review & Submit</Text>
           </Text>
-          <Text style={[iOSUIKit.body, { color: colors.text, marginBottom: 24 }]}>
-            Please review all information before submitting your business registration.
+          <Text style={[styles.stepSubtitle, { color: '#666' }]}>
+            Please review all information before submitting your business registration
+          </Text>
+        </View>
+
+        {/* Business Information Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            Business Information
+          </Text>
+          <InfoRow label="Business name" value={businessName} />
+          <InfoRow label="Description" value={description} />
+          <InfoRow label="Phone number" value={phoneNumber} />
+          <InfoRow label="Website" value={businessUrl} />
+        </View>
+
+        {/* Location Section */}
+        <View style={[styles.section, styles.locationSection]}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            Location
+          </Text>
+          <InfoRow label="Address" value={address} />
+          <InfoRow label="City" value={city} />
+          <InfoRow label="State" value={state} />
+          <InfoRow label="Country" value={country} />
+        </View>
+
+        {/* Images Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            Images
           </Text>
 
-          {/* Business Information Section */}
-          <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[iOSUIKit.title3, { color: colors.text, marginBottom: 16 }]}>
-              Business Information
-            </Text>
-            <SummaryRow label="Business Name" value={businessName} />
-            <SummaryRow label="Description" value={description} />
-            <SummaryRow label="Phone Number" value={phoneNumber} />
-            <SummaryRow label="Website" value={businessUrl} />
-          </View>
+          <View style={styles.logosCoverRow}>
+            {/* Logo */}
+            <View style={styles.imageColumn}>
+              <Text style={styles.imageLabel}>Logo</Text>
+              {logo?.uri ? (
+                <View style={styles.logoContainer}>
+                  <Image
+                    source={{ uri: logo.uri }}
+                    style={styles.logoImage}
+                    resizeMode="contain"
+                  />
+                </View>
+              ) : (
+                <View style={[styles.logoContainer, styles.emptyImageBox]}>
+                  <Text style={styles.emptyText}>No logo</Text>
+                </View>
+              )}
+            </View>
 
-          {/* Location Section */}
-          <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[iOSUIKit.title3, { color: colors.text, marginBottom: 16 }]}>
-              Location
-            </Text>
-            <SummaryRow label="Address" value={address} />
-            <SummaryRow label="City" value={city} />
-            <SummaryRow label="State" value={state} />
-            <SummaryRow label="Country" value={country} />
-          </View>
-
-          {/* Images Section */}
-          <View style={[styles.section, { backgroundColor: colors.surface }]}>
-            <Text style={[iOSUIKit.title3, { color: colors.text, marginBottom: 16 }]}>
-              Images
-            </Text>
-            
-            <View style={styles.imagesGrid}>
-              {logo && <ImagePreview uri={logo.uri} label="Logo" />}
-              {cover && <ImagePreview uri={cover.uri} label="Cover Photo" />}
-              {businessImage1 && <ImagePreview uri={businessImage1.uri} label="Business Image 1" />}
-              {businessImage2 && <ImagePreview uri={businessImage2.uri} label="Business Image 2" />}
+            {/* Cover */}
+            <View style={styles.imageColumn}>
+              <Text style={styles.imageLabel}>Cover</Text>
+              {cover?.uri ? (
+                <View style={styles.coverContainer}>
+                  <Image
+                    source={{ uri: cover.uri }}
+                    style={styles.coverImage}
+                    resizeMode="cover"
+                  />
+                </View>
+              ) : (
+                <View style={[styles.coverContainer, styles.emptyImageBox]}>
+                  <Text style={styles.emptyText}>No cover</Text>
+                </View>
+              )}
             </View>
           </View>
 
-          {/* Continue to Subscription Button */}
-          <TouchableOpacity
-            style={{
-              backgroundColor: colors.primary,
-              padding: 15,
-              borderRadius: 10,
-              marginTop: 24,
-              marginBottom: 40,
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}
-            onPress={handleNext}
-          >
-            <Icon name="credit-card" size={20} color={colors.background} style={{ marginRight: 8 }} />
-            <Text style={{ color: colors.background, fontWeight: 'bold', fontSize: 16 }}>
-              Continue to Subscription
-            </Text>
-          </TouchableOpacity>
+          {/* Business Photos */}
+          {businessPhotos.length > 0 && (
+            <View style={styles.businessPhotosSection}>
+              <Text style={styles.imageLabel}>Business Photos</Text>
+              <View style={styles.photosColumn}>
+                {businessPhotos.map((photo: any, index: number) => (
+                  <Image
+                    key={index}
+                    source={{ uri: photo.uri }}
+                    style={styles.businessPhoto}
+                    resizeMode="cover"
+                  />
+                ))}
+              </View>
+            </View>
+          )}
         </View>
       </ScrollView>
-      <VersionFooter />
+
+      {/* Bottom Buttons */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+          <Text style={styles.nextButtonText}>Continue to Subscription</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={[styles.backButtonText, { color: colors.text }]}>
+            Back to Previous Step
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 50,
+  mainContainer: {
+    flex: 1,
   },
-  container: {
-    padding: 24,
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  headerSection: {
+    marginTop: 24,
+    marginBottom: 24,
+  },
+  stepTitle: {
+    fontSize: 22,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 8,
+  },
+  stepTitleBold: {
+    fontWeight: '700',
+  },
+  stepSubtitle: {
+    fontSize: 15,
+    lineHeight: 22,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
   section: {
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
+    marginBottom: 8,
   },
-  summaryRow: {
+  locationSection: {
+    backgroundColor: '#F9F9F9',
+    marginHorizontal: -20,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  sectionTitle: {
+    fontSize: 17,
+    fontWeight: '600',
+    marginBottom: 16,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  infoRow: {
+    marginBottom: 12,
+  },
+  infoLabel: {
+    fontSize: 12,
+    color: '#999',
+    marginBottom: 4,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  infoValue: {
+    fontSize: 16,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    marginBottom: 12,
+  },
+  rowDivider: {
+    height: 1,
+    backgroundColor: '#E5E5E5',
+  },
+  logosCoverRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    paddingVertical: 8,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'rgba(128, 128, 128, 0.2)',
-  },
-  imagesGrid: {
     gap: 16,
+    marginBottom: 20,
   },
-  imagePreviewContainer: {
-    marginBottom: 16,
+  imageColumn: {
+    flex: 1,
   },
-  summaryImage: {
-    width: '100%',
-    height: 150,
+  imageLabel: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 8,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  logoContainer: {
+    height: 80,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoImage: {
+    width: '100%',
+    height: '100%',
+  },
+  coverContainer: {
+    height: 80,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#E5E5E5',
+  },
+  coverImage: {
+    width: '100%',
+    height: '100%',
+  },
+  emptyImageBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+  },
+  emptyText: {
+    fontSize: 12,
+    color: '#999',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  businessPhotosSection: {
+    marginTop: 8,
+  },
+  photosColumn: {
+    gap: 12,
+  },
+  businessPhoto: {
+    width: '100%',
+    height: 180,
+    borderRadius: 12,
+  },
+  buttonContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: Platform.OS === 'ios' ? 24 : 16,
+  },
+  nextButton: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  nextButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+  },
+  backButton: {
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  backButtonText: {
+    fontSize: 15,
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
   },
 });
 

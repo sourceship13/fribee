@@ -1,12 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Linking, TouchableOpacity, Platform, FlatList, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Linking,
+  TouchableOpacity,
+  Platform,
+  FlatList,
+  Image,
+  Dimensions,
+  StatusBar,
+} from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
-import Toolbar from '../../components/Toolbar';
-import { iOSUIKit } from 'react-native-typography';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import VersionFooter from '../../components/VersionFooter';
+
+const { width: screenWidth } = Dimensions.get('window');
+const HERO_HEIGHT = 280;
 
 // Dark mode map style for Google Maps
 const darkMapStyle = [
@@ -104,29 +117,17 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
   const colors = getColors(isDarkMode);
   const deal = route.params?.deal;
 
-  const handlePhonePress = () => {
-    if (deal?.business_phone) {
-      Linking.openURL(`tel:${deal.business_phone}`);
-    }
-  };
-
-  const handleWebsitePress = () => {
-    if (deal?.business_website) {
-      Linking.openURL(deal.business_website);
-    }
-  };
-
   const handleGetDirections = () => {
     const coordinates = getBusinessCoordinates();
     if (coordinates) {
       const { latitude, longitude } = coordinates;
       const label = deal.business_name || deal.business || 'Business Location';
-      
+
       const url = Platform.select({
         ios: `maps:0,0?q=${label}@${latitude},${longitude}`,
         android: `geo:0,0?q=${latitude},${longitude}(${label})`,
       });
-      
+
       if (url) {
         Linking.openURL(url);
       }
@@ -135,27 +136,24 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
 
   // Helper function to get business coordinates
   const getBusinessCoordinates = () => {
-    // Try multiple possible property names for latitude
     const lat = parseFloat(
-      deal?.latitude || 
-      deal?.business_latitude || 
-      deal?.lat || 
-      deal?.business_lat || 
-      ''
-    );
-    
-    // Try multiple possible property names for longitude
-    const lng = parseFloat(
-      deal?.longitude || 
-      deal?.business_longitude || 
-      deal?.lng || 
-      deal?.lon ||
-      deal?.business_lng || 
-      deal?.business_lon || 
-      ''
+      deal?.latitude ||
+        deal?.business_latitude ||
+        deal?.lat ||
+        deal?.business_lat ||
+        ''
     );
 
-    // Validate coordinates
+    const lng = parseFloat(
+      deal?.longitude ||
+        deal?.business_longitude ||
+        deal?.lng ||
+        deal?.lon ||
+        deal?.business_lng ||
+        deal?.business_lon ||
+        ''
+    );
+
     if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
       return null;
     }
@@ -169,15 +167,13 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
   // Helper function to get business images
   const getBusinessImages = (): Array<{ id: string; url: string }> => {
     const images: Array<{ id: string; url: string }> = [];
-    
-    // Try multiple possible property names for business images
-    const businessImages = 
-      deal?.images?.businessImages || 
-      deal?.businessImages || 
-      deal?.business_images || 
+
+    const businessImages =
+      deal?.images?.businessImages ||
+      deal?.businessImages ||
+      deal?.business_images ||
       [];
-    
-    // Add business images to array
+
     if (Array.isArray(businessImages) && businessImages.length > 0) {
       businessImages.forEach((img: any) => {
         if (img.url || img.image_url) {
@@ -188,28 +184,43 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
         }
       });
     }
-    
+
     return images;
   };
 
-  const businessImages = getBusinessImages();
+  // Get hero image (first business image or deal image)
+  const getHeroImage = (): string | null => {
+    const businessImages = getBusinessImages();
+    if (businessImages.length > 0) {
+      return businessImages[0].url;
+    }
+    if (deal?.deal_images?.[0]?.image_url) {
+      return deal.deal_images[0].image_url;
+    }
+    if (deal?.deal_image_url) {
+      return deal.deal_image_url;
+    }
+    if (deal?.image_url) {
+      return deal.image_url;
+    }
+    return null;
+  };
 
-  // Debug logging
-  console.log('Deal object:', deal);
-  console.log('Coordinates:', coordinates);
-  console.log('Has valid coordinates:', hasValidCoordinates);
-  console.log('Business Images:', businessImages);
+  const businessImages = getBusinessImages();
+  const heroImage = getHeroImage();
 
   if (!deal) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Toolbar
-          title="About Business"
-          onBack={() => navigation.goBack()}
-          showSettings={false}
-        />
+        <StatusBar barStyle="light-content" />
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={24} color="#FFF" />
+        </TouchableOpacity>
         <View style={styles.errorContainer}>
-          <Text style={[iOSUIKit.body, { color: colors.text }]}>
+          <Text style={{ color: colors.text }}>
             No business information available
           </Text>
         </View>
@@ -219,18 +230,48 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Toolbar
-        title="About Business"
-        onBack={() => navigation.goBack()}
-        showSettings={false}
-      />
+      <StatusBar barStyle="light-content" />
+
+      {/* Back Button - Floating */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons name="arrow-back" size={24} color="#FFF" />
+      </TouchableOpacity>
 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        {/* Business Header */}
-        <View style={styles.businessHeader}>
+        {/* Hero Image */}
+        <View style={styles.heroContainer}>
+          {heroImage ? (
+            <Image
+              source={{ uri: heroImage }}
+              style={styles.heroImage}
+              resizeMode="cover"
+            />
+          ) : (
+            <View style={[styles.heroImage, styles.heroPlaceholder]}>
+              <MaterialIcons name="store" size={64} color="#CCC" />
+            </View>
+          )}
+        </View>
+
+        {/* Content Card - Overlaps Hero */}
+        <View style={[styles.contentCard, { backgroundColor: colors.background }]}>
+          {/* Category Chip */}
+          {deal.category_name && (
+            <View style={styles.categoryChip}>
+              <Text style={styles.categoryChipText}>
+                {deal.category_name || deal.category}
+              </Text>
+            </View>
+          )}
+
+          {/* Business Name with Verified Badge */}
           <View style={styles.businessTitleRow}>
             <Text style={[styles.businessName, { color: colors.text }]}>
               {deal.business_name || deal.business || 'Unknown Business'}
@@ -238,273 +279,145 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
             {deal.is_premium_business && (
               <MaterialIcons
                 name="verified"
-                size={24}
+                size={22}
                 color="#0095f6"
                 style={styles.verifiedIcon}
               />
             )}
           </View>
-          {deal.category_name && (
-            <Text
-              style={[styles.categoryText, { color: colors.textSecondary }]}
-            >
-              {deal.category_name || deal.category}
+
+          {/* Description / Tagline */}
+          {(deal.business_description || deal.businessDescription) && (
+            <Text style={[styles.tagline, { color: colors.textSecondary }]}>
+              {deal.business_description || deal.businessDescription}
             </Text>
           )}
-        </View>
 
-        {/* Map and Images Section */}
-        {(hasValidCoordinates && coordinates) || businessImages.length > 0 ? (
-          <View
-            style={[
-              styles.mapSection,
-              { backgroundColor: colors.surface, borderColor: colors.border },
-            ]}
-          >
-            {/* Business Images Horizontal FlatList */}
-            {businessImages.length > 0 && (
-              <View style={styles.businessImagesSection}>
-                <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 12, paddingHorizontal: 16 }]}>
-                  Business Photos
-                </Text>
-                <FlatList
-                  data={businessImages}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item) => item.id}
-                  contentContainerStyle={styles.imagesList}
-                  renderItem={({ item }) => (
-                    <View style={styles.businessImageContainer}>
-                      <Image
-                        source={{ uri: item.url }}
-                        style={styles.businessImage}
-                        resizeMode="cover"
-                      />
-                    </View>
-                  )}
-                />
+          {/* Location Info */}
+          <View style={styles.locationSection}>
+            {/* State */}
+            {deal.business_state && (
+              <View style={styles.locationRow}>
+                <View style={[styles.locationIcon, { backgroundColor: '#FFF5E6' }]}>
+                  <MaterialIcons name="location-on" size={20} color="#FF9500" />
+                </View>
+                <View style={styles.locationContent}>
+                  <Text style={[styles.locationLabel, { color: colors.subText }]}>
+                    State
+                  </Text>
+                  <Text style={[styles.locationValue, { color: colors.text }]}>
+                    {deal.business_state}
+                  </Text>
+                </View>
               </View>
             )}
 
-            {/* Map */}
-            {hasValidCoordinates && coordinates && (
-              <>
-                <View style={styles.mapContainer}>
-                  <MapView
-                    provider={PROVIDER_GOOGLE}
-                    style={styles.map}
-                    initialRegion={{
-                      latitude: coordinates.latitude,
-                      longitude: coordinates.longitude,
-                      latitudeDelta: 0.01,
-                      longitudeDelta: 0.01,
-                    }}
-                    scrollEnabled={false}
-                    zoomEnabled={false}
-                    pitchEnabled={false}
-                    rotateEnabled={false}
-                    customMapStyle={isDarkMode ? darkMapStyle : []}
-                  >
-                    <Marker
-                      coordinate={{
-                        latitude: coordinates.latitude,
-                        longitude: coordinates.longitude,
-                      }}
-                      title={deal.business_name || deal.business || 'Business Location'}
-                      description={deal.business_address}
-                    />
-                  </MapView>
+            {/* City */}
+            {deal.business_city && (
+              <View style={styles.locationRow}>
+                <View style={[styles.locationIcon, { backgroundColor: '#FFF5E6' }]}>
+                  <MaterialIcons name="location-city" size={20} color="#FF9500" />
                 </View>
-                
-                <TouchableOpacity
-                  style={[styles.directionsButton, { backgroundColor: colors.primary }]}
-                  onPress={handleGetDirections}
-                >
-                  <MaterialIcons name="directions" size={20} color="#FFFFFF" />
-                  <Text style={styles.directionsButtonText}>Get Directions</Text>
-                </TouchableOpacity>
-              </>
+                <View style={styles.locationContent}>
+                  <Text style={[styles.locationLabel, { color: colors.subText }]}>
+                    City
+                  </Text>
+                  <Text style={[styles.locationValue, { color: colors.text }]}>
+                    {deal.business_city}
+                  </Text>
+                </View>
+              </View>
+            )}
+
+            {/* Postal Code */}
+            {(deal.business_postal_code ||
+              deal.postalCode ||
+              deal.zip_code ||
+              deal.zipCode) && (
+              <View style={styles.locationRow}>
+                <View style={[styles.locationIcon, { backgroundColor: '#FFF5E6' }]}>
+                  <MaterialIcons name="local-post-office" size={20} color="#FF9500" />
+                </View>
+                <View style={styles.locationContent}>
+                  <Text style={[styles.locationLabel, { color: colors.subText }]}>
+                    Postal Code
+                  </Text>
+                  <Text style={[styles.locationValue, { color: colors.text }]}>
+                    {deal.business_postal_code ||
+                      deal.postalCode ||
+                      deal.zip_code ||
+                      deal.zipCode}
+                  </Text>
+                </View>
+              </View>
             )}
           </View>
-        ) : null}
 
-        {/* Business Information Section */}
-        <View
-          style={[
-            styles.businessInfoSection,
-            { backgroundColor: colors.surface, borderColor: colors.border },
-          ]}
-        >
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Business Information
-          </Text>
-
-          {/* Description */}
-          {(deal.business_description || deal.businessDescription) && (
-            <View style={styles.businessInfoRow}>
-              <MaterialIcons name="info" size={20} color={colors.primary} />
-              <View style={styles.businessInfoContent}>
-                <Text
-                  style={[
-                    styles.businessInfoLabel,
-                    { color: colors.textSecondary },
-                  ]}
+          {/* Map Section */}
+          {hasValidCoordinates && coordinates && (
+            <View style={styles.mapSection}>
+              <View style={styles.mapContainer}>
+                <MapView
+                  provider={PROVIDER_GOOGLE}
+                  style={styles.map}
+                  initialRegion={{
+                    latitude: coordinates.latitude,
+                    longitude: coordinates.longitude,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                  }}
+                  scrollEnabled={false}
+                  zoomEnabled={false}
+                  pitchEnabled={false}
+                  rotateEnabled={false}
+                  customMapStyle={isDarkMode ? darkMapStyle : []}
                 >
-                  About
-                </Text>
-                <Text style={[styles.businessInfoText, { color: colors.text }]}>
-                  {deal.business_description || deal.businessDescription}
-                </Text>
+                  <Marker
+                    coordinate={{
+                      latitude: coordinates.latitude,
+                      longitude: coordinates.longitude,
+                    }}
+                    title={
+                      deal.business_name || deal.business || 'Business Location'
+                    }
+                    description={deal.business_address}
+                  />
+                </MapView>
               </View>
+
+              <TouchableOpacity
+                style={styles.directionsButton}
+                onPress={handleGetDirections}
+              >
+                <Ionicons name="navigate" size={20} color="#FFF" />
+                <Text style={styles.directionsButtonText}>Get Directions</Text>
+              </TouchableOpacity>
             </View>
           )}
 
-          {/* Address */}
-          {deal.business_address && (
-            <View style={styles.businessInfoRow}>
-              <MaterialIcons
-                name="location-on"
-                size={20}
-                color={colors.primary}
+          {/* Business Photos Gallery */}
+          {businessImages.length > 0 && (
+            <View style={styles.gallerySection}>
+              <FlatList
+                data={businessImages}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={item => item.id}
+                contentContainerStyle={styles.galleryList}
+                renderItem={({ item }) => (
+                  <View style={styles.galleryImageContainer}>
+                    <Image
+                      source={{ uri: item.url }}
+                      style={styles.galleryImage}
+                      resizeMode="cover"
+                    />
+                  </View>
+                )}
               />
-              <View style={styles.businessInfoContent}>
-                <Text
-                  style={[
-                    styles.businessInfoLabel,
-                    { color: colors.textSecondary },
-                  ]}
-                >
-                  Address
-                </Text>
-                <Text style={[styles.businessInfoText, { color: colors.text }]}>
-                  {deal.business_address}
-                </Text>
-              </View>
             </View>
-          )}
-
-          {/* City */}
-          {deal.business_city && (
-            <View style={styles.businessInfoRow}>
-              <MaterialIcons
-                name="location-city"
-                size={20}
-                color={colors.primary}
-              />
-              <View style={styles.businessInfoContent}>
-                <Text
-                  style={[
-                    styles.businessInfoLabel,
-                    { color: colors.textSecondary },
-                  ]}
-                >
-                  City
-                </Text>
-                <Text style={[styles.businessInfoText, { color: colors.text }]}>
-                  {deal.business_city}
-                </Text>
-              </View>
-            </View>
-          )}
-
-          {/* State */}
-          {deal.business_state && (
-            <View style={styles.businessInfoRow}>
-              <MaterialIcons name="map" size={20} color={colors.primary} />
-              <View style={styles.businessInfoContent}>
-                <Text
-                  style={[
-                    styles.businessInfoLabel,
-                    { color: colors.textSecondary },
-                  ]}
-                >
-                  State
-                </Text>
-                <Text style={[styles.businessInfoText, { color: colors.text }]}>
-                  {deal.business_state}
-                </Text>
-              </View>
-            </View>
-          )}
-
-          {/* Postal Code */}
-          {(deal.business_postal_code ||
-            deal.postalCode ||
-            deal.zip_code ||
-            deal.zipCode) && (
-            <View style={styles.businessInfoRow}>
-              <MaterialIcons
-                name="markunread-mailbox"
-                size={20}
-                color={colors.primary}
-              />
-              <View style={styles.businessInfoContent}>
-                <Text
-                  style={[
-                    styles.businessInfoLabel,
-                    { color: colors.textSecondary },
-                  ]}
-                >
-                  Postal Code
-                </Text>
-                <Text style={[styles.businessInfoText, { color: colors.text }]}>
-                  {deal.business_postal_code ||
-                    deal.postalCode ||
-                    deal.zip_code ||
-                    deal.zipCode}
-                </Text>
-              </View>
-            </View>
-          )}
-
-          {/* Phone Number */}
-          {deal.business_phone && (
-            <TouchableOpacity onPress={handlePhonePress}>
-            <View style={styles.businessInfoRow}>
-              <MaterialIcons name="phone" size={20} color={colors.primary} />
-              <View style={styles.businessInfoContent}>
-                <Text
-                  style={[
-                    styles.businessInfoLabel,
-                    { color: colors.textSecondary },
-                  ]}
-                >
-                  Phone
-                </Text>
-                <Text style={[styles.businessInfoText, { color: colors.text }]}>
-                  {deal.business_phone}
-                </Text>
-              </View>
-            </View>
-            </TouchableOpacity>
-          )}
-
-          {/* Website */}
-          {deal.business_website && (
-            <TouchableOpacity onPress={handleWebsitePress}>
-              <View style={styles.businessInfoRow}>
-                <MaterialIcons name="language" size={20} color={colors.primary} />
-                <View style={styles.businessInfoContent}>
-                  <Text
-                    style={[
-                    styles.businessInfoLabel,
-                    { color: colors.textSecondary },
-                  ]}
-                >
-                  Website
-                </Text>
-                <Text
-                  style={[styles.businessInfoText, { color: colors.primary }]}
-                >
-                  {deal.business_website}
-                </Text>
-              </View>
-            </View>
-            </TouchableOpacity>
           )}
         </View>
       </ScrollView>
-      <VersionFooter />
     </View>
   );
 };
@@ -513,48 +426,117 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 40,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 50,
+    left: 16,
+    zIndex: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
-  scrollView: {
-    flex: 1,
+  // Hero Section
+  heroContainer: {
+    height: HERO_HEIGHT,
+    width: '100%',
   },
-  scrollContent: {
-    padding: 16,
+  heroImage: {
+    width: '100%',
+    height: '100%',
   },
-  businessHeader: {
+  heroPlaceholder: {
+    backgroundColor: '#E5E5E5',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  // Content Card
+  contentCard: {
+    marginTop: -40,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingTop: 24,
+    paddingHorizontal: 20,
+    minHeight: 500,
+  },
+  categoryChip: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginBottom: 16,
+  },
+  categoryChipText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#666',
+  },
+  businessTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  businessName: {
+    fontSize: 26,
+    fontWeight: '700',
+  },
+  verifiedIcon: {
+    marginLeft: 8,
+  },
+  tagline: {
+    fontSize: 15,
+    lineHeight: 22,
     marginBottom: 24,
   },
+  // Location Section
+  locationSection: {
+    marginBottom: 24,
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  locationIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  locationContent: {
+    marginLeft: 12,
+  },
+  locationLabel: {
+    fontSize: 12,
+    marginBottom: 2,
+  },
+  locationValue: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  // Map Section
   mapSection: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    borderWidth: 1,
     marginBottom: 24,
-    overflow: 'hidden',
-  },
-  businessImagesSection: {
-    paddingVertical: 16,
-  },
-  imagesList: {
-    paddingHorizontal: 16,
-  },
-  businessImageContainer: {
-    marginRight: 12,
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  businessImage: {
-    width: 200,
-    height: 150,
-    borderRadius: 12,
+    marginHorizontal: -20,
   },
   mapContainer: {
-    height: 250,
-    borderRadius: 12,
-    overflow: 'hidden',
+    height: 180,
   },
   map: {
     flex: 1,
@@ -563,60 +545,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 16,
+    backgroundColor: '#1a1a1a',
+    paddingVertical: 14,
+    borderRadius: 30,
+    marginTop: 12,
+    marginHorizontal: 20,
     gap: 8,
   },
   directionsButtonText: {
-    color: '#FFFFFF',
+    color: '#FFF',
     fontSize: 16,
     fontWeight: '600',
   },
-  businessTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
+  // Gallery Section
+  gallerySection: {
+    marginTop: 8,
   },
-  businessName: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    flex: 1,
+  galleryList: {
+    paddingRight: 20,
   },
-  verifiedIcon: {
-    marginLeft: 8,
+  galleryImageContainer: {
+    marginRight: 12,
+    overflow: 'hidden',
   },
-  categoryText: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  businessInfoSection: {
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 16,
-  },
-  businessInfoRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 16,
-  },
-  businessInfoContent: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  businessInfoLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    marginBottom: 4,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  businessInfoText: {
-    fontSize: 15,
-    lineHeight: 20,
+  galleryImage: {
+    width: 150,
+    height: 150,
   },
 });
 

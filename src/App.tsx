@@ -12,6 +12,7 @@ import AppReturnUtils from './libs/utils/appReturnUtils';
 import * as Sentry from '@sentry/react-native';
 import { accelerometer, setUpdateIntervalForType, SensorTypes } from 'react-native-sensors';
 import FeedbackModal from './components/FeedbackModal';
+import BootSplash from 'react-native-bootsplash';
 
 Sentry.init({
   dsn: 'https://782d11d5dba6567941af57bb9981d2c3@o4510396604088320.ingest.us.sentry.io/4510396604940288',
@@ -55,6 +56,14 @@ function AppWithStatusBar() {
   const { isDarkMode } = useAuth();
   const lastShakeTime = useRef(0);
   const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
+
+  // Hide splash screen after app is ready
+  useEffect(() => {
+    const hideSplash = async () => {
+      await BootSplash.hide({ fade: true });
+    };
+    hideSplash();
+  }, []);
 
   const handleFeedbackSubmit = (feedback: string) => {
     try {

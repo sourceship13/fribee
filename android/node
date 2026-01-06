@@ -1,0 +1,17 @@
+#!/bin/bash
+# Node wrapper for Android Studio builds
+# Android Studio doesn't inherit shell PATH, so we need to find node manually
+
+# Try common node locations in order
+if [ -x "/usr/local/bin/node" ]; then
+    exec /usr/local/bin/node "$@"
+elif [ -x "$HOME/.nvm/versions/node/v20.19.5/bin/node" ]; then
+    exec "$HOME/.nvm/versions/node/v20.19.5/bin/node" "$@"
+elif [ -x "$(which node 2>/dev/null)" ]; then
+    exec "$(which node)" "$@"
+else
+    # Try to load nvm
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    exec node "$@"
+fi

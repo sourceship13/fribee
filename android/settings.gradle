@@ -1,5 +1,17 @@
 pluginManagement { includeBuild("../node_modules/@react-native/gradle-plugin") }
 plugins { id("com.facebook.react.settings") }
+
+// Set NODE_BINARY for React Native codegen after plugins load
+def nodeExecutable = System.getenv("NODE_BINARY") ?: "/usr/local/bin/node"
+if (!new File(nodeExecutable).exists()) {
+    // Fallback to nvm path if symlink doesn't exist
+    def nvmNode = System.getProperty("user.home") + "/.nvm/versions/node/v20.19.5/bin/node"
+    if (new File(nvmNode).exists()) {
+        nodeExecutable = nvmNode
+    }
+}
+System.setProperty("NODE_BINARY", nodeExecutable)
+
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
 rootProject.name = 'nolimitseradeals'
 include ':app'
