@@ -58,16 +58,18 @@ jobs:
             echo "NPM version: $(npm --version)"
       - restore_cache:
           keys:
-            - v1-android-gems-{{ checksum "android/Gemfile.lock" }}
-            - v1-android-gems-
+            - v3-android-gems-{{ checksum "android/Gemfile.lock" }}
+            - v3-android-gems-
       - run:
           name: Install Ruby dependencies
           command: |
             cd android
+            # Clear any stale bundle config
+            rm -rf .bundle vendor/bundle
             bundle config set --local path 'vendor/bundle'
-            bundle install
+            bundle install --jobs 4 --retry 3
       - save_cache:
-          key: v1-android-gems-{{ checksum "android/Gemfile.lock" }}
+          key: v3-android-gems-{{ checksum "android/Gemfile.lock" }}
           paths:
             - android/vendor/bundle
       - run:
@@ -107,25 +109,25 @@ jobs:
             export SENTRY_DISABLE_AUTO_UPLOAD=true
 
             # Generate all codegen artifacts first
-            ./gradlew generateCodegenArtifactsFromSchema --no-daemon --init-script init.gradle
+            ./gradlew generateCodegenArtifactsFromSchema --no-daemon
 
             # react-native-config doesn't generate codegen properly, create empty directory
             mkdir -p ../node_modules/react-native-config/android/build/generated/source/codegen/jni
 
             # Build Staging APK
-            ./gradlew assembleStagingRelease --no-daemon --stacktrace --init-script init.gradle
+            ./gradlew assembleStagingRelease --no-daemon --stacktrace
             
             # Build Staging AAB
-            ./gradlew bundleStagingRelease --no-daemon --stacktrace --init-script init.gradle
+            ./gradlew bundleStagingRelease --no-daemon --stacktrace
       - run:
           name: Build Android Production (APK & AAB)
           command: |
             cd android
             # Build Production APK
-            ./gradlew assembleProductionRelease --no-daemon --stacktrace --init-script init.gradle
+            ./gradlew assembleProductionRelease --no-daemon --stacktrace
             
             # Build Production AAB
-            ./gradlew bundleProductionRelease --no-daemon --stacktrace --init-script init.gradle
+            ./gradlew bundleProductionRelease --no-daemon --stacktrace
       - save_cache:
           key: v2-gradle-{{ checksum "android/build.gradle" }}-{{ checksum "android/app/build.gradle" }}
           paths:

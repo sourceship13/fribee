@@ -257,13 +257,12 @@ const SignInScreen = ({ navigation }: any) => {
         <View
           style={{
             flexDirection: 'column',
-
             backgroundColor: 'white',
             width: '100%',
             padding: 20,
             borderRadius: 36,
             opacity: 0.95,
-            height: '85%',
+            height: createUserModal ? '85%' : '60%',
           }}
         >
           {createUserModal ? (
@@ -439,22 +438,6 @@ const SignInScreen = ({ navigation }: any) => {
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
-                autoCapitalize="none"
-              />
-              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                Phone
-              </Text>
-
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
-                ]}
-                placeholder="Phone"
-                placeholderTextColor={colors.textPlaceholder}
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
                 autoCapitalize="none"
               />
               <Text style={[styles.subtitle, { color: colors.textSecondary }]}>

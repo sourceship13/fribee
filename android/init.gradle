@@ -7,25 +7,10 @@ def nodePaths = androidDir + ":/usr/local/bin:" + home + "/.nvm/versions/node/v2
 def currentPath = System.getenv("PATH") ?: ""
 def newPath = nodePaths + ":" + currentPath
 
-// Use reflection to modify process environment
-try {
-    def processEnvClass = Class.forName("java.lang.ProcessEnvironment")
-    def theEnvironmentField = processEnvClass.getDeclaredField("theEnvironment")
-    theEnvironmentField.setAccessible(true)
-    def env = theEnvironmentField.get(null)
-    env.put("PATH", newPath)
-    println "[init.gradle] PATH updated with node paths"
-} catch (Exception e) {
-    println "[init.gradle] Could not update PATH via ProcessEnvironment: " + e.message
-    // Try alternative method
-    try {
-        def env = System.getenv()
-        def field = env.getClass().getDeclaredField('m')
-        field.setAccessible(true)
-        def map = field.get(env)
-        map.put("PATH", newPath)
-        println "[init.gradle] PATH updated via alternative method"
-    } catch (Exception e2) {
-        println "[init.gradle] All PATH update methods failed"
-    }
-}
+// Set system property for node path that React Native can use
+System.setProperty("NODE_BINARY_PATH", home + "/.nvm/versions/node/v20.19.5/bin/node")
+
+// For Java 17+, we can't modify ProcessEnvironment directly due to module restrictions
+// Instead, we'll rely on the node wrapper scripts and system properties
+println "[init.gradle] Node paths configured: " + nodePaths
+println "[init.gradle] NODE_BINARY_PATH set to: " + System.getProperty("NODE_BINARY_PATH")

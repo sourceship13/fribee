@@ -55,10 +55,10 @@ let FORCE_PHYSICAL_DEVICE: boolean | null = null;
 
 
 // Override for development - set to true to use local development server
-const FORCE_LOCAL_DEVELOPMENT = true; // Set to true to use local development server
+const FORCE_LOCAL_DEVELOPMENT = false; // Set to false to use cloud server
 
   // FORCE STAGING: Override everything to use staging (set to true to force staging regardless of device)
-const FORCE_STAGING_ALWAYS = false; // Set to false to use local server
+const FORCE_STAGING_ALWAYS = true; // Set to true to use cloud server
 
 // IMPORTANT: Verify all URLs point to staging
 const STAGING_URL = 'https://f3x2ipn2yf.us-east-1.awsapprunner.com';

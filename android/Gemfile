@@ -1,3 +1,10 @@
 source "https://rubygems.org"
 
+# Lock Ruby version for CI compatibility (CircleCI uses Ruby 3.0.x)
+ruby ">= 2.7", "< 3.2"
+
 gem "fastlane"
+
+# Pin gems that have Ruby 3.2+ requirements in newer versions
+gem "public_suffix", "< 6.0"
+gem "addressable", "~> 2.8.0"
