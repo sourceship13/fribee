@@ -136,6 +136,7 @@
 		DE8B204EF79F47E9A4AAE393 /* Roboto-VariableFont_wdth,wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9564D79325204B96B91623CE /* Roboto-VariableFont_wdth,wght.ttf */; };
 		DEAE9F642E9E27570041BB64 /* info-staging.plist in Resources */ = {isa = PBXBuildFile; fileRef = DEAE9F632E9E27570041BB64 /* info-staging.plist */; };
 		DEAE9F652E9E27570041BB64 /* info-staging.plist in Resources */ = {isa = PBXBuildFile; fileRef = DEAE9F632E9E27570041BB64 /* info-staging.plist */; };
+		DEB271EB700B0773AA0D3534 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBE07BB9A2C2422C8480D4D2 /* BootSplash.storyboard */; };
 		DECAADB12ED9793300B64A25 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE15BF6F2ECD9AC400704938 /* StoreKit.framework */; };
 		DEE363062E98730100B65285 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		DEE3630A2E98730100B65285 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -796,6 +797,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DEB271EB700B0773AA0D3534 /* BootSplash.storyboard in Resources */,
 				DEAE9F642E9E27570041BB64 /* info-staging.plist in Resources */,
 				DEE3630A2E98730100B65285 /* LaunchScreen.storyboard in Resources */,
 				DE15BF742ECDDED300704938 /* IAP.storekit in Resources */,
