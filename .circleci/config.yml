@@ -58,16 +58,19 @@ jobs:
             echo "NPM version: $(npm --version)"
       - restore_cache:
           keys:
-            - v1-android-gems-{{ checksum "android/Gemfile.lock" }}
-            - v1-android-gems-
+            - v2-android-gems-{{ checksum "android/Gemfile.lock" }}
+            - v2-android-gems-
       - run:
           name: Install Ruby dependencies
           command: |
             cd android
+            # Clear any stale bundle config
+            rm -rf .bundle vendor/bundle
             bundle config set --local path 'vendor/bundle'
-            bundle install
+            bundle config set --local deployment 'true'
+            bundle install --jobs 4 --retry 3
       - save_cache:
-          key: v1-android-gems-{{ checksum "android/Gemfile.lock" }}
+          key: v2-android-gems-{{ checksum "android/Gemfile.lock" }}
           paths:
             - android/vendor/bundle
       - run:
