@@ -257,13 +257,12 @@ const SignInScreen = ({ navigation }: any) => {
         <View
           style={{
             flexDirection: 'column',
-
             backgroundColor: 'white',
             width: '100%',
             padding: 20,
             borderRadius: 36,
             opacity: 0.95,
-            height: '85%',
+            height: createUserModal ? '85%' : '60%',
           }}
         >
           {createUserModal ? (
