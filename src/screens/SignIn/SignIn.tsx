@@ -441,22 +441,6 @@ const SignInScreen = ({ navigation }: any) => {
                 autoCapitalize="none"
               />
               <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                Phone
-              </Text>
-
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
-                ]}
-                placeholder="Phone"
-                placeholderTextColor={colors.textPlaceholder}
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-                autoCapitalize="none"
-              />
-              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
                 Password
               </Text>
               <TextInput
