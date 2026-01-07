@@ -46,6 +46,21 @@ const SignInScreen = ({ navigation }: any) => {
     password: '',
   });
 
+  // Format phone number for display as (XXX) XXX-XXXX
+  const formatPhoneNumber = (text: string) => {
+    // Remove all non-digits
+    const digits = text.replace(/\D/g, '');
+    
+    // Format based on length
+    if (digits.length <= 3) {
+      return digits;
+    } else if (digits.length <= 6) {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    } else {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+    }
+  };
+
   const handleSignIn = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Please enter both email and password');
@@ -388,15 +403,18 @@ const SignInScreen = ({ navigation }: any) => {
                   { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
                   errors.phone && styles.inputError,
                 ]}
-                placeholder="Phone Number"
+                placeholder="(555) 123-4567"
                 placeholderTextColor={colors.textPlaceholder}
-                value={fields.phone}
+                value={formatPhoneNumber(fields.phone)}
                 onChangeText={(text) => {
-                  setFields({ ...fields, phone: text });
+                  // Store only digits for API
+                  const digits = text.replace(/\D/g, '');
+                  setFields({ ...fields, phone: digits });
                   clearFieldError('phone');
                 }}
                 keyboardType="phone-pad"
                 autoCapitalize="none"
+                maxLength={14}
               />
               {errors.phone && (
                 <Text style={styles.errorText}>{errors.phone}</Text>
