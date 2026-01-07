@@ -188,7 +188,7 @@ const RedemptionScreen = () => {
           >
             Redeem Deal
           </Text>
-          <View> </View>
+          <View style={{ width: 40 }} />
         </View>
         <View
           style={{
