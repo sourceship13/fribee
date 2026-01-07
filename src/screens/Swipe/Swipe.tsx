@@ -24,8 +24,6 @@ import DeclineButton from '../../../assets/imgs/decline-butt.svg';
 import IconLogo from '../../../assets/imgs/icon_logo.svg';
 import SettingsIcon from '../../../assets/imgs/settings-icon.svg';
 import LinearGradient from 'react-native-linear-gradient';
-import SwipeCard2 from '../../../assets/imgs/swipe-card-2.svg';
-import SwipeCard3 from '../../../assets/imgs/swipe-card-3.svg';
 import Toolbar from '../../components/Toolbar';
 
 const PLACEHOLDER_DEAL = {
@@ -81,6 +79,14 @@ const SwipeScreen = ({ navigation }: any) => {
       : 0;
   const nextDeal =
     unheartedDeals.length > 1 ? unheartedDeals[nextDealIndex] : null;
+
+  // Get the third deal to show behind the second one
+  const thirdDealIndex =
+    unheartedDeals.length > 0
+      ? (currentDealIndex + 2) % unheartedDeals.length
+      : 0;
+  const thirdDeal =
+    unheartedDeals.length > 2 ? unheartedDeals[thirdDealIndex] : null;
 
   // Helper function to get deal image URL
   const getDealImageUrl = (deal: any): string | null => {
@@ -296,20 +302,38 @@ const SwipeScreen = ({ navigation }: any) => {
         </View>
       )}
 
-      {/* Stacked cards behind main card - OUTSIDE animated view so they don't move */}
-      {!dealsLoading && (
-        <View style={styles.stackedCardsContainer} pointerEvents="none">
-          <View
-            style={[
-              styles.stackedCard2,
-              { width: (screenWidth - 30) * 0.9 },
-            ]}
-          >
-            <SwipeCard2
-              width="100%"
-              height={12}
-              preserveAspectRatio="none"
-            />
+      {/* Third deal card rendered BEHIND the second card */}
+      {!dealsLoading && !error && thirdDeal && (
+        <View style={styles.thirdDealContainer} pointerEvents="none">
+          <View style={styles.thirdDealCard}>
+            {getDealImageUrl(thirdDeal) ? (
+              <ImageBackground
+                source={{ uri: getDealImageUrl(thirdDeal)! }}
+                style={styles.thirdDealImage}
+                resizeMode="cover"
+              >
+                <LinearGradient
+                  colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
+                  locations={[0, 0.5, 1]}
+                  style={styles.thirdDealGradient}
+                />
+              </ImageBackground>
+            ) : (
+              <View
+                style={[
+                  styles.thirdDealImage,
+                  {
+                    backgroundColor: thirdDeal.backgroundColor || colors.primary,
+                  },
+                ]}
+              >
+                <LinearGradient
+                  colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
+                  locations={[0, 0.5, 1]}
+                  style={styles.thirdDealGradient}
+                />
+              </View>
+            )}
           </View>
         </View>
       )}
@@ -539,20 +563,27 @@ const styles = StyleSheet.create({
     bottom: 155,
     zIndex: 1,
   },
-  // Stacked cards effect
-  stackedCardsContainer: {
+  // Third deal card behind second card
+  thirdDealContainer: {
     position: 'absolute',
-    top: 115, // Below header (header is ~100px with padding), above main card
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    zIndex: 1,
+    top: 135, // Higher up so it peeks above the second card
+    left: 35,
+    right: 35,
+    bottom: 165,
+    zIndex: 0,
   },
-  stackedCard3: {
-    // Smallest/lightest card at very top - no margin needed, renders first
+  thirdDealCard: {
+    flex: 1,
+    borderRadius: 20,
+    overflow: 'hidden',
   },
-  stackedCard2: {
-    marginTop: 18, // Slight overlap with card3 so card3 peeks above
+  thirdDealImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  thirdDealGradient: {
+    ...StyleSheet.absoluteFillObject,
   },
   nextDealCard: {
     flex: 1,

@@ -162,11 +162,32 @@ const SignInScreen = ({ navigation }: any) => {
   const validateForm = () => {
     const newErrors: any = {};
 
+    // First name validation
+    if (!fields.firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+    } else if (fields.firstName.trim().length < 2) {
+      newErrors.firstName = 'First name must be at least 2 characters';
+    }
+
+    // Last name validation
+    if (!fields.lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
+    } else if (fields.lastName.trim().length < 2) {
+      newErrors.lastName = 'Last name must be at least 2 characters';
+    }
+
     // Email validation
-    if (!fields.email) {
+    if (!fields.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(fields.email)) {
+    } else if (!/\S+@\S+\.\S+/.test(fields.email.trim())) {
       newErrors.email = 'Invalid email format';
+    }
+
+    // Phone validation (required)
+    if (!fields.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    } else if (!/^\+?[\d\s-()]{10,}$/.test(fields.phone.trim())) {
+      newErrors.phone = 'Enter a valid phone number (at least 10 digits)';
     }
 
     // Password validation
@@ -178,21 +199,25 @@ const SignInScreen = ({ navigation }: any) => {
       !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(fields.password)
     ) {
       newErrors.password =
-        'Must contain uppercase, lowercase, number and special character';
+        'Must include uppercase, lowercase, number & special char';
     }
 
     // Confirm password
-    if (fields.password !== confirmPassword) {
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (fields.password !== confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    // Phone validation (optional)
-    if (fields.phone && !/^\+?[\d\s-()]+$/.test(fields.phone)) {
-      newErrors.phone = 'Invalid phone number';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  // Clear error when user starts typing
+  const clearFieldError = (fieldName: string) => {
+    if (errors[fieldName]) {
+      setErrors({ ...errors, [fieldName]: undefined });
+    }
   };
 
   const handleSignUp = async () => {
@@ -274,7 +299,7 @@ const SignInScreen = ({ navigation }: any) => {
                 Enter your details to create a new account.
               </Text>
 
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
                 <View style={{ flex: 1 }}>
                   <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
                     First Name
@@ -282,16 +307,23 @@ const SignInScreen = ({ navigation }: any) => {
                   <TextInput
                     style={[
                       styles.input,
-                      { color: colors.text, backgroundColor: colors.surface },
+                      { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
+                      errors.firstName && styles.inputError,
                     ]}
                     placeholder="First Name"
                     placeholderTextColor={colors.textPlaceholder}
                     value={fields.firstName}
-                    onChangeText={(text) => setFields({ ...fields, firstName: text })}
+                    onChangeText={(text) => {
+                      setFields({ ...fields, firstName: text });
+                      clearFieldError('firstName');
+                    }}
                     autoCapitalize="words"
                     textContentType="givenName"
                     autoComplete="off"
                   />
+                  {errors.firstName && (
+                    <Text style={styles.errorText}>{errors.firstName}</Text>
+                  )}
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
@@ -300,16 +332,23 @@ const SignInScreen = ({ navigation }: any) => {
                   <TextInput
                     style={[
                       styles.input,
-                      { color: colors.text, backgroundColor: colors.surface },
+                      { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
+                      errors.lastName && styles.inputError,
                     ]}
                     placeholder="Last Name"
                     placeholderTextColor={colors.textPlaceholder}
                     value={fields.lastName}
-                    onChangeText={(text) => setFields({ ...fields, lastName: text })}
+                    onChangeText={(text) => {
+                      setFields({ ...fields, lastName: text });
+                      clearFieldError('lastName');
+                    }}
                     autoCapitalize="words"
                     textContentType="familyName"
                     autoComplete="off"
                   />
+                  {errors.lastName && (
+                    <Text style={styles.errorText}>{errors.lastName}</Text>
+                  )}
                 </View>
               </View>
 
@@ -319,17 +358,24 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
+                  errors.email && styles.inputError,
                 ]}
                 placeholder="Email"
                 placeholderTextColor={colors.textPlaceholder}
                 value={fields.email}
-                onChangeText={(text) => setFields({ ...fields, email: text })}
+                onChangeText={(text) => {
+                  setFields({ ...fields, email: text });
+                  clearFieldError('email');
+                }}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 textContentType="none"
                 autoComplete="off"
               />
+              {errors.email && (
+                <Text style={styles.errorText}>{errors.email}</Text>
+              )}
 
               <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
                 Phone Number
@@ -337,15 +383,22 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
+                  errors.phone && styles.inputError,
                 ]}
                 placeholder="Phone Number"
                 placeholderTextColor={colors.textPlaceholder}
                 value={fields.phone}
-                onChangeText={(text) => setFields({ ...fields, phone: text })}
+                onChangeText={(text) => {
+                  setFields({ ...fields, phone: text });
+                  clearFieldError('phone');
+                }}
                 keyboardType="phone-pad"
                 autoCapitalize="none"
               />
+              {errors.phone && (
+                <Text style={styles.errorText}>{errors.phone}</Text>
+              )}
 
               <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
                 Password
@@ -353,14 +406,21 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
+                  errors.password && styles.inputError,
                 ]}
                 placeholder="Password"
                 placeholderTextColor={colors.textPlaceholder}
                 value={fields.password}
-                onChangeText={(text) => setFields({ ...fields, password: text })}
+                onChangeText={(text) => {
+                  setFields({ ...fields, password: text });
+                  clearFieldError('password');
+                }}
                 secureTextEntry
               />
+              {errors.password && (
+                <Text style={styles.errorText}>{errors.password}</Text>
+              )}
 
               <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
                 Confirm Password
@@ -368,14 +428,21 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
+                  errors.confirmPassword && styles.inputError,
                 ]}
                 placeholder="Confirm Password"
                 placeholderTextColor={colors.textPlaceholder}
                 value={confirmPassword}
-                onChangeText={setConfirmPassword}
+                onChangeText={(text) => {
+                  setConfirmPassword(text);
+                  clearFieldError('confirmPassword');
+                }}
                 secureTextEntry
               />
+              {errors.confirmPassword && (
+                <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+              )}
 
               <TouchableOpacity
                 style={[
@@ -431,7 +498,7 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
                 ]}
                 placeholder="Email"
                 placeholderTextColor={colors.textPlaceholder}
@@ -446,7 +513,7 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
                 ]}
                 placeholder="Password"
                 placeholderTextColor={colors.textPlaceholder}
@@ -619,6 +686,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     alignSelf: 'center',
+  },
+  inputError: {
+    borderWidth: 1,
+    borderColor: '#ff3b30',
+  },
+  errorText: {
+    color: '#ff3b30',
+    fontSize: 12,
+    marginTop: -12,
+    marginBottom: 12,
+    marginLeft: 4,
   },
 });
 
