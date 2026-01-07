@@ -128,7 +128,7 @@ const SavedDealsScreen = ({ navigation }: any) => {
 
           {!isRedeemed && (
             <TouchableOpacity
-              style={styles.redeemButton}
+              style={[styles.redeemButton, { borderColor: colors.text }]}
               onPress={() => {
                 if (isReady) {
                   navigation.navigate('Redemption', { deal: item });
@@ -137,7 +137,7 @@ const SavedDealsScreen = ({ navigation }: any) => {
                 }
               }}
             >
-              <Text style={styles.redeemButtonText}>
+              <Text style={[styles.redeemButtonText, { color: colors.text }]}>
                 {isReady ? 'Redeem Now' : 'Share More'}
               </Text>
             </TouchableOpacity>

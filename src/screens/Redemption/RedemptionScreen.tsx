@@ -174,7 +174,10 @@ const RedemptionScreen = () => {
         <View
           style={[styles.modalHeader, { borderBottomColor: colors.border }]}
         >
-          <TouchableOpacity style={styles.closeButton}>
+          <TouchableOpacity 
+            style={[styles.closeButton, { borderColor: colors.border }]}
+            onPress={() => navigation.goBack()}
+          >
             <MaterialIcons name="arrow-back" size={24} color={colors.text} />
           </TouchableOpacity>
           <Text
@@ -190,13 +193,13 @@ const RedemptionScreen = () => {
         <View
           style={{
             borderWidth: 1,
-            borderColor: '#E6E6E6',
+            borderColor: colors.border,
             borderRadius: 12,
             padding: 16,
             flexDirection: 'row',
             marginHorizontal: 20,
             marginTop: 16,
-            backgroundColor: '#FFFFFF',
+            backgroundColor: colors.surface,
           }}
         >
           <View>{renderImage()}</View>
@@ -232,32 +235,33 @@ const RedemptionScreen = () => {
         </View>
         <View style={styles.couponWrapper}>
           {/* Coupon Card with SVG background */}
-          <View style={styles.couponCardContainer}>
-            {/* SVG Background for top section */}
-            <View style={styles.couponTopBackground}>
+          <View style={styles.couponTopBackground}>
               <RedeemBg
                 width={screenWidth - 40}
                 height={150}
                 preserveAspectRatio="xMidYMin slice"
               />
             </View>
+          <View style={styles.couponCardContainer}>
+            {/* SVG Background for top section */}
+            
             
             {/* Coupon Content Card */}
-            <View style={styles.couponCard}>
+            <View style={[styles.couponCard, { backgroundColor: colors.surface }]}>
               {/* Top Section - Promo Code */}
               <View style={styles.couponTopSection}>
-                <Text style={styles.couponLabel}>Your promocode:</Text>
+                <Text style={[styles.couponLabel, { color: colors.textTertiary }]}>Your promocode:</Text>
                 <View style={styles.codeRow}>
                   <Text style={styles.couponCode}>{redemptionCode}</Text>
                   <TouchableOpacity style={styles.copyButton}>
-                    <MaterialIcons name="content-copy" size={20} color="#666" />
+                    <MaterialIcons name="content-copy" size={20} color={colors.textTertiary} />
                   </TouchableOpacity>
                 </View>
               </View>
 
               {/* Bottom Section - Barcode */}
-              <View style={styles.couponBottomSection}>
-                <Text style={styles.scanLabel}>Or scan QR code below:</Text>
+              <View style={[styles.couponBottomSection, { backgroundColor: colors.surface }]}>
+                <Text style={[styles.scanLabel, { color: colors.text }]}>Or scan QR code below:</Text>
                 <View style={styles.barcodeContainer}>
                   <BarcodeCreatorView
                     value={redemptionCode}
@@ -270,8 +274,8 @@ const RedemptionScreen = () => {
               </View>
 
               {/* Divider and Button */}
-              <View style={styles.redeemSection}>
-                <View style={styles.redeemDivider} />
+              <View style={[styles.redeemSection, { backgroundColor: colors.surface }]}>
+                <View style={[styles.redeemDivider, { backgroundColor: colors.border }]} />
                 <TouchableOpacity
                   style={styles.redeemButton}
                   activeOpacity={0.7}
@@ -297,7 +301,7 @@ const RedemptionScreen = () => {
                     }
                   }}
                 >
-                  <Text style={styles.redeemButtonText}>Set Deal as Redeemed</Text>
+                  <Text style={[styles.redeemButtonText, { color: colors.text }]}>Set Deal as Redeemed</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -317,7 +321,6 @@ const styles = StyleSheet.create({
   closeButton: {
     padding: 8,
     borderWidth: 1,
-    borderColor: '#E6E6E6',
     borderRadius: 20,
   },
   modalHeader: {
@@ -332,6 +335,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 20,
+    marginTop: 20,
   },
   couponCardContainer: {
     position: 'relative',
@@ -342,10 +346,11 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   couponCard: {
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -363,7 +368,6 @@ const styles = StyleSheet.create({
   },
   couponLabel: {
     fontSize: 14,
-    color: '#666666',
     marginBottom: 8,
   },
   codeRow: {
@@ -385,11 +389,9 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 20,
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
   },
   scanLabel: {
     fontSize: 14,
-    color: '#333333',
     marginBottom: 16,
   },
   barcodeContainer: {
@@ -397,11 +399,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   redeemSection: {
-    backgroundColor: '#FFFFFF',
   },
   redeemDivider: {
     height: 1,
-    backgroundColor: '#E6E6E6',
   },
   redeemButton: {
     paddingVertical: 16,
@@ -410,7 +410,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   redeemButtonText: {
-    color: '#333333',
     fontSize: 16,
     fontWeight: '600',
   },
