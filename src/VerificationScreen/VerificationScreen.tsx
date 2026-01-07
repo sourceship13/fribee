@@ -30,6 +30,25 @@ const VerificationScreen = ({ navigation, route }: any) => {
   const email = route?.params?.email || '';
   const password = route?.params?.password || '';
 
+  // Format phone number for display as (XXX) XXX-XXXX
+  const formatPhoneNumber = (text: string) => {
+    // Remove all non-digits
+    const digits = text.replace(/\D/g, '');
+    
+    // Format based on length
+    if (digits.length <= 3) {
+      return digits;
+    } else if (digits.length <= 6) {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    } else {
+      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+    }
+  };
+
+  // Check if identifier is a phone number (all digits) or email
+  const isPhoneNumber = /^\d+$/.test(identifier);
+  const displayIdentifier = isPhoneNumber ? formatPhoneNumber(identifier) : identifier;
+
   useEffect(() => {
     // Focus the first input on mount
     if (inputRefs.current[0]) {
@@ -208,7 +227,7 @@ const VerificationScreen = ({ navigation, route }: any) => {
         </Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
           We sent a 6-digit code to{'\n'}
-          {identifier}
+          {displayIdentifier}
         </Text>
 
         <View style={styles.codeContainer}>
