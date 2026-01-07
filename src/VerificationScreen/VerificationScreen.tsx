@@ -16,7 +16,7 @@ import { iOSUIKit } from 'react-native-typography';
 
 
 const VerificationScreen = ({ navigation, route }: any) => {
-  const { isDarkMode } = useAuth();
+  const { isDarkMode, login } = useAuth();
   const colors = getColors(isDarkMode);
 
   const [code, setCode] = useState(['', '', '', '', '', '']);
@@ -27,6 +27,8 @@ const VerificationScreen = ({ navigation, route }: any) => {
   // Get identifier (phone or email) from route params
   const identifier = route?.params?.phoneNumber || route?.params?.email || '';
   const verificationMethod = route?.params?.verificationMethod || 'sms';
+  const email = route?.params?.email || '';
+  const password = route?.params?.password || '';
 
   useEffect(() => {
     // Focus the first input on mount
@@ -123,9 +125,24 @@ const VerificationScreen = ({ navigation, route }: any) => {
       const result = await authService.verifyCode(identifier, codeToVerify);
 
       if (result.success) {
-        Alert.alert('Success', 'Account verified successfully! Please sign in.', [
-          { text: 'OK', onPress: () => navigation.navigate('SignIn') },
-        ]);
+        // If we have email and password, auto-login the user
+        if (email && password) {
+          try {
+            await login({ email, password });
+            // Navigation will be handled automatically by auth state change
+            return;
+          } catch (loginError) {
+            console.error('Auto-login failed:', loginError);
+            // Fall back to manual sign in
+            Alert.alert('Success', 'Account verified! Please sign in.', [
+              { text: 'OK', onPress: () => navigation.navigate('SignIn') },
+            ]);
+          }
+        } else {
+          Alert.alert('Success', 'Account verified successfully! Please sign in.', [
+            { text: 'OK', onPress: () => navigation.navigate('SignIn') },
+          ]);
+        }
       } else {
         Alert.alert('Error', result.message || 'Invalid verification code');
         // Clear the code for retry

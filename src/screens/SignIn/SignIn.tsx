@@ -248,6 +248,8 @@ const SignInScreen = ({ navigation }: any) => {
             onPress: () =>
               navigation.navigate('Verification', {
                 phoneNumber: fields.phone.trim(),
+                email: fields.email.toLowerCase().trim(),
+                password: fields.password,
               }),
           },
         ],
@@ -282,7 +284,7 @@ const SignInScreen = ({ navigation }: any) => {
         <View
           style={{
             flexDirection: 'column',
-            backgroundColor: 'white',
+            backgroundColor: colors.background,
             width: '100%',
             padding: 20,
             borderRadius: 36,
