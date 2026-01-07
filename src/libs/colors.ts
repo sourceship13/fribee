@@ -22,6 +22,7 @@ export const Colors = {
     subText: '#8E8E93',
     title: '#2A2A2A',
     titleSecondary: '#8E8E93',
+    loginInputBorder: '#cdcdcd',
 
     // Navigation
     navButton: '#8E8E93',
@@ -81,6 +82,7 @@ export const Colors = {
     subText: '#8E8E93',
     title: '#FFFFFF',
     titleSecondary: '#E5E5EA',
+    loginInputBorder: '#323232',
 
     // Navigation
     navButton: '#8E8E93',

@@ -307,7 +307,7 @@ const SignInScreen = ({ navigation }: any) => {
                   <TextInput
                     style={[
                       styles.input,
-                      { color: colors.text, backgroundColor: colors.surface },
+                      { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
                       errors.firstName && styles.inputError,
                     ]}
                     placeholder="First Name"
@@ -332,7 +332,7 @@ const SignInScreen = ({ navigation }: any) => {
                   <TextInput
                     style={[
                       styles.input,
-                      { color: colors.text, backgroundColor: colors.surface },
+                      { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
                       errors.lastName && styles.inputError,
                     ]}
                     placeholder="Last Name"
@@ -358,7 +358,7 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
                   errors.email && styles.inputError,
                 ]}
                 placeholder="Email"
@@ -383,7 +383,7 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
                   errors.phone && styles.inputError,
                 ]}
                 placeholder="Phone Number"
@@ -406,7 +406,7 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
                   errors.password && styles.inputError,
                 ]}
                 placeholder="Password"
@@ -428,7 +428,7 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
                   errors.confirmPassword && styles.inputError,
                 ]}
                 placeholder="Confirm Password"
@@ -498,7 +498,7 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
                 ]}
                 placeholder="Email"
                 placeholderTextColor={colors.textPlaceholder}
@@ -513,7 +513,7 @@ const SignInScreen = ({ navigation }: any) => {
               <TextInput
                 style={[
                   styles.input,
-                  { color: colors.text, backgroundColor: colors.surface },
+                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
                 ]}
                 placeholder="Password"
                 placeholderTextColor={colors.textPlaceholder}
