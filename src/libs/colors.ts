@@ -59,6 +59,7 @@ export const Colors = {
     // Misc
     lightContactBadge: '#FFE9D4',
     placeholder: '#000',
+    displayText: '#000000',
   },
 
   dark: {
@@ -119,6 +120,7 @@ export const Colors = {
     // Misc
     lightContactBadge: '#00162b',
     placeholder: '#fff',
+    displayText: '#FFFFFF',
   },
 };
 

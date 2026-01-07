@@ -63,7 +63,7 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
             borderColor: colors.border,
           },
           isSelected && {
-            backgroundColor: colors.primzary + '20',
+            backgroundColor: colors.primary + '20',
             borderColor: colors.primary,
           },
         ]}
@@ -77,7 +77,7 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
             </Text>
           </View>
           <View style={styles.contactDetails}>
-            <Text style={[styles.contactName, { color: colors.text }]}>
+            <Text style={[styles.contactName, { color: colors.displayText }]}>
               {item.displayName || 'Unknown Contact'}
             </Text>
             <Text
@@ -100,11 +100,11 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
       onRequestClose={onClose}
     >
       <SafeAreaView
-        style={[styles.modalContainer]}
+        style={[styles.modalContainer, { backgroundColor: colors.background }]}
       >
         {/* Modal Header */}
         <View
-          style={[styles.modalHeader, { borderBottomColor: colors.border }]}
+          style={[styles.modalHeader, { borderBottomColor: colors.border, backgroundColor: colors.background }]}
         >
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <MaterialIcons name="close" size={24} color={colors.text} />
@@ -115,7 +115,7 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
         </View>
 
         {/* Deal Badge */}
-        <View style={[styles.dealBadge, { borderWidth: 1, borderColor: '#C7C7CC' }]}>
+        <View style={[styles.dealBadge, { borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface }]}>
           <View style={[styles.dealIcon, { backgroundColor: colors.primary }]}>
             <Text style={styles.dealEmoji}>🛍️</Text>
           </View>
@@ -138,7 +138,7 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
 
         {/* Search Bar */}
         <View
-          style={[styles.searchContainer]}
+          style={[styles.searchContainer, { backgroundColor: colors.surface }]}
         >
           <MaterialIcons
             name="search"
@@ -208,7 +208,7 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
         />
 
         {/* Share Button */}
-        <View style={[styles.modalFooter, { borderTopColor: colors.border }]}>
+        <View style={[styles.modalFooter, { borderTopColor: colors.border, backgroundColor: colors.background }]}>
           <TouchableOpacity
             style={[
               styles.shareModalButton,
