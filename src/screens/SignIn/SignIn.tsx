@@ -10,6 +10,8 @@ import {
   ActivityIndicator,
   Platform,
   ImageBackground,
+  ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -296,17 +298,25 @@ const SignInScreen = ({ navigation }: any) => {
       resizeMode="cover"
     >
       <View style={[styles.container, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
-        <View
-          style={{
-            flexDirection: 'column',
-            backgroundColor: colors.background,
-            width: '100%',
-            padding: 20,
-            borderRadius: 36,
-            opacity: 0.95,
-            height: createUserModal ? '85%' : '50%',
-          }}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ width: '100%', maxHeight: createUserModal ? '85%' : '60%' }}
         >
+          <View
+            style={{
+              flexDirection: 'column',
+              backgroundColor: colors.background,
+              width: '100%',
+              borderRadius: 36,
+              opacity: 0.95,
+              maxHeight: '100%',
+            }}
+          >
+            <ScrollView
+              contentContainerStyle={{ padding: 20, }}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+            >
           {createUserModal ? (
             <>
               <Text style={[styles.title, { color: colors.text }]}>
@@ -583,7 +593,9 @@ const SignInScreen = ({ navigation }: any) => {
               </View>
             </>
           )}
-        </View>
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
 
         {/* Social Sign In Buttons */}
         {/* <View style={styles.socialContainer}>
