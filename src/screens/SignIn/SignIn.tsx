@@ -304,7 +304,7 @@ const SignInScreen = ({ navigation }: any) => {
             padding: 20,
             borderRadius: 36,
             opacity: 0.95,
-            height: createUserModal ? '85%' : '60%',
+            height: createUserModal ? '85%' : '50%',
           }}
         >
           {createUserModal ? (
