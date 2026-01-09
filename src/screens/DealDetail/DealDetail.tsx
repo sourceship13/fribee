@@ -476,11 +476,15 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
         >
           {/* Business Info */}
           <View style={styles.businessHeader}>
-            <Text
-              style={[styles.categoryText, { color: colors.textSecondary }]}
+            <View
+              style={[styles.categoryContainer, { backgroundColor: colors.categoryBackground }]}
             >
-              {deal.category_name || deal.category || ''}
-            </Text>
+              <Text
+                style={[styles.categoryText, { color: colors.textSecondary }]}
+              >
+                {deal.category_name || deal.category || ''}
+              </Text>
+            </View>
             <View style={styles.businessTitleRow}>
               <Text style={[styles.businessName, { color: colors.text }]}>
                 {deal.business_name || deal.business || 'Unknown Business'}
@@ -580,7 +584,10 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               <View
                 style={[
                   styles.rectangularBlock,
-                  { backgroundColor: currentShares === 0 ? colors.primary : colors.inactive },
+                  {
+                    backgroundColor:
+                      currentShares === 0 ? colors.primary : colors.inactive,
+                  },
                 ]}
               />
             </View>
@@ -591,7 +598,12 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               <View
                 style={[
                   styles.rectangularBlock,
-                  { backgroundColor: currentShares > 0 && !canRedeem ? colors.primary : colors.inactive },
+                  {
+                    backgroundColor:
+                      currentShares > 0 && !canRedeem
+                        ? colors.primary
+                        : colors.inactive,
+                  },
                 ]}
               />
             </View>
@@ -602,7 +614,11 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               <View
                 style={[
                   styles.rectangularBlock,
-                  { backgroundColor: canRedeem ? colors.primary : colors.inactive },
+                  {
+                    backgroundColor: canRedeem
+                      ? colors.primary
+                      : colors.inactive,
+                  },
                 ]}
               />
             </View>
@@ -696,6 +712,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+  },
+  categoryContainer: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 14,
   },
   errorText: StyleSheet.flatten([
     iOSUIKit.callout,

@@ -13,6 +13,7 @@ export const Colors = {
     overlayButton: 'rgba(255,255,255,0.5)',
     subscriptionBorder: '#2A2A2A',
     subscriptionBorderGrey: '#8E8E93',
+    categoryBackground: 'rgba(242,242,242,0.55)',
 
     // Text
     text: '#2A2A2A',
@@ -73,6 +74,7 @@ export const Colors = {
     overlayButton: 'rgba(0,0,0,0.5)',
     subscriptionBorder: '#2A2A2A',
     subscriptionBorderGrey: '#71716c',
+    categoryBackground: 'rgba(13,13,13,0.55)',
 
 
     // Text
