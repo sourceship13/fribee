@@ -349,13 +349,14 @@ class DealSharingService {
 
   private createShareMessage(dealInfo: any): string {
     const dealId = dealInfo.id || dealInfo.deal_id || '';
-    const deepLink = `https://fribee.io/deal/${dealId}`;
+    const appLink = `nolimitseradeals://deal/${dealId}`;
+    const webLink = `https://fribee.io/deal/${dealId}`;
     
     return `🎉 Check out this amazing deal at ${
       dealInfo.business_name || dealInfo.business
     }!\n\n${
-      dealInfo.description
-    }\n\nView this deal: ${deepLink}`;
+      dealInfo.description || dealInfo.descrption
+    }\n\nOpen in app: ${appLink}\nView in browser: ${webLink}`;
   }
 
   private async trackShares(dealId: string, shareCount: number): Promise<void> {

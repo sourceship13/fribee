@@ -27,6 +27,7 @@
 			<string>org.sera.dev.nolimitsera.deeplink</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>nolimitseradeals</string>
 				<string>nolimitsera</string>
 			</array>
 		</dict>
