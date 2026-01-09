@@ -174,8 +174,54 @@ const AppNavigator = () => {
     );
   }
 
+  // Deep linking configuration
+  const linking = {
+    prefixes: ['nolimitseradeals://', 'https://fribee.io'],
+    config: {
+      screens: {
+        // Auth screens
+        SignIn: 'signin',
+        SignUp: 'signup',
+        Verification: 'verification',
+        
+        // Main authenticated screens
+        MainTabs: {
+          screens: {
+            SwipeTab: 'discover',
+            ExploreTab: 'explore',
+            SavedTab: 'saved',
+            ProfileTab: 'profile',
+          },
+        },
+        
+        // Modal/Detail screens
+        DealDetail: 'deal/:dealId',
+        Settings: 'settings',
+        Redemption: 'redemption/:dealId',
+        
+        // Business screens
+        BusinessProfile: 'business/profile',
+        BusinessCreationScreen1: 'business/create/step1',
+        BusinessCreationScreen2: 'business/create/step2',
+        BusinessCreationScreen3: 'business/create/step3',
+        BusinessSubscriptionScreen: 'business/subscribe',
+        BusinessCreationScreen4: 'business/create/step4',
+        BusinessDeals: 'business/deals',
+        DealPostPurchase: 'business/deal/post-purchase',
+        CreateDeal: 'business/deal/create',
+        AboutBusiness: 'business/about',
+        
+        // Debug screens
+        Debug: 'debug',
+        FontDebug: 'font-debug',
+        PermissionTest: 'permission-test',
+        NetworkDebug: 'network-debug',
+      },
+    },
+  };
+
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator
         initialRouteName={isAuthenticated ? "MainTabs" : "SignIn"}
         screenOptions={{

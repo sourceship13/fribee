@@ -27,6 +27,7 @@
 			<string>org.sera.dev.nolimitsera.deeplink</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>nolimitseradeals</string>
 				<string>nolimitsera</string>
 			</array>
 		</dict>
@@ -62,6 +63,10 @@
 	<string>We need your location to show nearby deals and help you navigate to businesses.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>We use motion detection to let you shake your device to send feedback.</string>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:fribee.io</string>
+	</array>
 	<key>GMSApiKey</key>
 	<string>AIzaSyAP8fSG5JPvlZvmznHINSKTwXiNfBHm21E</string>
 	<key>RCTNewArchEnabled</key>

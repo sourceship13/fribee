@@ -46,6 +46,27 @@
                     android:scheme="com.nolimitseradeals"
                     android:host="oauth" />
             </intent-filter>
+
+            <!-- Deep link for custom scheme -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="nolimitseradeals"
+                    android:host="deal" />
+            </intent-filter>
+
+            <!-- App Links for Universal Links -->
+                <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="fribee.io"
+                    android:pathPrefix="/deal" />
+            </intent-filter>
         </activity>
     </application>
 </manifest>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoLimit Sera Deals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 25px;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+            transform: translateY(-2px);
+        }
+
+        .countdown {
+            font-size: 14px;
+            color: #999;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🎉</div>
+        <h1>Amazing Deal Waiting!</h1>
+        <p>Someone shared an exclusive deal with you on NoLimit Sera Deals. Open the app to view this deal and discover more amazing offers in your area.</p>
+        
+        <div class="buttons">
+            <button id="openApp" class="btn btn-primary">Open in App</button>
+            <a href="https://apps.apple.com/app/nolimit-sera-deals/id123456789" class="btn btn-secondary" id="downloadApp">Download App</a>
+        </div>
+        
+        <div class="countdown" id="countdown">Redirecting in <span id="timer">3</span> seconds...</div>
+    </div>
+
+    <script>
+        // Extract deal ID from URL path
+        const pathParts = window.location.pathname.split('/');
+        const dealId = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2];
+        
+        // Try to detect platform
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isAndroid = /Android/.test(navigator.userAgent);
+        
+        // Update download link based on platform
+        const downloadBtn = document.getElementById('downloadApp');
+        if (isAndroid) {
+            downloadBtn.href = 'https://play.google.com/store/apps/details?id=com.nolimitseradeals';
+            downloadBtn.textContent = 'Get on Google Play';
+        } else {
+            downloadBtn.href = 'https://apps.apple.com/app/nolimit-sera-deals/id123456789';
+            downloadBtn.textContent = 'Get on App Store';
+        }
+
+        // Build deep link URL
+        const deepLink = `nolimitseradeals://deal/${dealId}`;
+        
+        // Try to open app immediately
+        let hasOpened = false;
+        
+        const openApp = () => {
+            if (!hasOpened) {
+                hasOpened = true;
+                window.location.href = deepLink;
+                
+                // If app doesn't open after 2 seconds, assume it's not installed
+                setTimeout(() => {
+                    if (!document.hidden) {
+                        // User is still on the page, app probably not installed
+                        document.getElementById('countdown').style.display = 'none';
+                    }
+                }, 2000);
+            }
+        };
+
+        // Handle open app button click
+        document.getElementById('openApp').addEventListener('click', openApp);
+
+        // Auto-redirect countdown
+        let countdown = 3;
+        const timerElement = document.getElementById('timer');
+        const countdownElement = document.getElementById('countdown');
+        
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            timerElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                openApp();
+            }
+        }, 1000);
+
+        // Try to open immediately on page load (for browsers that support it)
+        setTimeout(() => {
+            if (isIOS || isAndroid) {
+                openApp();
+            }
+        }, 100);
+    </script>
+</body>
+</html>
