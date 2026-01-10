@@ -61,7 +61,7 @@ const FORCE_LOCAL_DEVELOPMENT = false; // Set to false to use cloud server
 const FORCE_STAGING_ALWAYS = true; // Set to true to use cloud server
 
 // IMPORTANT: Verify all URLs point to staging
-const STAGING_URL = 'https://f3x2ipn2yf.us-east-1.awsapprunner.com';
+const STAGING_URL = 'https://fribee.io';
 const getEnvironment = (): Environment => {
   const actuallyPhysical = FORCE_PHYSICAL_DEVICE !== null ? FORCE_PHYSICAL_DEVICE : isPhysicalDevice();
   // HIGHEST PRIORITY: Force staging override (bypasses all other logic)
