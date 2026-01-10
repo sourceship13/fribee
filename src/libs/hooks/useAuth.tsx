@@ -5,6 +5,7 @@ import { getColors } from '../colors';
 import AuthService from '../../services/auth.service';
 import ApiService from '../../services/api.service';
 import AnalyticsService from '../../services/analytics.service';
+import { getPendingDeepLink, handleDeepLink } from '../../services/navigation.service';
 import * as Sentry from '@sentry/react-native';
 
 export { getColors };
@@ -662,6 +663,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       await loadUserPreferences(loggedInUser.id);
+      
+      // Check for pending deep link from guest view and navigate
+      setTimeout(async () => {
+        try {
+          const pendingUrl = await getPendingDeepLink();
+          if (pendingUrl) {
+            console.log('🔗 Found pending deep link after login:', pendingUrl);
+            handleDeepLink(pendingUrl);
+          }
+        } catch (deepLinkError) {
+          console.error('⚠️ Error handling pending deep link:', deepLinkError);
+        }
+      }, 500);
     } catch (error) {
       throw error;
     } finally {

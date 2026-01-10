@@ -241,6 +241,16 @@ const AppNavigator = () => {
             <Stack.Screen name="Verification" component={VerificationScreen} />
             <Stack.Screen name="Debug" component={DebugScreen} />
             <Stack.Screen name="NetworkDebug" component={NetworkDebugScreen} />
+            {/* Guest Deal View - allows viewing deals from deep links without auth */}
+            <Stack.Screen 
+              name="DealDetail" 
+              component={DealDetailScreen}
+              options={{ 
+                presentation: 'fullScreenModal',
+                gestureEnabled: true,
+                contentStyle: { backgroundColor: colors.background },
+              }}
+            />
           </>
         ) : (
           // Authenticated user screens with bottom tabs

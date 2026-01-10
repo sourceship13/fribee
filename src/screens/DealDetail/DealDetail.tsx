@@ -21,6 +21,7 @@ import { useDealSharing } from '../../libs/hooks/useDealSharing';
 import AnalyticsService from '../../services/analytics.service';
 import ContactSelectionModal from './ContactSelectionModal';
 import ApiService from '../../services/api.service';
+import { storePendingDeepLink } from '../../services/navigation.service';
 
 // Type definitions for better type safety
 interface DealDetailProps {
@@ -31,7 +32,7 @@ interface DealDetailProps {
       dealId?: string; // Support deep link parameter
     };
   };
-  deal: any;
+  deal?: any; // Optional - can be passed directly or fetched via dealId from route params
   requiredShares?: number;
   style?: any;
 }
@@ -120,12 +121,17 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
   const [loading, setLoading] = useState(!initialDeal && !!deepLinkDealId);
   const [error, setError] = useState<string | null>(null);
 
+  // Check if this is a guest view (deep link without auth)
+  const isGuestView = !isAuthenticated && !!deepLinkDealId;
+
   // Fetch deal from API when opened via deep link
   useEffect(() => {
     console.log(`🔗 DealDetailScreen: useEffect triggered`, { 
       deepLinkDealId, 
       hasInitialDeal: !!initialDeal,
-      hasDeal: !!deal 
+      hasDeal: !!deal,
+      isAuthenticated,
+      isGuestView
     });
     
     const fetchDealFromDeepLink = async () => {
@@ -136,21 +142,35 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
         setError(null);
         
         try {
-          // First try to find deal in existing deals list
-          const existingDeal = deals.find(
-            d => String(d.id) === deepLinkDealId || String(d.deal_id) === deepLinkDealId
-          );
-          
-          if (existingDeal) {
-            console.log('✅ Found deal in local cache');
-            setDeal(existingDeal);
-            setLoading(false);
-            return;
+          // First try to find deal in existing deals list (only if authenticated)
+          if (isAuthenticated && deals.length > 0) {
+            const existingDeal = deals.find(
+              d => String(d.id) === deepLinkDealId || String(d.deal_id) === deepLinkDealId
+            );
+            
+            if (existingDeal) {
+              console.log('✅ Found deal in local cache');
+              setDeal(existingDeal);
+              setLoading(false);
+              return;
+            }
           }
           
-          // Otherwise fetch from API
-          console.log('📡 Fetching deal from API...');
-          const response = await ApiService.getDealById(deepLinkDealId);
+          // Fetch from API - use public endpoint for guest users
+          console.log(`📡 Fetching deal from API (${isGuestView ? 'public' : 'authenticated'})...`);
+          
+          let response;
+          if (isGuestView) {
+            // Try public endpoint first for guest users
+            try {
+              response = await ApiService.getDealByIdPublic(deepLinkDealId);
+            } catch (publicErr) {
+              console.log('📡 Public endpoint failed, trying authenticated endpoint...');
+              response = await ApiService.getDealById(deepLinkDealId);
+            }
+          } else {
+            response = await ApiService.getDealById(deepLinkDealId);
+          }
           
           if (response.data) {
             console.log('✅ Deal fetched successfully:', response.data);
@@ -169,7 +189,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
     };
     
     fetchDealFromDeepLink();
-  }, [deepLinkDealId, initialDeal, deals]);
+  }, [deepLinkDealId, initialDeal, deals, isAuthenticated, isGuestView]);
 
   // Simple heart state - just use global state directly
   const dealId = deal?.deal_id || deal?.id;
@@ -728,6 +748,46 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
             </View>
           </View>
 
+          {/* Guest User CTA - Show sign in button instead of share/redeem */}
+          {isGuestView ? (
+            <View style={styles.guestCtaContainer}>
+              <Text style={[styles.guestCtaTitle, { color: colors.text }]}>
+                Want to claim this deal?
+              </Text>
+              <Text style={[styles.guestCtaSubtitle, { color: colors.textSecondary }]}>
+                Sign in or create an account to unlock and redeem amazing deals!
+              </Text>
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: colors.primary }]}
+                onPress={async () => {
+                  // Store the pending deep link so user is redirected back after login
+                  if (deepLinkDealId) {
+                    await storePendingDeepLink(`nolimitseradeals://deal/${deepLinkDealId}`);
+                  }
+                  navigation.navigate('SignIn');
+                }}
+              >
+                <MaterialIcons name="login" size={20} color={colors.background} />
+                <Text style={[styles.buttonText, { color: colors.background }]}>
+                  Sign In to Claim
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.secondaryButton, { borderColor: colors.primary }]}
+                onPress={async () => {
+                  // Store the pending deep link so user is redirected back after signup
+                  if (deepLinkDealId) {
+                    await storePendingDeepLink(`nolimitseradeals://deal/${deepLinkDealId}`);
+                  }
+                  navigation.navigate('SignUp');
+                }}
+              >
+                <Text style={[styles.secondaryButtonText, { color: colors.primary }]}>
+                  Create Account
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
           <>
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.primary }]}
@@ -770,8 +830,10 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               requestContactsAccess={requestContactsAccess}
             />
           </>
+          )}
 
-          {/* Action Buttons */}
+          {/* Action Buttons - Only for authenticated users */}
+          {!isGuestView && (
           <View style={styles.actionButtons}>
             <TouchableOpacity
               style={[
@@ -790,6 +852,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               <Text style={styles.redeemButtonText}>Redeem Deal</Text>
             </TouchableOpacity>
           </View>
+          )}
         </View>
         <Text
           style={[
@@ -995,6 +1058,42 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   buttonText: iOSUIKit.calloutObject,
+  secondaryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 2,
+    marginTop: 12,
+  },
+  secondaryButtonText: StyleSheet.flatten([
+    iOSUIKit.callout,
+    {
+      fontWeight: '600',
+    },
+  ]),
+  guestCtaContainer: {
+    paddingVertical: 20,
+    alignItems: 'center',
+  },
+  guestCtaTitle: StyleSheet.flatten([
+    iOSUIKit.title3,
+    {
+      fontWeight: '700',
+      textAlign: 'center',
+      marginBottom: 8,
+    },
+  ]),
+  guestCtaSubtitle: StyleSheet.flatten([
+    iOSUIKit.subhead,
+    {
+      textAlign: 'center',
+      marginBottom: 20,
+      paddingHorizontal: 20,
+    },
+  ]),
   aboutBusinessButton: {
     flexDirection: 'row',
     padding: 10,

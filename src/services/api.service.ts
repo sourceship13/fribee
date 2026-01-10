@@ -24,6 +24,7 @@ class ApiService {
     '/auth/resend-code',
     '/auth/forgot-password',
     '/auth/reset-password',
+    '/deals/public/',  // Public deal endpoint for guest viewing via deep links
   ];
 
   private requiresAuth(endpoint: string): boolean {
@@ -108,6 +109,14 @@ class ApiService {
 
   async getDealById(id: string): Promise<ApiResponse<any>> {
     return this.makeRequest(`/deals/${id}`);
+  }
+
+  /**
+   * Get deal by ID using public endpoint (no auth required)
+   * Used for guest viewing of deals via deep links
+   */
+  async getDealByIdPublic(id: string): Promise<ApiResponse<any>> {
+    return this.makeRequest(`/deals/public/${id}`);
   }
 
   async heartDeal(dealId: string): Promise<ApiResponse> {

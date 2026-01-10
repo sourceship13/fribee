@@ -1,11 +1,44 @@
 import { createNavigationContainerRef } from '@react-navigation/native';
 import { Linking, AppState, AppStateStatus } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Create a navigation ref that can be used anywhere
 export const navigationRef = createNavigationContainerRef<any>();
 
 // Track last handled URL to avoid duplicate handling
 let lastHandledUrl: string | null = null;
+
+// Storage key for pending deep link
+const PENDING_DEEP_LINK_KEY = '@pending_deep_link';
+
+/**
+ * Store a pending deep link to be processed after authentication
+ */
+export async function storePendingDeepLink(url: string): Promise<void> {
+  try {
+    await AsyncStorage.setItem(PENDING_DEEP_LINK_KEY, url);
+    console.log('🔗 Stored pending deep link:', url);
+  } catch (error) {
+    console.error('🔗 Error storing pending deep link:', error);
+  }
+}
+
+/**
+ * Get and clear the pending deep link
+ */
+export async function getPendingDeepLink(): Promise<string | null> {
+  try {
+    const url = await AsyncStorage.getItem(PENDING_DEEP_LINK_KEY);
+    if (url) {
+      await AsyncStorage.removeItem(PENDING_DEEP_LINK_KEY);
+      console.log('🔗 Retrieved and cleared pending deep link:', url);
+    }
+    return url;
+  } catch (error) {
+    console.error('🔗 Error getting pending deep link:', error);
+    return null;
+  }
+}
 
 /**
  * Navigate to a screen from anywhere in the app
@@ -179,4 +212,6 @@ export default {
   handleDeepLink,
   checkForDeepLink,
   setupDeepLinkListener,
+  storePendingDeepLink,
+  getPendingDeepLink,
 };
