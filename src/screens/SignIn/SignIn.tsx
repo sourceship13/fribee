@@ -30,8 +30,8 @@ const signInBackground = require('../../../assets/imgs/signInBackground.png');
 const SignInScreen = ({ navigation }: any) => {
   const { isDarkMode, login } = useAuth();
   const colors = getColors(isDarkMode);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('aj@sera.dev');
+  const [password, setPassword] = useState('Purple99!');
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [instagramLoading, setInstagramLoading] = useState(false);

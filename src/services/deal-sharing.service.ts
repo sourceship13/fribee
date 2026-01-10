@@ -5,6 +5,7 @@ import Contacts from 'react-native-contacts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SendSMS from 'react-native-sms';
 import AppReturnUtils from '../libs/utils/appReturnUtils';
+import { uuidToBase62 } from '../libs/utils/deeplink.utils';
 
 interface Contact {
   recordID: string;
@@ -351,9 +352,12 @@ class DealSharingService {
     const dealId = dealInfo.id || dealInfo.deal_id || '';
     console.log(`🔗 Creating share message for deal ID: ${dealId}`);
     
-    // Use full deal ID in URLs (UUIDs can't be base62 encoded)
-    const appLink = `nolimitseradeals://deal/${dealId}`;
-    const webLink = `https://fribee.io/deal/${dealId}`;
+    // Encode UUID to base62 for shorter URLs
+    const shortId = uuidToBase62(dealId);
+    console.log(`🔗 Base62 encoded: ${dealId} → ${shortId}`);
+    
+    const appLink = `nolimitseradeals://deal/${shortId}`;
+    const webLink = `https://fribee.io/deal/${shortId}`;
     
     return `🎉 Check out this amazing deal at ${
       dealInfo.business_name || dealInfo.business

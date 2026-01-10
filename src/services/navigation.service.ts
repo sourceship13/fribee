@@ -1,6 +1,7 @@
 import { createNavigationContainerRef } from '@react-navigation/native';
 import { Linking, AppState, AppStateStatus } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { base62ToUuid } from '../libs/utils/deeplink.utils';
 
 // Create a navigation ref that can be used anywhere
 export const navigationRef = createNavigationContainerRef<any>();
@@ -92,8 +93,10 @@ export function parseDeepLink(url: string): { screen: string; params: any } | nu
     // Match deal/:dealId pattern
     const dealMatch = path.match(/^deal\/(.+)$/);
     if (dealMatch) {
-      const dealId = dealMatch[1];
-      console.log('🔗 Matched deal route with ID:', dealId);
+      const rawId = dealMatch[1];
+      // Decode base62 to UUID if needed
+      const dealId = base62ToUuid(rawId);
+      console.log(`🔗 Matched deal route - raw: ${rawId}, decoded: ${dealId}`);
       return {
         screen: 'DealDetail',
         params: { dealId },
