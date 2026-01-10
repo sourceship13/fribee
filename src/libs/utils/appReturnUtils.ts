@@ -1,4 +1,5 @@
 import { Linking, Platform } from 'react-native';
+import { fromBase62 } from './deeplink.utils';
 
 /**
  * Utility functions for enabling "Return to App" functionality
@@ -102,6 +103,16 @@ export class AppReturnUtils {
    * Handles deep link when user returns to app
    */
   static handleAppReturn(url: string): void {
+    console.log('🔗 AppReturnUtils handling URL:', url);
+    
+    // Handle shortened deal URLs: /d/:shortId
+    const shortDealMatch = url.match(/\/d\/([a-zA-Z0-9]+)/);
+    if (shortDealMatch) {
+      const shortId = shortDealMatch[1];
+      const dealId = fromBase62(shortId);
+      console.log(`🔗 Decoded short ID "${shortId}" to deal ID "${dealId}"`);
+      // The actual navigation is handled by React Navigation's linking config
+    }
     
     // You can add specific logic here for when users return
     // For example, showing a success message, tracking analytics, etc.

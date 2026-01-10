@@ -1,7 +1,8 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, getStateFromPath as defaultGetStateFromPath } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { fromBase62 } from './libs/utils/deeplink.utils';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DiscoverIcon from '../assets/imgs/nav/discover.svg';
 import ExploreIcon from '../assets/imgs/nav/explore.svg';
@@ -175,48 +176,67 @@ const AppNavigator = () => {
   }
 
   // Deep linking configuration
+  const linkingConfig = {
+    screens: {
+      // Auth screens
+      SignIn: 'signin',
+      SignUp: 'signup',
+      Verification: 'verification',
+      
+      // Main authenticated screens
+      MainTabs: {
+        screens: {
+          SwipeTab: 'discover',
+          ExploreTab: 'explore',
+          SavedTab: 'saved',
+          ProfileTab: 'profile',
+        },
+      },
+      
+      // Modal/Detail screens - supports both full and shortened URLs
+      DealDetail: {
+        path: 'deal/:dealId',
+      },
+      Settings: 'settings',
+      Redemption: 'redemption/:dealId',
+      
+      // Business screens
+      BusinessProfile: 'business/profile',
+      BusinessCreationScreen1: 'business/create/step1',
+      BusinessCreationScreen2: 'business/create/step2',
+      BusinessCreationScreen3: 'business/create/step3',
+      BusinessSubscriptionScreen: 'business/subscribe',
+      BusinessCreationScreen4: 'business/create/step4',
+      BusinessDeals: 'business/deals',
+      DealPostPurchase: 'business/deal/post-purchase',
+      CreateDeal: 'business/deal/create',
+      AboutBusiness: 'business/about',
+      
+      // Debug screens
+      Debug: 'debug',
+      FontDebug: 'font-debug',
+      PermissionTest: 'permission-test',
+      NetworkDebug: 'network-debug',
+    },
+  };
+
+  // Custom getStateFromPath to handle shortened URLs with base62 decoding
   const linking = {
     prefixes: ['nolimitseradeals://', 'https://fribee.io'],
-    config: {
-      screens: {
-        // Auth screens
-        SignIn: 'signin',
-        SignUp: 'signup',
-        Verification: 'verification',
-        
-        // Main authenticated screens
-        MainTabs: {
-          screens: {
-            SwipeTab: 'discover',
-            ExploreTab: 'explore',
-            SavedTab: 'saved',
-            ProfileTab: 'profile',
-          },
-        },
-        
-        // Modal/Detail screens
-        DealDetail: 'deal/:dealId',
-        Settings: 'settings',
-        Redemption: 'redemption/:dealId',
-        
-        // Business screens
-        BusinessProfile: 'business/profile',
-        BusinessCreationScreen1: 'business/create/step1',
-        BusinessCreationScreen2: 'business/create/step2',
-        BusinessCreationScreen3: 'business/create/step3',
-        BusinessSubscriptionScreen: 'business/subscribe',
-        BusinessCreationScreen4: 'business/create/step4',
-        BusinessDeals: 'business/deals',
-        DealPostPurchase: 'business/deal/post-purchase',
-        CreateDeal: 'business/deal/create',
-        AboutBusiness: 'business/about',
-        
-        // Debug screens
-        Debug: 'debug',
-        FontDebug: 'font-debug',
-        PermissionTest: 'permission-test',
-        NetworkDebug: 'network-debug',
-      },
+    config: linkingConfig,
+    getStateFromPath: (path: string, options: any) => {
+      // Handle shortened deal URLs: /d/:shortId -> /deal/:dealId
+      const shortDealMatch = path.match(/^\/?(d)\/([a-zA-Z0-9]+)$/);
+      if (shortDealMatch) {
+        const shortId = shortDealMatch[2];
+        const dealId = fromBase62(shortId);
+        console.log(`🔗 Deep link: Converting short ID "${shortId}" to deal ID "${dealId}"`);
+        // Rewrite path to standard format
+        path = `/deal/${dealId}`;
+      }
+      
+      // Use default state parser with potentially rewritten path
+      return defaultGetStateFromPath(path, options);
     },
   };
 
