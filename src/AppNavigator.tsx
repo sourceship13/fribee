@@ -20,6 +20,7 @@ import VerificationScreen from './VerificationScreen/VerificationScreen';
 import DebugScreen from './screens/Debug/Debug';
 import PermissionTestScreen from './screens/PermissionTestScreen';
 import NetworkDebugScreen from './screens/NetworkDebugScreen';
+import OnboardingScreen from './screens/Onboarding/OnboardingScreen';
 import { useAuth, getColors } from './libs/hooks/useAuth';
 import { ActivityIndicator, View } from 'react-native';
 import { iOSUIKit } from 'react-native-typography';
@@ -163,7 +164,7 @@ const MainTabNavigator = () => {
 };
 
 const AppNavigator = () => {
-  const { isAuthenticated, loading, isDarkMode } = useAuth();
+  const { isAuthenticated, loading, isDarkMode, hasSeenOnboarding } = useAuth();
   const colors = getColors(isDarkMode);
 
   if (loading) {
@@ -182,6 +183,7 @@ const AppNavigator = () => {
       SignIn: 'signin',
       SignUp: 'signup',
       Verification: 'verification',
+      Onboarding: 'onboarding',
       
       // Main authenticated screens
       MainTabs: {
@@ -226,15 +228,40 @@ const AppNavigator = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        initialRouteName={isAuthenticated ? "MainTabs" : "SignIn"}
+        initialRouteName={!hasSeenOnboarding ? "Onboarding" : isAuthenticated ? "MainTabs" : "SignIn"}
         screenOptions={{
           headerShown: false,
           gestureEnabled: true,
           gestureDirection: 'horizontal',
         }}
       >
-        {!isAuthenticated ? (
-          // Authentication flow screens
+        {!hasSeenOnboarding ? (
+          // First-time user flow - show onboarding
+          <>
+            <Stack.Screen 
+              name="Onboarding" 
+              component={OnboardingScreen}
+              options={{ 
+                gestureEnabled: false, // Prevent swipe back to previous screen
+              }}
+            />
+            <Stack.Screen name="SignIn" component={SignInScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Stack.Screen name="Verification" component={VerificationScreen} />
+            <Stack.Screen name="Debug" component={DebugScreen} />
+            <Stack.Screen name="NetworkDebug" component={NetworkDebugScreen} />
+            {/* Guest Deal View - allows viewing deals from deep links without auth */}
+            <Stack.Screen 
+              name="DealDetail" 
+              component={DealDetailScreen}
+              options={{ 
+                presentation: 'modal',
+                gestureEnabled: true,
+              }}
+            />
+          </>
+        ) : !isAuthenticated ? (
+          // Authentication flow screens (after onboarding)
           <>
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
@@ -246,9 +273,8 @@ const AppNavigator = () => {
               name="DealDetail" 
               component={DealDetailScreen}
               options={{ 
-                presentation: 'fullScreenModal',
+                presentation: 'modal',
                 gestureEnabled: true,
-                contentStyle: { backgroundColor: colors.background },
               }}
             />
           </>
@@ -263,18 +289,16 @@ const AppNavigator = () => {
               name="DealDetail" 
               component={DealDetailScreen}
               options={{ 
-                presentation: 'fullScreenModal',
+                presentation: 'modal',
                 gestureEnabled: true,
-                contentStyle: { backgroundColor: colors.background },
               }}
             />
             <Stack.Screen 
               name="Settings" 
               component={SettingsScreen}
               options={{ 
-                presentation: 'fullScreenModal',
+                presentation: 'modal',
                 gestureEnabled: true,
-                contentStyle: { backgroundColor: colors.background },
               }}
             />
             

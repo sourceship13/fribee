@@ -18,6 +18,8 @@ interface AuthContextType {
   loading: boolean;
   isAuthenticated: boolean;
   isEmailVerified: boolean;
+  hasSeenOnboarding: boolean;
+  markOnboardingAsComplete: () => Promise<void>;
   
   // Authentication methods
   login: (credentials: LoginCredentials) => Promise<void>;
@@ -76,6 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Authentication state
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
   
   // Hearted deals state
   const [heartedDeals, setHeartedDeals] = useState<any[]>([]);
@@ -424,6 +427,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (savedTheme !== null) {
         setDarkModeState(savedTheme === 'dark');
       }
+      
+      // Load onboarding status
+      const hasSeenOnboarding = await AsyncStorage.getItem('@has_seen_onboarding');
+      setHasSeenOnboarding(hasSeenOnboarding === 'true');
       
       // Load category preferences
       const savedCategories = await AsyncStorage.getItem('categories');
@@ -796,6 +803,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const markOnboardingAsComplete = async () => {
+    try {
+      await AsyncStorage.setItem('@has_seen_onboarding', 'true');
+      setHasSeenOnboarding(true);
+    } catch (error) {
+      console.error('Error marking onboarding as complete:', error);
+      throw error;
+    }
+  };
+
   const value = useMemo(() => ({
     user,
     loading,
@@ -831,7 +848,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCategories,
     availableCategories,
     refreshCategories,
-  }), [user, loading, isDarkMode, categories, availableCategories, heartedDeals, heartedDealsLoading, deals, dealsLoading, redeemedDeals, userBusiness]);
+    hasSeenOnboarding,
+    markOnboardingAsComplete,
+  }), [user, loading, isDarkMode, categories, availableCategories, heartedDeals, heartedDealsLoading, deals, dealsLoading, redeemedDeals, userBusiness, hasSeenOnboarding]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
