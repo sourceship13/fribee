@@ -35,6 +35,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     return true
   }
+  
+  // Handle deep links when app is already running (custom URL scheme)
+  func application(
+    _ app: UIApplication,
+    open url: URL,
+    options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+  ) -> Bool {
+    print("🔗 AppDelegate received URL: \(url)")
+    return RCTLinkingManager.application(app, open: url, options: options)
+  }
+  
+  // Handle Universal Links (https:// URLs)
+  func application(
+    _ application: UIApplication,
+    continue userActivity: NSUserActivity,
+    restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+  ) -> Bool {
+    if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+       let url = userActivity.webpageURL {
+      print("🔗 AppDelegate received Universal Link: \(url)")
+      return RCTLinkingManager.application(application, open: url, options: [:])
+    }
+    return false
+  }
 }
 
 class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {

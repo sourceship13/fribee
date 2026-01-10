@@ -7,7 +7,7 @@ import {
 } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AuthProvider, useAuth } from './libs/hooks/useAuth';
-import AppReturnUtils from './libs/utils/appReturnUtils';
+import { setupDeepLinkListener } from './services/navigation.service';
 // import Config from 'react-native-config';
 import * as Sentry from '@sentry/react-native';
 import { accelerometer, setUpdateIntervalForType, SensorTypes } from 'react-native-sensors';
@@ -63,6 +63,10 @@ function AppWithStatusBar() {
       await BootSplash.hide({ fade: true });
     };
     hideSplash();
+  }, []);
+
+  useEffect(() => {
+    console.log(`App Loaded `);
   }, []);
 
   const handleFeedbackSubmit = (feedback: string) => {
@@ -151,22 +155,10 @@ function AppWithStatusBar() {
     };
   }, []);
 
-  // Handle deep link when user returns to app
+  // Handle deep links manually
   useEffect(() => {
-    // Handle initial URL if app is opened via deep link
-    Linking.getInitialURL().then(url => {
-      if (url) {
-        AppReturnUtils.handleAppReturn(url);
-      }
-    });
-
-    // Listen for deep link events while app is running
-    const handleUrl = (event: { url: string }) => {
-      AppReturnUtils.handleAppReturn(event.url);
-    };
-
-    // Add event listener
-    const subscription = Linking.addEventListener('url', handleUrl);
+    console.log('🔗 Setting up deep link listener in App.tsx');
+    const subscription = setupDeepLinkListener();
 
     // Cleanup
     return () => {

@@ -134,6 +134,8 @@
         const pathParts = window.location.pathname.split('/');
         const dealId = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2];
         
+        console.log('Deep link page loaded for deal:', dealId);
+        
         // Try to detect platform
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const isAndroid = /Android/.test(navigator.userAgent);
@@ -148,29 +150,59 @@
             downloadBtn.textContent = 'Get on App Store';
         }
 
-        // Build deep link URL
+        // Build deep link URL using custom scheme
         const deepLink = `nolimitseradeals://deal/${dealId}`;
         
-        // Try to open app immediately
+        // Store deep link in localStorage so app can retrieve it
+        localStorage.setItem('pendingDeepLink', deepLink);
+        localStorage.setItem('pendingDeepLinkTime', Date.now().toString());
+        
+        console.log('Deep link URL:', deepLink);
+        
         let hasOpened = false;
         
         const openApp = () => {
-            if (!hasOpened) {
-                hasOpened = true;
+            if (hasOpened) return;
+            hasOpened = true;
+            
+            console.log('Attempting to open app with:', deepLink);
+            
+            // Method 1: Try using an iframe (works better on some iOS versions)
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = deepLink;
+            document.body.appendChild(iframe);
+            
+            // Method 2: Also try direct navigation after a short delay
+            setTimeout(() => {
+                // Method 2a: Use window.location
                 window.location.href = deepLink;
-                
-                // If app doesn't open after 2 seconds, assume it's not installed
-                setTimeout(() => {
-                    if (!document.hidden) {
-                        // User is still on the page, app probably not installed
-                        document.getElementById('countdown').style.display = 'none';
-                    }
-                }, 2000);
-            }
+            }, 100);
+            
+            // Method 3: Try using a link click
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.href = deepLink;
+                link.click();
+            }, 200);
+            
+            // If app doesn't open after 2 seconds, user is still here
+            setTimeout(() => {
+                if (!document.hidden) {
+                    // User is still on the page, app might not be installed
+                    console.log('App did not open, user still on page');
+                    document.getElementById('countdown').innerHTML = 
+                        'App not opening? <a href="' + downloadBtn.href + '">Download the app</a>';
+                }
+            }, 2500);
         };
 
         // Handle open app button click
-        document.getElementById('openApp').addEventListener('click', openApp);
+        document.getElementById('openApp').addEventListener('click', (e) => {
+            e.preventDefault();
+            hasOpened = false; // Reset so user can retry
+            openApp();
+        });
 
         // Auto-redirect countdown
         let countdown = 3;
@@ -187,12 +219,20 @@
             }
         }, 1000);
 
-        // Try to open immediately on page load (for browsers that support it)
+        // Try to open immediately on mobile
         setTimeout(() => {
             if (isIOS || isAndroid) {
                 openApp();
             }
-        }, 100);
+        }, 500);
+        
+        // Listen for visibility change - if page becomes hidden, app probably opened
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                console.log('Page hidden - app likely opened');
+                clearInterval(countdownInterval);
+            }
+        });
     </script>
 </body>
 </html>

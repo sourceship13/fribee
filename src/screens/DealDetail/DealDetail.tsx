@@ -10,6 +10,7 @@ import {
   Platform,
   FlatList,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,6 +20,7 @@ import { iOSUIKit } from 'react-native-typography';
 import { useDealSharing } from '../../libs/hooks/useDealSharing';
 import AnalyticsService from '../../services/analytics.service';
 import ContactSelectionModal from './ContactSelectionModal';
+import ApiService from '../../services/api.service';
 
 // Type definitions for better type safety
 interface DealDetailProps {
@@ -26,6 +28,7 @@ interface DealDetailProps {
   route?: {
     params?: {
       deal?: any;
+      dealId?: string; // Support deep link parameter
     };
   };
   deal: any;
@@ -90,15 +93,16 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
   const navigation = safeProps.navigation || null;
   const route = safeProps.route || null;
 
-  let initialDeal = null;
+  // Extract params reactively - these will update when route changes
+  const routeParams = route?.params || {};
+  const initialDeal = routeParams.deal || null;
+  const deepLinkDealId = routeParams.dealId ? String(routeParams.dealId) : null;
 
-  // Super defensive parameter extraction
-  if (route && typeof route === 'object' && 'params' in route) {
-    const params = route.params;
-    if (params && typeof params === 'object' && 'deal' in params) {
-      initialDeal = params.deal;
-    }
-  }
+  console.log('🔗 DealDetailScreen render - params:', { 
+    hasInitialDeal: !!initialDeal, 
+    deepLinkDealId,
+    allParams: routeParams 
+  });
 
   const {
     isDarkMode,
@@ -112,9 +116,60 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
   const colors = getColors(isDarkMode);
   const insets = useSafeAreaInsets();
 
-  const [deal, _setDeal] = useState(initialDeal || null);
-  const [loading, setLoading] = useState(false);
-  const [error, _setError] = useState<string | null>(null);
+  const [deal, setDeal] = useState(initialDeal || null);
+  const [loading, setLoading] = useState(!initialDeal && !!deepLinkDealId);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch deal from API when opened via deep link
+  useEffect(() => {
+    console.log(`🔗 DealDetailScreen: useEffect triggered`, { 
+      deepLinkDealId, 
+      hasInitialDeal: !!initialDeal,
+      hasDeal: !!deal 
+    });
+    
+    const fetchDealFromDeepLink = async () => {
+      // Only fetch if we have a dealId but no deal object
+      if (deepLinkDealId && !initialDeal) {
+        console.log(`🔗 Deep link: Fetching deal with ID: ${deepLinkDealId}`);
+        setLoading(true);
+        setError(null);
+        
+        try {
+          // First try to find deal in existing deals list
+          const existingDeal = deals.find(
+            d => String(d.id) === deepLinkDealId || String(d.deal_id) === deepLinkDealId
+          );
+          
+          if (existingDeal) {
+            console.log('✅ Found deal in local cache');
+            setDeal(existingDeal);
+            setLoading(false);
+            return;
+          }
+          
+          // Otherwise fetch from API
+          console.log('📡 Fetching deal from API...');
+          const response = await ApiService.getDealById(deepLinkDealId);
+          
+          if (response.data) {
+            console.log('✅ Deal fetched successfully:', response.data);
+            setDeal(response.data);
+          } else {
+            console.error('❌ Deal not found in API response');
+            setError('Deal not found');
+          }
+        } catch (err) {
+          console.error('❌ Error fetching deal:', err);
+          setError('Failed to load deal');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    
+    fetchDealFromDeepLink();
+  }, [deepLinkDealId, initialDeal, deals]);
 
   // Simple heart state - just use global state directly
   const dealId = deal?.deal_id || deal?.id;
@@ -211,13 +266,50 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
     );
   }
 
+  // Show loading state when fetching deal from deep link
+  if (loading) {
+    return (
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={[styles.overlayButtons, { top: insets.top + 10, position: 'absolute', left: 16, right: 16, zIndex: 10 }]}>
+          <TouchableOpacity
+            style={[
+              styles.circleButton,
+              { backgroundColor: colors.overlayButton },
+            ]}
+            onPress={() => navigation.goBack()}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons name="chevron-back" size={24} color={colors.text} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.centerContent}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={[styles.errorText, { color: colors.text, marginTop: 16 }]}>
+            Loading deal...
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
   if (!deal) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        {/* <Toolbar title="Deal Details" onBack={() => navigation.goBack()} /> */}
+        <View style={[styles.overlayButtons, { top: insets.top + 10, position: 'absolute', left: 16, right: 16, zIndex: 10 }]}>
+          <TouchableOpacity
+            style={[
+              styles.circleButton,
+              { backgroundColor: colors.overlayButton },
+            ]}
+            onPress={() => navigation.goBack()}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons name="chevron-back" size={24} color={colors.text} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.centerContent}>
           <Text style={[styles.errorText, { color: colors.text }]}>
-            Deal not found
+            {error || 'Deal not found'}
           </Text>
           <Text
             style={[
@@ -227,6 +319,18 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
           >
             Unable to load deal details
           </Text>
+          <TouchableOpacity
+            style={{
+              marginTop: 20,
+              paddingVertical: 12,
+              paddingHorizontal: 24,
+              backgroundColor: colors.primary,
+              borderRadius: 8,
+            }}
+            onPress={() => navigation.goBack()}
+          >
+            <Text style={{ color: '#fff', fontWeight: '600' }}>Go Back</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
