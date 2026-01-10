@@ -37,8 +37,9 @@ import VersionFooter from '../../components/VersionFooter';
 // 🔧 IAP ENVIRONMENT CONFIGURATION
 // =====================================================
 // Set this to 'staging' or 'production' to control which SKUs are used
-// Note: For staging release builds, we need to explicitly use 'staging'
-const IAP_ENVIRONMENT: 'staging' | 'production' = 'staging'; // Force staging for staging builds
+// Uses __DEV__ to automatically detect: dev builds use staging, prod builds use production
+// __DEV__ is false in production/TestFlight builds, true in debug builds
+const IAP_ENVIRONMENT: 'staging' | 'production' = __DEV__ ? 'staging' : 'production';
 
 // 🧪 TEST MODE - Bypass IAP and test backend verification directly (ANDROID ONLY)
 // Set to true to skip Google Play billing and test with mock purchase data
