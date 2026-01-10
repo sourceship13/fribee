@@ -110,11 +110,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     initializeApp();
     
-    // Listen for appearance changes
+    // Listen for appearance changes and update theme if user hasn't set a manual preference
     const appearanceSubscription = Appearance.addChangeListener(({ colorScheme }) => {
-      if (!isDarkMode) {
-        setDarkModeState(colorScheme === 'dark');
-      }
+      // Only auto-update theme if no manual preference was saved
+      AsyncStorage.getItem('theme').then((savedTheme) => {
+        if (savedTheme === null) {
+          // No manual preference, so follow system theme
+          setDarkModeState(colorScheme === 'dark');
+          console.log('📱 System theme changed - auto-updating app theme to:', colorScheme);
+        }
+      }).catch((error) => {
+        console.error('Error checking saved theme preference:', error);
+      });
     });
     
     // Listen for app state changes
@@ -426,6 +433,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const savedTheme = await AsyncStorage.getItem('theme');
       if (savedTheme !== null) {
         setDarkModeState(savedTheme === 'dark');
+      } else {
+        // If no saved preference, use system theme
+        const systemTheme = Appearance.getColorScheme();
+        setDarkModeState(systemTheme === 'dark');
       }
       
       // Load onboarding status
