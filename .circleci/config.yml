@@ -369,16 +369,29 @@ workflows:
       - install_dependencies:
           context:
             - nolimitsera-context
+          filters:
+            branches:
+              only: main
+              # Temporarily disabled develop branch builds
+              # only:
+              #   - main
+              #   - develop
       - build_android:
           context:
             - nolimitsera-context
           requires:
             - install_dependencies
+          filters:
+            branches:
+              only: main
       - build_ios_staging:
           context:
             - nolimitsera-context
           requires:
             - install_dependencies
+          filters:
+            branches:
+              only: main
 
   deploy_production:
     jobs:
