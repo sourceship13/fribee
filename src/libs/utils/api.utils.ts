@@ -4,6 +4,29 @@ import DeviceDetector from './deviceDetector';
 // Environment type
 type Environment = 'local' | 'staging' | 'production';
 
+/**
+ * ENVIRONMENT CONFIGURATION GUIDE
+ * 
+ * The app will automatically use different API endpoints based on the build type:
+ * 
+ * 1. DEVELOPMENT BUILDS (npm run ios, npm run android):
+ *    - Uses staging.fribee.io by default
+ *    - Set FORCE_LOCAL_DEVELOPMENT = true to use local server instead
+ * 
+ * 2. PRODUCTION BUILDS (CI/CD, TestFlight, App Store):
+ *    - Uses fribee.io (production)
+ *    - Detected automatically via __DEV__ = false
+ * 
+ * 3. MANUAL OVERRIDE:
+ *    - FORCE_STAGING_ALWAYS: Set to true to always use staging (ignores all other settings)
+ *    - FORCE_LOCAL_DEVELOPMENT: Set to true to use local server in development
+ * 
+ * Current URLs:
+ * - Local: http://192.168.26.21:8080 (or localhost for simulators)
+ * - Staging: https://staging.fribee.io
+ * - Production: https://fribee.io
+ */
+
 // Detect if running on physical device (not simulator)
 const isPhysicalDevice = (): boolean => {
   // Enhanced detection using multiple signals
@@ -57,25 +80,36 @@ let FORCE_PHYSICAL_DEVICE: boolean | null = null;
 // Override for development - set to true to use local development server
 const FORCE_LOCAL_DEVELOPMENT = false; // Set to false to use cloud server
 
-  // FORCE STAGING: Override everything to use staging (set to true to force staging regardless of device)
-const FORCE_STAGING_ALWAYS = true; // Set to true to use cloud server
+// FORCE STAGING: Override everything to use staging (set to false to allow production builds)
+const FORCE_STAGING_ALWAYS = !FORCE_PRODUCTION_BUILD; // Staging by default in dev, production in CI builds
 
-// IMPORTANT: Verify all URLs point to staging
-const STAGING_URL = 'https://fribee.io';
+// API URLs
+const STAGING_URL = 'https://staging.fribee.io';
+const PRODUCTION_URL = 'https://fribee.io';
+
 const getEnvironment = (): Environment => {
   const actuallyPhysical = FORCE_PHYSICAL_DEVICE !== null ? FORCE_PHYSICAL_DEVICE : isPhysicalDevice();
+  
   // HIGHEST PRIORITY: Force staging override (bypasses all other logic)
   if (FORCE_STAGING_ALWAYS) {
     return 'staging';
   }
+  
+  // PRODUCTION BUILD: Use production environment
+  if (FORCE_PRODUCTION_BUILD) {
+    return 'production';
+  }
+  
   // In dev mode, always use local for physical devices
   if (__DEV__ && actuallyPhysical) {
     return 'local';
   }
+  
   // In dev mode, use local for simulators if FORCE_LOCAL_DEVELOPMENT is true
   if (__DEV__ && FORCE_LOCAL_DEVELOPMENT) {
     return 'local';
   }
+  
   // Use staging for everything else
   return 'staging';
 };
@@ -90,7 +124,7 @@ class ApiConfig {
       physical: 'http://192.168.26.21:8080', // Mac's local IP for physical device
     },
     staging: STAGING_URL,
-    production: STAGING_URL,
+    production: PRODUCTION_URL,
   };
   
   // Store the environment

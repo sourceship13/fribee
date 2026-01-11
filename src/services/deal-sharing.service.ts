@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SendSMS from 'react-native-sms';
 import AppReturnUtils from '../libs/utils/appReturnUtils';
 import { uuidToBase62 } from '../libs/utils/deeplink.utils';
+import { apiConfig } from '../libs/utils/api.utils';
 
 interface Contact {
   recordID: string;
@@ -356,8 +357,12 @@ class DealSharingService {
     const shortId = uuidToBase62(dealId);
     console.log(`🔗 Base62 encoded: ${dealId} → ${shortId}`);
     
+    // Use environment-based base URL (staging.fribee.io or fribee.io)
+    const webBaseUrl = apiConfig.baseURL;
+    console.log(`🌐 Using base URL: ${webBaseUrl} (environment: ${apiConfig.environment})`);
+    
     const appLink = `nolimitseradeals://deal/${shortId}`;
-    const webLink = `https://fribee.io/deal/${shortId}`;
+    const webLink = `${webBaseUrl}/deal/${shortId}`;
     
     return `🎉 Check out this amazing deal at ${
       dealInfo.business_name || dealInfo.business
