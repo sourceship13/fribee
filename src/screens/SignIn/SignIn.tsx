@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
   Platform,
+  Image,
   ImageBackground,
   ScrollView,
   KeyboardAvoidingView,
@@ -26,6 +27,7 @@ import AuthService from '../../services/auth.service';
 
 
 const signInBackground = require('../../../assets/imgs/signInBackground.png');
+const FribeeLogoPNG = require('../../../assets/imgs/fribee-logo.png');
 
 const SignInScreen = ({ navigation }: any) => {
   const { isDarkMode, login } = useAuth();
@@ -297,6 +299,17 @@ const SignInScreen = ({ navigation }: any) => {
       style={styles.backgroundImage}
       resizeMode="cover"
     >
+      {/* Fribee Logo - Upper portion of screen */}
+      <View style={{ position: 'absolute', top: 130, left: 0, right: 0, alignItems: 'center', zIndex: 10 }}>
+        <View style={{ backgroundColor: '#FFFFFF', borderRadius: 20, padding: 5, paddingHorizontal: 10, }}>
+          <Image
+            source={FribeeLogoPNG}
+            style={{ width: 180, height: 100 }}
+            resizeMode="contain"
+          />
+        </View>
+      </View>
+
       <View style={[styles.container, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
