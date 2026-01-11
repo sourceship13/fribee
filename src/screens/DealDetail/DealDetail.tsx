@@ -394,6 +394,11 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
   };
 
   const handlePress = async () => {
+    // If deal is already unlocked, don't open share modal
+    if (canRedeem) {
+      return;
+    }
+
     // Check contacts permission first
     if (hasContactsPermission !== 'granted') {
       Alert.alert(
