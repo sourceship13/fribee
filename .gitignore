@@ -79,4 +79,6 @@ ios/fastlane/app_store_connect_api_key.json
 # Environment variables
 .env
 .env.*
-!.env.example
+!.env.example# Sentry auth tokens
+ios/sentry.properties
+android/sentry.properties
