@@ -107,6 +107,26 @@ const BusinessProfile = ({ navigation, route }: any) => {
     }
   };
 
+  const formatPhoneNumber = (phoneNumber: string): string => {
+    // Remove all non-numeric characters
+    const cleaned = phoneNumber.replace(/\D/g, '');
+    
+    // Check if it's a US/Canada number (10 digits) or international
+    if (cleaned.length === 10) {
+      // Format as (XXX) XXX-XXXX
+      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+    } else if (cleaned.length === 11 && cleaned.startsWith('1')) {
+      // Format as +1 (XXX) XXX-XXXX
+      return `+1 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
+    } else if (cleaned.length > 10) {
+      // International format: show first few digits with spaces
+      return `+${cleaned.slice(0, cleaned.length - 10)} ${cleaned.slice(cleaned.length - 10, cleaned.length - 7)} ${cleaned.slice(cleaned.length - 7, cleaned.length - 4)} ${cleaned.slice(cleaned.length - 4)}`;
+    }
+    
+    // Return original if format doesn't match
+    return phoneNumber;
+  };
+
   const clearStuckPurchases = async () => {
     try {
       Alert.alert(
@@ -303,7 +323,7 @@ const BusinessProfile = ({ navigation, route }: any) => {
           <InfoRow 
             icon="phone" 
             label="Phone Number" 
-            value={business.phoneNumber || 'Not provided'}
+            value={business.phoneNumber ? formatPhoneNumber(business.phoneNumber) : 'Not provided'}
             onPress={business.phoneNumber ? handlePhonePress : undefined}
           />
           
