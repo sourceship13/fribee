@@ -9,10 +9,13 @@ import {
   Animated,
   SafeAreaView,
   Platform,
+  Image,
 } from 'react-native';
 import { iOSUIKit } from 'react-native-typography';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
+import FribeeLogo from '../../../assets/imgs/fribee-logo.svg';
+const FribeeLogoPNG = require('../../../assets/imgs/fribee-logo.png');
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -28,21 +31,24 @@ const slides: Slide[] = [
   {
     id: '1',
     title: 'Discover Amazing Deals',
-    description: 'Browse through exclusive local deals from your favorite businesses right in your area.',
+    description:
+      'Browse through exclusive local deals from your favorite businesses right in your area.',
     icon: 'local-offer',
     color: '#667eea',
   },
   {
     id: '2',
     title: 'Share & Unlock',
-    description: 'Share deals with your friends to unlock exclusive offers. The more you share, the more you save!',
+    description:
+      'Share deals with your friends to unlock exclusive offers. The more you share, the more you save!',
     icon: 'share',
     color: '#764ba2',
   },
   {
     id: '3',
     title: 'Redeem Your Rewards',
-    description: 'Once you\'ve unlocked a deal, redeem it at the business and enjoy your savings.',
+    description:
+      "Once you've unlocked a deal, redeem it at the business and enjoy your savings.",
     icon: 'card-giftcard',
     color: '#f093fb',
   },
@@ -51,7 +57,7 @@ const slides: Slide[] = [
 const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const { isDarkMode, markOnboardingAsComplete } = useAuth();
   const colors = getColors(isDarkMode);
-  
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -77,7 +83,7 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   const handleScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-    { useNativeDriver: false }
+    { useNativeDriver: false },
   );
 
   const handleMomentumScrollEnd = (event: any) => {
@@ -91,10 +97,7 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       <View style={styles.slideContent}>
         {/* Icon/Logo Section */}
         <View
-          style={[
-            styles.iconContainer,
-            { backgroundColor: item.color + '20' },
-          ]}
+          style={[styles.iconContainer, { backgroundColor: item.color + '20' }]}
         >
           <MaterialIcons name={item.icon} size={80} color={item.color} />
         </View>
@@ -104,10 +107,7 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           {item.title}
         </Text>
         <Text
-          style={[
-            styles.slideDescription,
-            { color: colors.textSecondary },
-          ]}
+          style={[styles.slideDescription, { color: colors.textSecondary }]}
         >
           {item.description}
         </Text>
@@ -123,22 +123,29 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     >
       {/* Skip Button */}
       {currentIndex < slides.length - 1 && (
-        <TouchableOpacity
-          style={styles.skipButton}
-          onPress={handleSkip}
-        >
+        <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
           <Text style={[styles.skipText, { color: colors.textSecondary }]}>
             Skip
           </Text>
         </TouchableOpacity>
       )}
+      <View style={{ alignItems: 'center', marginVertical: 20 }}>
+        {/* <FribeeLogo width={120} height={120} /> */}
+            <View style={{ alignItems: 'center' }}>
+              <Image 
+                source={FribeeLogoPNG} 
+                style={{ width: 120, height: 120, marginTop: 20 }}
+                resizeMode="contain"
+              />
+            </View>
+      </View>
 
       {/* Slides FlatList */}
       <FlatList
         ref={flatListRef}
         data={slides}
         renderItem={renderSlide}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         horizontal
         pagingEnabled
         scrollEventThrottle={16}
@@ -183,10 +190,7 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         {currentIndex < slides.length - 1 ? (
           <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colors.primary },
-            ]}
+            style={[styles.button, { backgroundColor: colors.primary }]}
             onPress={handleNext}
           >
             <Text style={[styles.buttonText, { color: colors.background }]}>
@@ -200,10 +204,7 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colors.primary },
-            ]}
+            style={[styles.button, { backgroundColor: colors.primary }]}
             onPress={handleGetStarted}
           >
             <Text style={[styles.buttonText, { color: colors.background }]}>
