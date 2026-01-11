@@ -833,9 +833,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -864,9 +868,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -903,9 +911,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -942,9 +954,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -993,6 +1009,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FC8D185518DFC2D287681986 /* Pods-nolimitseradeals-staging.debug.xcconfig */;
 			buildSettings = {
+				APP_DISPLAY_NAME = "FriBee Staging";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Staging";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -1029,6 +1046,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 77B010BBD8FD943C6F3ACC06 /* Pods-nolimitseradeals-staging.release.xcconfig */;
 			buildSettings = {
+				APP_DISPLAY_NAME = "FriBee Staging";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Staging";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1203,6 +1221,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 39BA33FCB4A40151E5F562AA /* Pods-nolimitseradeals-prod.debug.xcconfig */;
 			buildSettings = {
+				APP_DISPLAY_NAME = FriBee;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Prod";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -1239,6 +1258,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 20422818D84AB39556C5A5AB /* Pods-nolimitseradeals-prod.release.xcconfig */;
 			buildSettings = {
+				APP_DISPLAY_NAME = FriBee;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Prod";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
