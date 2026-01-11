@@ -136,6 +136,55 @@
         
         console.log('Deep link page loaded for deal:', dealId);
         
+        // Track deep link click - Send to backend
+        const trackDeepLinkClick = async () => {
+            try {
+                // Get user's IP address and location data from a public service
+                const ipResponse = await fetch('https://ipapi.co/json/');
+                const ipData = await ipResponse.json();
+                
+                // Prepare tracking data
+                const trackingData = {
+                    dealId: dealId,
+                    publicIp: ipData.ip || 'unknown',
+                    city: ipData.city || null,
+                    region: ipData.region || null,
+                    country: ipData.country_name || null,
+                    latitude: ipData.latitude || null,
+                    longitude: ipData.longitude || null,
+                    userAgent: navigator.userAgent,
+                    platform: navigator.platform,
+                    language: navigator.language,
+                    screenResolution: `${screen.width}x${screen.height}`,
+                    timestamp: new Date().toISOString(),
+                    referrer: document.referrer || 'direct',
+                    // Note: MAC address is not accessible from browsers for security reasons
+                };
+                
+                console.log('Tracking deep link click:', trackingData);
+                
+                // Send to your backend API
+                // REPLACE THIS URL WITH YOUR ACTUAL BACKEND ENDPOINT
+                const backendUrl = 'https://your-api-domain.com/api/deeplink/track';
+                
+                await fetch(backendUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(trackingData),
+                });
+                
+                console.log('Deep link click tracked successfully');
+            } catch (error) {
+                console.error('Failed to track deep link click:', error);
+                // Don't block the user experience if tracking fails
+            }
+        };
+        
+        // Fire tracking immediately on page load
+        trackDeepLinkClick();
+        
         // Try to detect platform
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const isAndroid = /Android/.test(navigator.userAgent);
