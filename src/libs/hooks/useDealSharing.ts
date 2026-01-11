@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Alert } from 'react-native';
 import DealSharingService from '../../services/deal-sharing.service';
 import { useAuth } from './useAuth';
@@ -222,27 +222,48 @@ export const useDealSharing = (dealId?: string, requiredShares: number = 3) => {
     }
   };
 
-  const searchContacts = (query: string) => {
-    if (!query.trim()) return contacts;
+  const searchContacts = useCallback((query: string) => {
+    console.log('🔍 Searching contacts with query:', query);
+    console.log('📋 Total contacts available:', contacts.length);
+    
+    if (!query.trim()) {
+      console.log('✅ No query, returning all contacts');
+      return contacts;
+    }
     
     const searchTerm = query.toLowerCase().trim();
     const searchDigits = query.replace(/\D/g, ''); // Extract digits for phone number search
     
-    return contacts.filter(contact => {
+    const filtered = contacts.filter(contact => {
       // Search by name fields
       const matchesDisplayName = contact.displayName?.toLowerCase().includes(searchTerm);
       const matchesGivenName = contact.givenName?.toLowerCase().includes(searchTerm);
       const matchesFamilyName = contact.familyName?.toLowerCase().includes(searchTerm);
       
-      // Search by phone number
-      const matchesPhone = contact.phoneNumbers?.some(phone => {
+      // Search by phone number (only if there are digits in the query)
+      const matchesPhone = searchDigits.length > 0 && contact.phoneNumbers?.some(phone => {
         const phoneDigits = phone.number?.replace(/\D/g, '') || '';
         return phoneDigits.includes(searchDigits);
       });
       
-      return matchesDisplayName || matchesGivenName || matchesFamilyName || matchesPhone;
+      const isMatch = matchesDisplayName || matchesGivenName || matchesFamilyName || matchesPhone;
+      
+      if (isMatch) {
+        console.log('✅ Match found:', {
+          name: contact.displayName,
+          matchesDisplayName,
+          matchesGivenName,
+          matchesFamilyName,
+          matchesPhone
+        });
+      }
+      
+      return isMatch;
     });
-  };
+    
+    console.log('✅ Filtered contacts:', filtered.length);
+    return filtered;
+  }, [contacts]);
 
   const clearSelection = () => {
     setSelectedContacts([]);

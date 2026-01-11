@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -460,7 +460,11 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
     }
   };
 
-  const filteredContacts = searchContacts(searchQuery);
+  const filteredContacts = useMemo(() => {
+    console.log('🔄 Recalculating filteredContacts with query:', searchQuery);
+    return searchContacts(searchQuery);
+  }, [searchQuery, searchContacts]);
+  
   const currentShares = shareProgress?.currentShares || 0;
   const canRedeem = shareProgress?.canRedeem || false;
 
