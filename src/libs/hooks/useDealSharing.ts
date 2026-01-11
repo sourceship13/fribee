@@ -225,14 +225,23 @@ export const useDealSharing = (dealId?: string, requiredShares: number = 3) => {
   const searchContacts = (query: string) => {
     if (!query.trim()) return contacts;
     
-    return contacts.filter(contact =>
-      contact.displayName?.toLowerCase().includes(query.toLowerCase()) ||
-      contact.givenName?.toLowerCase().includes(query.toLowerCase()) ||
-      contact.familyName?.toLowerCase().includes(query.toLowerCase()) ||
-      contact.phoneNumbers.some(phone => 
-        phone.number.replace(/\D/g, '').includes(query.replace(/\D/g, ''))
-      )
-    );
+    const searchTerm = query.toLowerCase().trim();
+    const searchDigits = query.replace(/\D/g, ''); // Extract digits for phone number search
+    
+    return contacts.filter(contact => {
+      // Search by name fields
+      const matchesDisplayName = contact.displayName?.toLowerCase().includes(searchTerm);
+      const matchesGivenName = contact.givenName?.toLowerCase().includes(searchTerm);
+      const matchesFamilyName = contact.familyName?.toLowerCase().includes(searchTerm);
+      
+      // Search by phone number
+      const matchesPhone = contact.phoneNumbers?.some(phone => {
+        const phoneDigits = phone.number?.replace(/\D/g, '') || '';
+        return phoneDigits.includes(searchDigits);
+      });
+      
+      return matchesDisplayName || matchesGivenName || matchesFamilyName || matchesPhone;
+    });
   };
 
   const clearSelection = () => {
