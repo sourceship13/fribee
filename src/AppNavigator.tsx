@@ -21,6 +21,7 @@ import DebugScreen from './screens/Debug/Debug';
 import PermissionTestScreen from './screens/PermissionTestScreen';
 import NetworkDebugScreen from './screens/NetworkDebugScreen';
 import OnboardingScreen from './screens/Onboarding/OnboardingScreen';
+import WelcomeScreen from './screens/Welcome/WelcomeScreen';
 import { useAuth, getColors } from './libs/hooks/useAuth';
 import { ActivityIndicator, View } from 'react-native';
 import { iOSUIKit } from 'react-native-typography';
@@ -228,7 +229,7 @@ const AppNavigator = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        initialRouteName={!hasSeenOnboarding ? "Onboarding" : isAuthenticated ? "MainTabs" : "SignIn"}
+        initialRouteName={!hasSeenOnboarding ? "Onboarding" : isAuthenticated ? "MainTabs" : "Welcome"}
         screenOptions={{
           headerShown: false,
           gestureEnabled: true,
@@ -263,6 +264,7 @@ const AppNavigator = () => {
         ) : !isAuthenticated ? (
           // Authentication flow screens (after onboarding)
           <>
+            <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
             <Stack.Screen name="Verification" component={VerificationScreen} />
