@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ImageBackground,
   Image,
   StatusBar,
+  Animated,
 } from 'react-native';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
 import { iOSUIKit } from 'react-native-typography';
@@ -22,6 +23,18 @@ interface WelcomeScreenProps {
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
   const { isDarkMode } = useAuth();
   const colors = getColors(isDarkMode);
+  const [logoOpacity] = useState(new Animated.Value(1));
+
+  const handleNavigation = (route: string, params?: any) => {
+    // Fade out logo before navigation
+    Animated.timing(logoOpacity, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      navigation.navigate(route, params);
+    });
+  };
 
   return (
     <ImageBackground
@@ -32,7 +45,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={styles.overlay}>
         {/* Logo */}
-        <View style={styles.logoContainer}>
+        <Animated.View style={[styles.logoContainer, { opacity: logoOpacity }]}>
           <View style={styles.logoWrapper}>
             <Image
               source={FribeeLogoPNG}
@@ -40,7 +53,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
               resizeMode="contain"
             />
           </View>
-        </View>
+        </Animated.View>
         <IconLogo width={80} height={80} fill="#FFFFFF" style={{ marginBottom: 40 }} />
         <View style={{ flexDirection: 'row',}}>
             <Text style={styles.brandName2}>Fri</Text>
@@ -58,7 +71,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.button, styles.primaryButton]}
-              onPress={() => navigation.navigate('SignIn', { showSignUp: true })}
+              onPress={() => handleNavigation('SignIn', { showSignUp: true })}
               activeOpacity={0.8}
             >
               <Text style={styles.primaryButtonText}>Join Us</Text>
@@ -66,7 +79,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
 
             <TouchableOpacity
               style={[styles.button, styles.secondaryButton]}
-              onPress={() => navigation.navigate('SignIn')}
+              onPress={() => handleNavigation('SignIn')}
               activeOpacity={0.8}
             >
               <Text style={styles.secondaryButtonText}>Sign In</Text>
