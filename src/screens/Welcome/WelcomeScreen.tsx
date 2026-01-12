@@ -56,7 +56,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.button, styles.primaryButton]}
-              onPress={() => navigation.navigate('SignUp')}
+              onPress={() => navigation.navigate('SignIn', { showSignUp: true })}
               activeOpacity={0.8}
             >
               <Text style={styles.primaryButtonText}>Join Us</Text>

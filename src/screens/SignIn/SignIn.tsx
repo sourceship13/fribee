@@ -29,7 +29,7 @@ import AuthService from '../../services/auth.service';
 const signInBackground = require('../../../assets/imgs/signInBackground.png');
 const FribeeLogoPNG = require('../../../assets/imgs/fribee-logo.png');
 
-const SignInScreen = ({ navigation }: any) => {
+const SignInScreen = ({ navigation, route }: any) => {
   const { isDarkMode, login } = useAuth();
   const colors = getColors(isDarkMode);
   const [email, setEmail] = useState('aj@sera.dev');
@@ -37,7 +37,7 @@ const SignInScreen = ({ navigation }: any) => {
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [instagramLoading, setInstagramLoading] = useState(false);
-  const [createUserModal, setCreateUserModal] = useState(false);
+  const [createUserModal, setCreateUserModal] = useState(route?.params?.showSignUp || false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState<any>({});
   const [phone, setPhone] = useState('');
