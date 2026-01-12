@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
+  StatusBar,
 } from 'react-native';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
 import { iOSUIKit } from 'react-native-typography';
@@ -28,6 +29,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ navigation }) => {
       style={styles.backgroundImage}
       resizeMode="cover"
     >
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={styles.overlay}>
         {/* Logo */}
         <View style={styles.logoContainer}>
