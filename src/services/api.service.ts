@@ -11,39 +11,37 @@ interface ApiResponse<T = any> {
 }
 
 class ApiService {
-  
   private get baseURL() {
     return apiConfig.apiURL;
   }
 
   private publicEndpoints = [
     '/auth/login',
-    '/auth/register', 
+    '/auth/register',
     '/auth/verify-email',
     '/auth/verify-phone',
     '/auth/resend-code',
     '/auth/forgot-password',
     '/auth/reset-password',
-    '/deals/public/',  // Public deal endpoint for guest viewing via deep links
+    '/deals/public/', // Public deal endpoint for guest viewing via deep links
   ];
 
   private requiresAuth(endpoint: string): boolean {
-    return !this.publicEndpoints.some(publicEndpoint => 
-      endpoint.includes(publicEndpoint)
+    return !this.publicEndpoints.some(publicEndpoint =>
+      endpoint.includes(publicEndpoint),
     );
   }
 
   async makeRequest<T = any>(
-    endpoint: string, 
-    options: RequestInit = {}
+    endpoint: string,
+    options: RequestInit = {},
   ): Promise<ApiResponse<T>> {
     const url = `${this.baseURL}${endpoint}`;
-    
+
     try {
       let response: Response;
-      
+
       if (this.requiresAuth(endpoint)) {
-        
         const authOptions = {
           method: 'GET',
           ...options,
@@ -52,15 +50,15 @@ class ApiService {
             ...options.headers,
           },
         };
-        
+
         response = await AuthService.makeAuthenticatedRequest(url, authOptions);
       } else {
         const headers = {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          Accept: 'application/json',
           ...options.headers,
         };
-        
+
         response = await fetch(url, {
           method: 'GET',
           ...options,
@@ -70,29 +68,38 @@ class ApiService {
       }
 
       const data = await response.json();
-      
+
       if (!response.ok) {
-        console.error(`❌ API Error: ${response.status} - ${data.message || data.error}`);
-        throw new Error(data.message || data.error || `HTTP ${response.status}`);
+        console.error(
+          `❌ API Error: ${response.status} - ${data.message || data.error}`,
+        );
+        throw new Error(
+          data.message || data.error || `HTTP ${response.status}`,
+        );
       }
 
       return data;
     } catch (error) {
       console.error(`💥 API Error (${endpoint}):`, error);
-      
-      if (error instanceof TypeError && error.message.includes('Network request failed')) {
+
+      if (
+        error instanceof TypeError &&
+        error.message.includes('Network request failed')
+      ) {
         console.error(`🚨 Network Error Details:`);
         console.error(`📡 Trying to connect to: ${url}`);
         console.error(`🌐 Current API Config:`, {
           environment: apiConfig.environment,
           baseURL: this.baseURL,
-          isLocal: apiConfig.isLocal
+          isLocal: apiConfig.isLocal,
         });
         console.error(`💡 Suggestion: Check if device can reach the server`);
-        
-        throw new Error(`Unable to connect to server. Please check your internet connection and try again.`);
+
+        throw new Error(
+          `Unable to connect to server. Please check your internet connection and try again.`,
+        );
       }
-      
+
       throw error;
     }
   }
@@ -178,14 +185,24 @@ class ApiService {
   async trackDealShare(dealId: string, platform: string): Promise<ApiResponse> {
     return this.makeRequest('/analytics/deal-share', {
       method: 'POST',
-      body: JSON.stringify({ dealId, platform, timestamp: new Date().toISOString() }),
+      body: JSON.stringify({
+        dealId,
+        platform,
+        timestamp: new Date().toISOString(),
+      }),
     });
   }
 
-  async trackDealUnlocked(dealId: string, shareCount: number): Promise<ApiResponse> {
+  async trackDealUnlocked(
+    dealId: string,
+    shareCount: number,
+  ): Promise<ApiResponse> {
     const endpoint = `/deals/${dealId}/share`;
     const payload = { shareCount };
-    console.log('📣 ApiService.trackDealUnlocked ->', { url: `${this.baseURL}${endpoint}`, payload });
+    console.log('📣 ApiService.trackDealUnlocked ->', {
+      url: `${this.baseURL}${endpoint}`,
+      payload,
+    });
     return this.makeRequest(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -193,11 +210,14 @@ class ApiService {
     });
   }
 
-  async postContacts(payload: { userId: string; contacts: Array<{ contact_number: string; display_name: string }> }): Promise<ApiResponse> {
+  async postContacts(payload: {
+    userId: string;
+    contacts: Array<{ contact_number: string; display_name: string }>;
+  }): Promise<ApiResponse> {
     return this.makeRequest('/contacts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
   }
 
@@ -209,29 +229,35 @@ class ApiService {
     return this.makeRequest(`/deal-redemption`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
   }
 
   async registerBusiness(formData: FormData): Promise<ApiResponse> {
     console.log('📤 Registering business with FormData');
     const url = `${this.baseURL}/business/register`;
-    
+
     try {
       // Use AuthService's makeAuthenticatedRequest for proper token handling
       const response = await AuthService.makeAuthenticatedRequest(url, {
         method: 'POST',
         body: formData,
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
-        console.error(`❌ Business Registration Error: ${response.status} - ${data.message || data.error}`);
-        throw new Error(data.message || data.error || `HTTP ${response.status}`);
+        console.error(
+          `❌ Business Registration Error: ${response.status} - ${
+            data.message || data.error
+          }`,
+        );
+        throw new Error(
+          data.message || data.error || `HTTP ${response.status}`,
+        );
       }
 
       console.log('✅ Business registered successfully:', data);
@@ -243,8 +269,11 @@ class ApiService {
   }
 
   async getBusinessProfile(businessId?: string): Promise<ApiResponse> {
-    console.log('📥 Fetching business profile', businessId ? `for ID: ${businessId}` : '(user\'s business)');
-    const url = `/business/${businessId}`
+    console.log(
+      '📥 Fetching business profile',
+      businessId ? `for ID: ${businessId}` : "(user's business)",
+    );
+    const url = `/business/${businessId}`;
     try {
       return await this.makeRequest(url, {
         method: 'GET',
@@ -292,7 +321,7 @@ class ApiService {
     console.log('📡 API Base URL:', this.baseUrl);
     console.log('📡 Full URL:', `${this.baseUrl}/subscriptions/verify`);
     console.log('====================================================');
-    
+
     try {
       console.log('📤 Making POST request to /subscriptions/verify...');
       const response = await this.makeRequest('/subscriptions/verify', {
@@ -300,9 +329,12 @@ class ApiService {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      
+
       console.log('========== API SERVICE: RESPONSE RECEIVED ==========');
-      console.log('✅ Subscription verification response:', JSON.stringify(response, null, 2));
+      console.log(
+        '✅ Subscription verification response:',
+        JSON.stringify(response, null, 2),
+      );
       console.log('✅ Response success:', response.success);
       console.log('✅ Response message:', response.message);
       console.log('====================================================');
@@ -340,14 +372,17 @@ class ApiService {
       receiptLength: data.transactionReceipt?.length,
     });
     console.log('📦 Full request body:', JSON.stringify(data, null, 2));
-    
+
     try {
-      const response = await this.makeRequest('/subscriptions/consumables/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      
+      const response = await this.makeRequest(
+        '/subscriptions/consumables/verify',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        },
+      );
+
       console.log('✅ Consumable verification response:', response);
       return response;
     } catch (error) {
