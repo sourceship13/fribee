@@ -1,19 +1,19 @@
-import { Platform } from 'react-native';
+import { Platform, NativeModules } from 'react-native';
 
 /**
  * API CONFIGURATION
  *
- * Simple environment detection:
- * - __DEV__ = true (development builds) → Use STAGING by default
- * - __DEV__ = false (production builds) → Use PRODUCTION
+ * Automatic Environment Detection:
+ * - Checks bundle identifier to determine staging vs production
+ * - Staging bundle: org.sera.dev.nolimitsera.staging → staging.fribee.io
+ * - Production bundle: org.sera.dev.nolimitsera → fribee.io
+ * - Development builds (__DEV__ = true) → staging.fribee.io
  *
- * Override Flags:
- * - FORCE_STAGING: Set to true to always use staging (ignores production builds)
+ * Override Flags (for local development only):
  * - FORCE_LOCAL: Set to true to use local development server
  */
 
 // ========== CONFIGURATION FLAGS ==========
-const FORCE_STAGING = false; // Set to true only for local testing
 const FORCE_LOCAL = false; // Set to true to use local server
 
 // ========== API URLS ==========
@@ -24,24 +24,40 @@ const PRODUCTION_URL = 'https://fribee.io';
 // ========== ENVIRONMENT DETECTION ==========
 type Environment = 'local' | 'staging' | 'production';
 
+// Get bundle identifier to detect staging vs production builds
+function getBundleId(): string {
+  if (Platform.OS === 'ios') {
+    return NativeModules.RNDeviceInfo?.bundleId || 
+           NativeModules.PlatformConstants?.bundleIdentifier || 
+           'org.sera.dev.nolimitsera'; // fallback
+  }
+  // Android
+  return NativeModules.RNDeviceInfo?.bundleId || 
+         'org.sera.dev.nolimitsera'; // fallback
+}
+
 function getEnvironment(): Environment {
-  // Priority 1: Force local (for development)
-  if (FORCE_LOCAL) {
+  // Priority 1: Force local (for local development only)
+  if (FORCE_LOCAL && __DEV__) {
     return 'local';
   }
 
-  // Priority 2: Force staging (for testing)
-  if (FORCE_STAGING) {
+  // Priority 2: Development builds always use staging
+  if (__DEV__) {
     return 'staging';
   }
 
-  // Priority 3: Use production for production builds
-  if (!__DEV__) {
-    return 'production';
+  // Priority 3: Check bundle identifier for release builds
+  const bundleId = getBundleId();
+  console.log('🔍 Bundle ID detected:', bundleId);
+  
+  // If bundle ID contains 'staging', use staging environment
+  if (bundleId.includes('staging')) {
+    return 'staging';
   }
 
-  // Default: staging for development builds
-  return 'staging';
+  // Default: production for release builds
+  return 'production';
 }
 
 function getBaseURL(env: Environment): string {
