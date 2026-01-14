@@ -27,13 +27,14 @@ type Environment = 'local' | 'staging' | 'production';
 // Get bundle identifier to detect staging vs production builds
 function getBundleId(): string {
   if (Platform.OS === 'ios') {
-    return NativeModules.RNDeviceInfo?.bundleId || 
-           NativeModules.PlatformConstants?.bundleIdentifier || 
-           'org.sera.dev.nolimitsera'; // fallback
+    return (
+      NativeModules.RNDeviceInfo?.bundleId ||
+      NativeModules.PlatformConstants?.bundleIdentifier ||
+      'org.sera.dev.nolimitsera'
+    ); // fallback
   }
   // Android
-  return NativeModules.RNDeviceInfo?.bundleId || 
-         'org.sera.dev.nolimitsera'; // fallback
+  return NativeModules.RNDeviceInfo?.bundleId || 'org.sera.dev.nolimitsera'; // fallback
 }
 
 function getEnvironment(): Environment {
@@ -50,7 +51,7 @@ function getEnvironment(): Environment {
   // Priority 3: Check bundle identifier for release builds
   const bundleId = getBundleId();
   console.log('🔍 Bundle ID detected:', bundleId);
-  
+
   // If bundle ID contains 'staging', use staging environment
   if (bundleId.includes('staging')) {
     return 'staging';
