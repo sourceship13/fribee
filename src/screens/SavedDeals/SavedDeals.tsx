@@ -12,6 +12,7 @@ import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Toolbar from '../../components/Toolbar';
 
 type TabType = 'ready' | 'share' | 'redeemed';
 
@@ -158,16 +159,12 @@ const SavedDealsScreen = ({ navigation }: any) => {
   return (
     <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: colors.background }]}>
-        <Ionicons name="flame-outline" size={28} color="#FF9500" />
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Saved</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Settings')}
-          style={styles.settingsButton}
-        >
-          <Ionicons name="settings-outline" size={24} color="#666" />
-        </TouchableOpacity>
-      </View>
+      <Toolbar
+        title="Saved Deals"
+        onSettings={() => navigation.navigate('Settings')}
+        showSettings
+        showLogo
+      />
 
       {/* Tab Navigation */}
       <View style={styles.tabContainer}>

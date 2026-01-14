@@ -16,6 +16,7 @@ import AnalyticsService from '../../services/analytics.service';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import IconLogo from '../../../assets/imgs/icon_logo.svg';
+import Toolbar from '../../components/Toolbar';
 
 const { width: screenWidth } = Dimensions.get('window');
 const CARD_WIDTH = (screenWidth - 48) / 2;
@@ -299,16 +300,12 @@ const ExploreScreen = ({ navigation }: any) => {
   return (
     <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: colors.background }]}>
-        <IconLogo width={21} height={24} fill="#FF9500" />
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Explore Deals</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Settings')}
-          style={styles.settingsButton}
-        >
-          <Ionicons name="settings-outline" size={24} color={colors.subText} />
-        </TouchableOpacity>
-      </View>
+      <Toolbar
+        title="Explore Deals"
+        onSettings={() => navigation.navigate('Settings')}
+        showSettings
+        showLogo
+      />
 
       {/* Tab View Categories */}
       <View style={[styles.tabContainer, { backgroundColor: colors.background }]}>

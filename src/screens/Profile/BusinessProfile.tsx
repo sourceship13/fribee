@@ -9,6 +9,7 @@ import SettingsIcon from '../../../assets/imgs/settings-icon.svg';
 import ApiService from '../../services/api.service';
 import VersionFooter from '../../components/VersionFooter';
 import * as RNIap from 'react-native-iap';
+import Toolbar from '../../components/Toolbar';
 
 interface BusinessData {
   id: string;
@@ -203,14 +204,13 @@ const BusinessProfile = ({ navigation, route }: any) => {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
-          <IconLogo width={21} height={24} fill="#FF9500" />
-          <Text style={[iOSUIKit.title3Emphasized, { color: colors.title }]}>Business Profile</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={styles.settingsButton}>
-            <SettingsIcon width={24} height={24} color={colors.inactive} />
-          </TouchableOpacity>
-        </View>
+       <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
+        <Toolbar
+        title="Business Profile"
+        onSettings={() => navigation.navigate('Settings')}
+        showSettings
+        showLogo
+      />
         <View style={styles.centerContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
           <Text style={[iOSUIKit.body, { color: colors.textSecondary, marginTop: 16 }]}>
@@ -223,14 +223,13 @@ const BusinessProfile = ({ navigation, route }: any) => {
 
   if (error || !business) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
-          <IconLogo width={21} height={24} fill="#FF9500" />
-          <Text style={[iOSUIKit.title3Emphasized, { color: colors.title }]}>Business Profile</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={styles.settingsButton}>
-            <SettingsIcon width={24} height={24} color={colors.inactive} />
-          </TouchableOpacity>
-        </View>
+    <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
+        <Toolbar
+        title="Business Profile"
+        onSettings={() => navigation.navigate('Settings')}
+        showSettings
+        showLogo
+      />
         <View style={styles.centerContainer}>
           <Icon name="error-outline" size={64} color={colors.error} />
           <Text style={[iOSUIKit.title3, { color: colors.text, marginTop: 16, textAlign: 'center' }]}>
@@ -251,13 +250,12 @@ const BusinessProfile = ({ navigation, route }: any) => {
 
   return (
     <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
-      <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
-        <IconLogo width={21} height={24} fill="#FF9500" />
-        <Text style={[iOSUIKit.title3Emphasized, { color: colors.title }]}>Business Profile</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Settings')} style={styles.settingsButton}>
-          <SettingsIcon width={24} height={24} color={colors.inactive} />
-        </TouchableOpacity>
-      </View>
+        <Toolbar
+        title="Business Profile"
+        onSettings={() => navigation.navigate('Settings')}
+        showSettings
+        showLogo
+      />
       <ScrollView 
         style={{ flex: 1 }} 
         contentContainerStyle={styles.scrollContent}

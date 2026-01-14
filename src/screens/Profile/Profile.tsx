@@ -5,6 +5,7 @@ import { getColors } from '../../libs/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import IconLogo from '../../../assets/imgs/icon_logo.svg';
+import Toolbar from '../../components/Toolbar';
 
 const ProfileScreen = ({ navigation }: any) => {
   const { isDarkMode, user, heartedDeals } = useAuth();
@@ -48,16 +49,12 @@ const ProfileScreen = ({ navigation }: any) => {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={styles.header}>
-        <IconLogo width={21} height={24} fill="#FF9500" />
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Profile</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Settings')}
-          style={styles.settingsButton}
-        >
-          <Ionicons name="settings-outline" size={24} color="#666" />
-        </TouchableOpacity>
-      </View>
+        <Toolbar
+        title="Profile"
+        onSettings={() => navigation.navigate('Settings')}
+        showSettings
+        showLogo
+      />
 
       <ScrollView 
         style={styles.scrollView}
