@@ -1,137 +1,73 @@
 import { Platform } from 'react-native';
-import DeviceDetector from './deviceDetector';
-
-// Environment type
-type Environment = 'local' | 'staging' | 'production';
 
 /**
- * ENVIRONMENT CONFIGURATION GUIDE
+ * API CONFIGURATION
  * 
- * The app will automatically use different API endpoints based on the build type:
+ * Simple environment detection:
+ * - __DEV__ = true (development builds) → Use STAGING by default
+ * - __DEV__ = false (production builds) → Use PRODUCTION
  * 
- * 1. DEVELOPMENT BUILDS (npm run ios, npm run android):
- *    - Uses staging.fribee.io by default
- *    - Set FORCE_LOCAL_DEVELOPMENT = true to use local server instead
- * 
- * 2. PRODUCTION BUILDS (CI/CD, TestFlight, App Store):
- *    - Uses fribee.io (production)
- *    - Detected automatically via __DEV__ = false
- * 
- * 3. MANUAL OVERRIDE:
- *    - FORCE_STAGING_ALWAYS: Set to true to always use staging (ignores all other settings)
- *    - FORCE_LOCAL_DEVELOPMENT: Set to true to use local server in development
- * 
- * Current URLs:
- * - Local: http://192.168.26.21:8080 (or localhost for simulators)
- * - Staging: https://staging.fribee.io
- * - Production: https://fribee.io
+ * Override Flags:
+ * - FORCE_STAGING: Set to true to always use staging (ignores production builds)
+ * - FORCE_LOCAL: Set to true to use local development server
  */
 
-// Detect if running on physical device (not simulator)
-const isPhysicalDevice = (): boolean => {
-  // Enhanced detection using multiple signals
-  if (__DEV__) {
-    // In development, use heuristics to detect physical devices
-    
-    // Android emulators often have these characteristics
-    if (Platform.OS === 'android') {
-      const { constants } = Platform;
-      const isEmulator = (
-        constants?.Brand === 'google' ||
-        constants?.Model?.toLowerCase().includes('sdk') ||
-        constants?.Model?.toLowerCase().includes('emulator') ||
-        constants?.Fingerprint?.includes('generic')
-      );
-      
-    }
-    
-    // iOS: Since metro bundler loaded from network IP (192.168.26.8:8081)
-    // this indicates we're on a physical device, not simulator
-    // For now, let's default to physical device for iOS in dev mode
-    const isLikelyPhysical = true; // Physical devices need network IP for metro
-    
-    
-    return isLikelyPhysical;
-  }
-  
-  return true;
-};
+// ========== CONFIGURATION FLAGS ==========
+const FORCE_STAGING = true;  // Set to false for production builds
+const FORCE_LOCAL = false;    // Set to true to use local server
 
-// Detect if running in CI environment (CircleCI, GitHub Actions, etc.)
-const isCI = (): boolean => {
-  // In React Native, we can't access process.env directly in production builds
-  // But we can use __DEV__ as an indicator - production builds have __DEV__ = false
-  // For CI builds, we'll inject a specific flag during the build process
-  return !__DEV__; // CI builds are always production builds (not dev mode)
-};
-
-const FORCE_PRODUCTION_BUILD = isCI(); // Automatically true in CI/production builds
-
-// Override for testing - can be set via NetworkDebug screen
-let FORCE_PHYSICAL_DEVICE: boolean | null = null;
-
-// Override for development - set to true to use local development server
-// const FORCE_LOCAL_DEVELOPMENT = false; // Set to false to ALWAYS use staging server (recommended)
-
-  // FORCE STAGING: Override everything to use staging (set to true to force staging regardless of device)
-// const FORCE_STAGING_ALWAYS = FORCE_PRODUCTION_BUILD; // Set to true to FORCE staging server for all requests
-
-
-// Override for development - set to true to use local development server
-const FORCE_LOCAL_DEVELOPMENT = false; // Set to false to use cloud server
-
-// FORCE STAGING: Override everything to use staging (set to false to allow production builds)
-const FORCE_STAGING_ALWAYS = !FORCE_PRODUCTION_BUILD; // Staging by default in dev, production in CI builds
-
-// API URLs
+// ========== API URLS ==========
+const LOCAL_URL = 'http://192.168.26.21:8080';
 const STAGING_URL = 'https://staging.fribee.io';
 const PRODUCTION_URL = 'https://fribee.io';
 
-const getEnvironment = (): Environment => {
-  const actuallyPhysical = FORCE_PHYSICAL_DEVICE !== null ? FORCE_PHYSICAL_DEVICE : isPhysicalDevice();
+// ========== ENVIRONMENT DETECTION ==========
+type Environment = 'local' | 'staging' | 'production';
+
+function getEnvironment(): Environment {
+  // Priority 1: Force local (for development)
+  if (FORCE_LOCAL) {
+    return 'local';
+  }
   
-  // HIGHEST PRIORITY: Force staging override (bypasses all other logic)
-  if (FORCE_STAGING_ALWAYS) {
+  // Priority 2: Force staging (for testing)
+  if (FORCE_STAGING) {
     return 'staging';
   }
   
-  // PRODUCTION BUILD: Use production environment
-  if (FORCE_PRODUCTION_BUILD) {
+  // Priority 3: Use production for production builds
+  if (!__DEV__) {
     return 'production';
   }
   
-  // In dev mode, always use local for physical devices
-  if (__DEV__ && actuallyPhysical) {
-    return 'local';
-  }
-  
-  // In dev mode, use local for simulators if FORCE_LOCAL_DEVELOPMENT is true
-  if (__DEV__ && FORCE_LOCAL_DEVELOPMENT) {
-    return 'local';
-  }
-  
-  // Use staging for everything else
+  // Default: staging for development builds
   return 'staging';
-};
+}
 
+function getBaseURL(env: Environment): string {
+  switch (env) {
+    case 'local':
+      return LOCAL_URL;
+    case 'production':
+      return PRODUCTION_URL;
+    case 'staging':
+    default:
+      return STAGING_URL;
+  }
+}
+
+// ========== API CONFIG CLASS ==========
 class ApiConfig {
   private static instance: ApiConfig;
-  
-  private readonly urls = {
-    local: {
-      ios: 'http://192.168.26.21:8080', // Mac's local IP and port for iOS simulator
-      android: 'http://10.0.2.2:8080', // Android emulator localhost
-      physical: 'http://192.168.26.21:8080', // Mac's local IP for physical device
-    },
-    staging: STAGING_URL,
-    production: PRODUCTION_URL,
-  };
-  
-  // Store the environment
-  private currentEnv: Environment = getEnvironment();
+  private env: Environment;
   
   private constructor() {
-    this.currentEnv = getEnvironment();
+    this.env = getEnvironment();
+    console.log('🌐 API Config:', {
+      environment: this.env,
+      baseURL: this.baseURL,
+      isDev: __DEV__,
+    });
   }
   
   static getInstance(): ApiConfig {
@@ -141,111 +77,40 @@ class ApiConfig {
     return ApiConfig.instance;
   }
   
-  // Method to manually override environment (useful for testing)
-  setEnvironment(env: Environment): void {
+  get environment(): Environment {
+    return this.env;
   }
   
   get baseURL(): string {
-    const physicalDevice = isPhysicalDevice();
-    switch (this.currentEnv) {
-      case 'local':
-        // Smart local URL selection based on device type
-        if (physicalDevice) {
-          return this.urls.local.physical;
-        } else {
-          // Simulators use standard localhost
-          if (Platform.OS === 'ios') {
-            return this.urls.local.ios;
-          } else {
-            return this.urls.local.android;
-          }
-        }
-      case 'production':
-        return this.urls.production;
-      case 'staging':
-      default:
-        return this.urls.staging;
-    }
+    return getBaseURL(this.env);
   }
   
   get apiURL(): string {
     return `${this.baseURL}/api`;
   }
   
-  get environment(): Environment {
-    return this.currentEnv;
-  }
-  
-  // Helper to check if we're using local server
   get isLocal(): boolean {
-    return this.currentEnv === 'local';
+    return this.env === 'local';
   }
   
-  // Helper to get all configured URLs (for debugging)
-  get allUrls() {
-    return {
-      local_ios: this.urls.local.ios,
-      local_android: this.urls.local.android,
-      local_physical: this.urls.local.physical,
-      staging: this.urls.staging,
-      production: this.urls.production,
-    };
+  get isStaging(): boolean {
+    return this.env === 'staging';
+  }
+  
+  get isProduction(): boolean {
+    return this.env === 'production';
   }
 }
 
-// Create and export singleton instance
+// ========== EXPORTS ==========
 export const apiConfig = ApiConfig.getInstance();
 export default apiConfig;
 
-
-// Export helper function to switch environments during runtime (useful for testing)
-export const switchEnvironment = (env: Environment) => {
-  apiConfig.setEnvironment(env);
-};
-
-// Export helper to force physical device detection (for testing)
-export const forcePhysicalDevice = (isPhysical: boolean | null) => {
-  // Only allow this if FORCE_STAGING_ALWAYS is false
-  // (implementation placeholder)
-  // Refresh the configuration
-  const newEnv = getEnvironment();
-  apiConfig.setEnvironment(newEnv);
-};
-
-// Export helper to verify current configuration
-export const getCurrentConfig = () => {
-  return {
-    environment: apiConfig.environment,
-    baseURL: apiConfig.baseURL,
-    apiURL: apiConfig.apiURL,
-    isStaging: apiConfig.environment === 'staging'
-  };
-};
-
-// Export helper to force complete configuration refresh
-export const forceCompleteConfigRefresh = () => {
-  // Reset all overrides
-  FORCE_PHYSICAL_DEVICE = null;
-  // Force re-evaluation of environment
-  const newEnv = getEnvironment();
-  // Update the singleton instance
-  apiConfig.setEnvironment(newEnv);
-  // Double check no local IPs are being used
-  if (apiConfig.baseURL.includes('192.168') || apiConfig.baseURL.includes('localhost')) {
-    console.error('🚨 ERROR: Still using local IP! Base URL:', apiConfig.baseURL);
-  }
-  // Log the results
-  getCurrentConfig();
-  return apiConfig;
-};
-
-// Export helper to get current detection status
-export const getDeviceDetectionStatus = () => {
-  return {
-    forced: FORCE_PHYSICAL_DEVICE,
-    detected: isPhysicalDevice(),
-    final: FORCE_PHYSICAL_DEVICE !== null ? FORCE_PHYSICAL_DEVICE : isPhysicalDevice(),
-    environment: apiConfig.environment,
-    baseURL: apiConfig.baseURL
-  };
-};
+// Helper to get current config (for debugging)
+export const getCurrentConfig = () => ({
+  environment: apiConfig.environment,
+  baseURL: apiConfig.baseURL,
+  apiURL: apiConfig.apiURL,
+  isStaging: apiConfig.isStaging,
+  isProduction: apiConfig.isProduction,
+});
