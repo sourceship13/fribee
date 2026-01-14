@@ -13,7 +13,7 @@ interface ApiResponse<T = any> {
 class ApiService {
   
   private get baseURL() {
-    return ApiConfig.apiURL;
+    return apiConfig.apiURL;
   }
 
   private publicEndpoints = [

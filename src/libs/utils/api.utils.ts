@@ -13,7 +13,7 @@ import { Platform } from 'react-native';
  */
 
 // ========== CONFIGURATION FLAGS ==========
-const FORCE_STAGING = true;  // Set to false for production builds
+const FORCE_STAGING = false;  // Set to true only for local testing
 const FORCE_LOCAL = false;    // Set to true to use local server
 
 // ========== API URLS ==========
