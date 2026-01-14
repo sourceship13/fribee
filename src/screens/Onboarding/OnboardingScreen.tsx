@@ -73,12 +73,12 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   const handleSkip = async () => {
     await markOnboardingAsComplete();
-    navigation.replace('SignIn');
+    navigation.replace('WelcomeScreen');
   };
 
   const handleGetStarted = async () => {
     await markOnboardingAsComplete();
-    navigation.replace('SignIn');
+    navigation.replace('WelcomeScreen');
   };
 
   const handleScroll = Animated.event(
@@ -131,13 +131,13 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       )}
       <View style={{ alignItems: 'center', marginVertical: 20 }}>
         {/* <FribeeLogo width={120} height={120} /> */}
-            <View style={{ alignItems: 'center' }}>
-              <Image 
-                source={FribeeLogoPNG} 
-                style={{ width: 120, height: 120, marginTop: 20 }}
-                resizeMode="contain"
-              />
-            </View>
+        <View style={{ alignItems: 'center' }}>
+          <Image
+            source={FribeeLogoPNG}
+            style={{ width: 120, height: 120, marginTop: 20 }}
+            resizeMode="contain"
+          />
+        </View>
       </View>
 
       {/* Slides FlatList */}
