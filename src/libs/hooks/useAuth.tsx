@@ -441,7 +441,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       // Load onboarding status
       const hasSeenOnboarding = await AsyncStorage.getItem('@has_seen_onboarding');
-      setHasSeenOnboarding(hasSeenOnboarding === 'true');
+      const showOnboardingAgain = await AsyncStorage.getItem('showOnboardingAgain');
+      
+      // Show onboarding if: never seen it OR user wants to see it again
+      const shouldShowOnboarding = hasSeenOnboarding !== 'true' || showOnboardingAgain === 'true';
+      setHasSeenOnboarding(!shouldShowOnboarding);
+      
+      // Reset the flag after checking (so it shows once per app launch if user chose "Yes")
+      if (showOnboardingAgain === 'true') {
+        await AsyncStorage.setItem('showOnboardingAgain', 'false');
+      }
       
       // Load category preferences
       const savedCategories = await AsyncStorage.getItem('categories');
