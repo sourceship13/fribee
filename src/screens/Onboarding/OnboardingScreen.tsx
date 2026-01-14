@@ -10,10 +10,12 @@ import {
   SafeAreaView,
   Platform,
   Image,
+  Modal,
 } from 'react-native';
 import { iOSUIKit } from 'react-native-typography';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import FribeeLogo from '../../../assets/imgs/fribee-logo.svg';
 const FribeeLogoPNG = require('../../../assets/imgs/fribee-logo.png');
 
@@ -59,6 +61,7 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const colors = getColors(isDarkMode);
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showSkipModal, setShowSkipModal] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
 
@@ -71,14 +74,26 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     }
   };
 
-  const handleSkip = async () => {
+  const handleSkip = () => {
+    setShowSkipModal(true);
+  };
+
+  const handleSkipConfirm = async (showAgain: boolean) => {
+    // Save preference to AsyncStorage
+    await AsyncStorage.setItem(
+      'showOnboardingAgain',
+      JSON.stringify(showAgain),
+    );
+    setShowSkipModal(false);
     await markOnboardingAsComplete();
-    navigation.replace('WelcomeScreen');
+    navigation.replace('Welcome');
   };
 
   const handleGetStarted = async () => {
+    // Mark onboarding as complete and don't show again
+    await AsyncStorage.setItem('showOnboardingAgain', JSON.stringify(false));
     await markOnboardingAsComplete();
-    navigation.replace('WelcomeScreen');
+    navigation.replace('Welcome');
   };
 
   const handleScroll = Animated.event(
@@ -218,6 +233,90 @@ const OnboardingScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           </TouchableOpacity>
         )}
       </View>
+
+      {/* Skip Modal */}
+      <Modal
+        visible={showSkipModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowSkipModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View
+            style={[
+              styles.modalContainer,
+              { backgroundColor: colors.background },
+            ]}
+          >
+            <View
+              style={[
+                styles.modalIconContainer,
+                { backgroundColor: colors.primary + '20' },
+              ]}
+            >
+              <MaterialIcons
+                name="info-outline"
+                size={48}
+                color={colors.primary}
+              />
+            </View>
+
+            <Text style={[styles.modalTitle, { color: colors.text }]}>
+              Skip Intro?
+            </Text>
+
+            <Text
+              style={[styles.modalDescription, { color: colors.textSecondary }]}
+            >
+              Would you like to see this intro again next time you open the app?
+            </Text>
+
+            <View style={styles.modalButtonContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.modalButton,
+                  styles.modalButtonSecondary,
+                  { borderColor: colors.border },
+                ]}
+                onPress={() => handleSkipConfirm(false)}
+              >
+                <Text style={[styles.modalButtonText, { color: colors.text }]}>
+                  No, Don't Show Again
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[
+                  styles.modalButton,
+                  styles.modalButtonPrimary,
+                  { backgroundColor: colors.primary },
+                ]}
+                onPress={() => handleSkipConfirm(true)}
+              >
+                <Text
+                  style={[styles.modalButtonText, { color: colors.background }]}
+                >
+                  Yes, Show Again
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+              style={styles.modalCancelButton}
+              onPress={() => setShowSkipModal(false)}
+            >
+              <Text
+                style={[
+                  styles.modalCancelText,
+                  { color: colors.textSecondary },
+                ]}
+              >
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -299,6 +398,79 @@ const styles = StyleSheet.create({
     iOSUIKit.callout,
     {
       fontWeight: '600',
+    },
+  ]),
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: '85%',
+    borderRadius: 20,
+    padding: 24,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  modalIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: StyleSheet.flatten([
+    iOSUIKit.title3Emphasized,
+    {
+      textAlign: 'center',
+      marginBottom: 12,
+    },
+  ]),
+  modalDescription: StyleSheet.flatten([
+    iOSUIKit.callout,
+    {
+      textAlign: 'center',
+      lineHeight: 22,
+      marginBottom: 24,
+    },
+  ]),
+  modalButtonContainer: {
+    width: '100%',
+    gap: 12,
+  },
+  modalButton: {
+    width: '100%',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  modalButtonPrimary: {
+    // backgroundColor set dynamically
+  },
+  modalButtonSecondary: {
+    borderWidth: 2,
+  },
+  modalButtonText: StyleSheet.flatten([
+    iOSUIKit.callout,
+    {
+      fontWeight: '600',
+    },
+  ]),
+  modalCancelButton: {
+    marginTop: 12,
+    paddingVertical: 8,
+  },
+  modalCancelText: StyleSheet.flatten([
+    iOSUIKit.callout,
+    {
+      fontWeight: '500',
     },
   ]),
 });
