@@ -44,7 +44,10 @@ const ExploreScreen = ({ navigation }: any) => {
       : availableCategories.filter(cat => categories[cat.slug]);
 
   // Add "All" tab at the beginning
-  const tabCategories = [{ id: 'all', name: 'All', slug: null }, ...activeCategories];
+  const tabCategories = [
+    { id: 'all', name: 'All', slug: null },
+    ...activeCategories,
+  ];
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +64,7 @@ const ExploreScreen = ({ navigation }: any) => {
       if (heartedDealIds.has(deal.id || deal.deal_id)) {
         return false;
       }
-      
+
       // Match category name (case insensitive)
       const dealCategory = (deal.category_name || '').toLowerCase();
       return dealCategory === categoryName.toLowerCase();
@@ -77,7 +80,7 @@ const ExploreScreen = ({ navigation }: any) => {
           if (!deal.category_name) {
             return true;
           }
-          
+
           // Find which category this deal belongs to
           const dealCategory = (deal.category_name || '').toLowerCase();
           const matchingCategory = availableCategories.find(
@@ -103,12 +106,12 @@ const ExploreScreen = ({ navigation }: any) => {
         const selectedCat = availableCategories.find(
           cat => cat.slug === selectedCategory,
         );
-        
+
         // If deal has no category, don't show it when filtering by specific category
         if (!deal.category_name) {
           return false;
         }
-        
+
         return selectedCat && dealCategory === selectedCat.name.toLowerCase();
       })
     : unheartedDeals;
@@ -148,7 +151,9 @@ const ExploreScreen = ({ navigation }: any) => {
         activeOpacity={0.9}
       >
         {/* Deal Image Container */}
-        <View style={[styles.imageContainer, { backgroundColor: colors.surface }]}>
+        <View
+          style={[styles.imageContainer, { backgroundColor: colors.surface }]}
+        >
           {getDealImageUrl(item) ? (
             <Image
               source={{ uri: getDealImageUrl(item)! }}
@@ -156,26 +161,39 @@ const ExploreScreen = ({ navigation }: any) => {
               resizeMode="cover"
             />
           ) : (
-            <View style={[styles.emojiContainer, { backgroundColor: colors.surface }]}>
+            <View
+              style={[
+                styles.emojiContainer,
+                { backgroundColor: colors.surface },
+              ]}
+            >
               <Text style={styles.itemImage}>
                 {getCategoryEmoji(item.category_name)}
               </Text>
             </View>
           )}
-          
+
           {/* Heart Button */}
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.heartButton, { backgroundColor: colors.background }]}
             onPress={() => toggleHeartDeal(item.id || item.deal_id)}
             activeOpacity={0.7}
           >
-            <MaterialIcons 
-              name={isDealHearted(item.id || item.deal_id) ? "favorite" : "favorite-border"} 
-              size={20} 
-              color={isDealHearted(item.id || item.deal_id) ? "#FF3B30" : colors.subText} 
+            <MaterialIcons
+              name={
+                isDealHearted(item.id || item.deal_id)
+                  ? 'favorite'
+                  : 'favorite-border'
+              }
+              size={20}
+              color={
+                isDealHearted(item.id || item.deal_id)
+                  ? '#FF3B30'
+                  : colors.subText
+              }
             />
           </TouchableOpacity>
-          
+
           {/* Badge */}
           {isPremium ? (
             <View style={styles.premiumBadge}>
@@ -187,7 +205,7 @@ const ExploreScreen = ({ navigation }: any) => {
             </View>
           ) : null}
         </View>
-        
+
         {/* Deal Info */}
         <View style={styles.cardContent}>
           <Text
@@ -209,8 +227,6 @@ const ExploreScreen = ({ navigation }: any) => {
       </TouchableOpacity>
     );
   };
-
-
 
   // Get the best available deal image URL (DEAL-SPECIFIC images only, matching DealDetail logic)
   const getDealImageUrl = (deal: any): string | null => {
@@ -241,7 +257,7 @@ const ExploreScreen = ({ navigation }: any) => {
       typeof deal_image_url === 'string' &&
       deal_image_url.trim().length > 0
     ) {
-  return deal_image_url;
+      return deal_image_url;
     }
 
     // 3. Generic image URL (might be deal-specific)
@@ -250,7 +266,7 @@ const ExploreScreen = ({ navigation }: any) => {
       typeof image_url === 'string' &&
       image_url.trim().length > 0
     ) {
-  return image_url;
+      return image_url;
     }
 
     // 4. Generic images array (could be strings or objects)
@@ -298,7 +314,9 @@ const ExploreScreen = ({ navigation }: any) => {
   };
 
   return (
-    <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
+    <View
+      style={[styles.screenContainer, { backgroundColor: colors.background }]}
+    >
       {/* Header */}
       <Toolbar
         title="Explore Deals"
@@ -308,7 +326,9 @@ const ExploreScreen = ({ navigation }: any) => {
       />
 
       {/* Tab View Categories */}
-      <View style={[styles.tabContainer, { backgroundColor: colors.background }]}>
+      <View
+        style={[styles.tabContainer, { backgroundColor: colors.background }]}
+      >
         <ScrollView
           ref={tabScrollRef}
           horizontal
@@ -351,7 +371,9 @@ const ExploreScreen = ({ navigation }: any) => {
             );
           })}
         </ScrollView>
-        <View style={[styles.tabBottomLine, { backgroundColor: colors.border }]} />
+        <View
+          style={[styles.tabBottomLine, { backgroundColor: colors.border }]}
+        />
       </View>
 
       {/* Deals Grid */}
@@ -396,7 +418,8 @@ const ExploreScreen = ({ navigation }: any) => {
           <FlatList
             data={sortedDeals}
             keyExtractor={(item, index) => {
-              const baseKey = item.id?.toString() || `${item.business_name}-${index}`;
+              const baseKey =
+                item.id?.toString() || `${item.business_name}-${index}`;
               return `deal-${baseKey}-${index}`;
             }}
             numColumns={2}

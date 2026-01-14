@@ -323,7 +323,8 @@ const SwipeScreen = ({ navigation }: any) => {
                 style={[
                   styles.thirdDealImage,
                   {
-                    backgroundColor: thirdDeal.backgroundColor || colors.primary,
+                    backgroundColor:
+                      thirdDeal.backgroundColor || colors.primary,
                   },
                 ]}
               >

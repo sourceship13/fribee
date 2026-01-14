@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, ActivityIndicator, Platform, Linking, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  Platform,
+  Linking,
+  Alert,
+} from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import { iOSUIKit } from 'react-native-typography';
@@ -50,7 +61,7 @@ const BusinessProfile = ({ navigation, route }: any) => {
   const loadBusinessData = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // If viewing a specific business (businessId provided), fetch from API
       if (businessId) {
@@ -60,12 +71,16 @@ const BusinessProfile = ({ navigation, route }: any) => {
         } else {
           setError(response.message || 'Failed to load business profile');
         }
-      } 
+      }
       // Otherwise, use the userBusiness from context (already fetched with deals)
-      else if (userBusiness && Array.isArray(userBusiness) && userBusiness.length > 0) {
+      else if (
+        userBusiness &&
+        Array.isArray(userBusiness) &&
+        userBusiness.length > 0
+      ) {
         // userBusiness is an array, get the first business (primary business)
         const primaryBusiness = userBusiness[0];
-        
+
         // Map the API response structure to BusinessData interface
         const mappedBusiness: BusinessData = {
           id: primaryBusiness.businessId,
@@ -77,20 +92,26 @@ const BusinessProfile = ({ navigation, route }: any) => {
           country: primaryBusiness.country || '',
           phoneNumber: primaryBusiness.phoneNumber || '',
           websiteUrl: primaryBusiness.websiteUrl,
-          logoUrl: primaryBusiness.images?.logo || primaryBusiness.logoUrl || '',
+          logoUrl:
+            primaryBusiness.images?.logo || primaryBusiness.logoUrl || '',
           coverImageUrl: primaryBusiness.images?.coverImage,
-          businessImages: primaryBusiness.images?.businessImages || primaryBusiness.businessImages || [],
+          businessImages:
+            primaryBusiness.images?.businessImages ||
+            primaryBusiness.businessImages ||
+            [],
         };
-        
+
         console.log('📸 Business Images:', mappedBusiness.businessImages);
-        
+
         setBusiness(mappedBusiness);
       } else {
         setError('No business profile available');
       }
     } catch (err: any) {
       console.error('Error loading business profile:', err);
-      setError(err.message || 'An error occurred while loading the business profile');
+      setError(
+        err.message || 'An error occurred while loading the business profile',
+      );
     } finally {
       setIsLoading(false);
     }
@@ -111,19 +132,30 @@ const BusinessProfile = ({ navigation, route }: any) => {
   const formatPhoneNumber = (phoneNumber: string): string => {
     // Remove all non-numeric characters
     const cleaned = phoneNumber.replace(/\D/g, '');
-    
+
     // Check if it's a US/Canada number (10 digits) or international
     if (cleaned.length === 10) {
       // Format as (XXX) XXX-XXXX
-      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
+      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(
+        6,
+      )}`;
     } else if (cleaned.length === 11 && cleaned.startsWith('1')) {
       // Format as +1 (XXX) XXX-XXXX
-      return `+1 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
+      return `+1 (${cleaned.slice(1, 4)}) ${cleaned.slice(
+        4,
+        7,
+      )}-${cleaned.slice(7)}`;
     } else if (cleaned.length > 10) {
       // International format: show first few digits with spaces
-      return `+${cleaned.slice(0, cleaned.length - 10)} ${cleaned.slice(cleaned.length - 10, cleaned.length - 7)} ${cleaned.slice(cleaned.length - 7, cleaned.length - 4)} ${cleaned.slice(cleaned.length - 4)}`;
+      return `+${cleaned.slice(0, cleaned.length - 10)} ${cleaned.slice(
+        cleaned.length - 10,
+        cleaned.length - 7,
+      )} ${cleaned.slice(
+        cleaned.length - 7,
+        cleaned.length - 4,
+      )} ${cleaned.slice(cleaned.length - 4)}`;
     }
-    
+
     // Return original if format doesn't match
     return phoneNumber;
   };
@@ -141,40 +173,49 @@ const BusinessProfile = ({ navigation, route }: any) => {
               try {
                 console.log('🧹 Starting to clear stuck purchases...');
                 await RNIap.initConnection();
-                
+
                 const purchases = await RNIap.getAvailablePurchases();
                 console.log('📦 Found purchases:', purchases.length);
-                
+
                 if (purchases.length === 0) {
                   Alert.alert('No Purchases', 'No stuck purchases found.');
                   return;
                 }
-                
+
                 for (const purchase of purchases) {
-                  console.log('🔄 Consuming:', purchase.productId, purchase.purchaseToken);
-                  
-                  await RNIap.finishTransaction({ 
-                    purchase, 
-                    isConsumable: true 
+                  console.log(
+                    '🔄 Consuming:',
+                    purchase.productId,
+                    purchase.purchaseToken,
+                  );
+
+                  await RNIap.finishTransaction({
+                    purchase,
+                    isConsumable: true,
                   });
-                  
+
                   if (Platform.OS === 'android') {
                     await RNIap.consumePurchaseAndroid(purchase.purchaseToken);
                   }
-                  
+
                   console.log('✅ Done consuming:', purchase.productId);
                 }
-                
+
                 console.log('✅ All stuck purchases cleared!');
-                Alert.alert('Success', `Cleared ${purchases.length} stuck purchase(s)`);
-                
+                Alert.alert(
+                  'Success',
+                  `Cleared ${purchases.length} stuck purchase(s)`,
+                );
               } catch (error: any) {
                 console.error('❌ Error clearing purchases:', error);
-                Alert.alert('Error', `Failed to clear purchases: ${error.message}`);
+                Alert.alert(
+                  'Error',
+                  `Failed to clear purchases: ${error.message}`,
+                );
               }
-            }
-          }
-        ]
+            },
+          },
+        ],
       );
     } catch (error: any) {
       console.error('❌ Error:', error);
@@ -182,13 +223,28 @@ const BusinessProfile = ({ navigation, route }: any) => {
     }
   };
 
-  const InfoRow = ({ icon, label, value, onPress }: { icon: string; label: string; value: string; onPress?: () => void }) => (
-    <TouchableOpacity 
-      style={styles.infoRow} 
+  const InfoRow = ({
+    icon,
+    label,
+    value,
+    onPress,
+  }: {
+    icon: string;
+    label: string;
+    value: string;
+    onPress?: () => void;
+  }) => (
+    <TouchableOpacity
+      style={styles.infoRow}
       onPress={onPress}
       disabled={!onPress}
     >
-      <View style={[styles.infoIconContainer, { backgroundColor: colors.primary + '15' }]}>
+      <View
+        style={[
+          styles.infoIconContainer,
+          { backgroundColor: colors.primary + '15' },
+        ]}
+      >
         <Icon name={icon} size={18} color={colors.primary} />
       </View>
       <View style={styles.infoContent}>
@@ -204,16 +260,23 @@ const BusinessProfile = ({ navigation, route }: any) => {
 
   if (isLoading) {
     return (
-       <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
+      <View
+        style={[styles.screenContainer, { backgroundColor: colors.background }]}
+      >
         <Toolbar
-        title="Business Profile"
-        onSettings={() => navigation.navigate('Settings')}
-        showSettings
-        showLogo
-      />
+          title="Business Profile"
+          onSettings={() => navigation.navigate('Settings')}
+          showSettings
+          showLogo
+        />
         <View style={styles.centerContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
-          <Text style={[iOSUIKit.body, { color: colors.textSecondary, marginTop: 16 }]}>
+          <Text
+            style={[
+              iOSUIKit.body,
+              { color: colors.textSecondary, marginTop: 16 },
+            ]}
+          >
             Loading business profile...
           </Text>
         </View>
@@ -223,23 +286,35 @@ const BusinessProfile = ({ navigation, route }: any) => {
 
   if (error || !business) {
     return (
-    <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
+      <View
+        style={[styles.screenContainer, { backgroundColor: colors.background }]}
+      >
         <Toolbar
-        title="Business Profile"
-        onSettings={() => navigation.navigate('Settings')}
-        showSettings
-        showLogo
-      />
+          title="Business Profile"
+          onSettings={() => navigation.navigate('Settings')}
+          showSettings
+          showLogo
+        />
         <View style={styles.centerContainer}>
           <Icon name="error-outline" size={64} color={colors.error} />
-          <Text style={[iOSUIKit.title3, { color: colors.text, marginTop: 16, textAlign: 'center' }]}>
+          <Text
+            style={[
+              iOSUIKit.title3,
+              { color: colors.text, marginTop: 16, textAlign: 'center' },
+            ]}
+          >
             {error || 'Business not found'}
           </Text>
           <TouchableOpacity
             style={[styles.retryButton, { backgroundColor: colors.primary }]}
             onPress={loadBusinessData}
           >
-            <Text style={[iOSUIKit.body, { color: colors.background, fontWeight: '600' }]}>
+            <Text
+              style={[
+                iOSUIKit.body,
+                { color: colors.background, fontWeight: '600' },
+              ]}
+            >
               Try Again
             </Text>
           </TouchableOpacity>
@@ -249,22 +324,32 @@ const BusinessProfile = ({ navigation, route }: any) => {
   }
 
   return (
-    <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
-        <Toolbar
+    <View
+      style={[styles.screenContainer, { backgroundColor: colors.background }]}
+    >
+      <Toolbar
         title="Business Profile"
         onSettings={() => navigation.navigate('Settings')}
         showSettings
         showLogo
       />
-      <ScrollView 
-        style={{ flex: 1 }} 
+      <ScrollView
+        style={{ flex: 1 }}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {/* Profile Section */}
         <View style={styles.profileSection}>
           {/* Logo Circle */}
-          <View style={[styles.logoCircle, { backgroundColor: colors.primary + '15', borderColor: colors.primary }]}>
+          <View
+            style={[
+              styles.logoCircle,
+              {
+                backgroundColor: colors.primary + '15',
+                borderColor: colors.primary,
+              },
+            ]}
+          >
             {business.logoUrl ? (
               <Image
                 source={{ uri: business.logoUrl }}
@@ -275,18 +360,32 @@ const BusinessProfile = ({ navigation, route }: any) => {
               <Icon name="person" size={48} color={colors.primary} />
             )}
           </View>
-          
+
           {/* Business Name with Verified Badge */}
           <View style={styles.businessNameContainer}>
             <Text style={[iOSUIKit.title3Emphasized, { color: colors.text }]}>
               {business.businessName}
             </Text>
-            <Icon name="verified" size={18} color="#0095f6" style={{ marginLeft: 6 }} />
+            <Icon
+              name="verified"
+              size={18}
+              color="#0095f6"
+              style={{ marginLeft: 6 }}
+            />
           </View>
 
           {/* Description */}
           {business.description && (
-            <Text style={[iOSUIKit.subhead, { color: colors.textSecondary, marginTop: 4, textAlign: 'center' }]}>
+            <Text
+              style={[
+                iOSUIKit.subhead,
+                {
+                  color: colors.textSecondary,
+                  marginTop: 4,
+                  textAlign: 'center',
+                },
+              ]}
+            >
               {business.description}
             </Text>
           )}
@@ -294,9 +393,16 @@ const BusinessProfile = ({ navigation, route }: any) => {
           {/* Business Deals Button */}
           <TouchableOpacity
             style={styles.businessDealsButton}
-            onPress={() => navigation.navigate('BusinessDeals', { businessId: business.id })}
+            onPress={() =>
+              navigation.navigate('BusinessDeals', { businessId: business.id })
+            }
           >
-            <Icon name="edit" size={18} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Icon
+              name="edit"
+              size={18}
+              color="#FFFFFF"
+              style={{ marginRight: 8 }}
+            />
             <Text style={[iOSUIKit.bodyEmphasized, { color: '#FFFFFF' }]}>
               Business Deals
             </Text>
@@ -306,52 +412,80 @@ const BusinessProfile = ({ navigation, route }: any) => {
         {/* Debug: Clear Stuck Purchases Button */}
         {Platform.OS === 'android' && (
           <TouchableOpacity
-            style={[styles.debugButton, { backgroundColor: '#FFA500', marginTop: 12 }]}
+            style={[
+              styles.debugButton,
+              { backgroundColor: '#FFA500', marginTop: 12 },
+            ]}
             onPress={clearStuckPurchases}
           >
-            <Icon name="clean-hands" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
-            <Text style={[iOSUIKit.body, { color: '#FFFFFF', fontWeight: '600' }]}>
+            <Icon
+              name="clean-hands"
+              size={20}
+              color="#FFFFFF"
+              style={{ marginRight: 8 }}
+            />
+            <Text
+              style={[iOSUIKit.body, { color: '#FFFFFF', fontWeight: '600' }]}
+            >
               Clear Stuck Purchases (Debug)
             </Text>
           </TouchableOpacity>
         )}
 
         {/* Contact Information Card */}
-        <View style={[styles.contactCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
-          <InfoRow 
-            icon="phone" 
-            label="Phone Number" 
-            value={business.phoneNumber ? formatPhoneNumber(business.phoneNumber) : 'Not provided'}
+        <View
+          style={[
+            styles.contactCard,
+            { backgroundColor: colors.background, borderColor: colors.border },
+          ]}
+        >
+          <InfoRow
+            icon="phone"
+            label="Phone Number"
+            value={
+              business.phoneNumber
+                ? formatPhoneNumber(business.phoneNumber)
+                : 'Not provided'
+            }
             onPress={business.phoneNumber ? handlePhonePress : undefined}
           />
-          
-          <InfoRow 
-            icon="language" 
-            label="Website" 
+
+          <InfoRow
+            icon="language"
+            label="Website"
             value={business.websiteUrl || 'Not provided'}
             onPress={business.websiteUrl ? handleWebsitePress : undefined}
           />
-          
-          <InfoRow 
-            icon="location-on" 
-            label="Address" 
-            value={`${business.address}${business.city ? ', ' + business.city : ''}${business.state ? ', ' + business.state : ''}${business.country ? ', ' + business.country : ''}`}
+
+          <InfoRow
+            icon="location-on"
+            label="Address"
+            value={`${business.address}${
+              business.city ? ', ' + business.city : ''
+            }${business.state ? ', ' + business.state : ''}${
+              business.country ? ', ' + business.country : ''
+            }`}
           />
         </View>
 
         {/* Business Photos Section */}
         {business.businessImages && business.businessImages.length > 0 && (
           <View style={styles.photosSection}>
-            <Text style={[iOSUIKit.title3Emphasized, { color: colors.text, marginBottom: 16, paddingHorizontal: 16 }]}>
+            <Text
+              style={[
+                iOSUIKit.title3Emphasized,
+                { color: colors.text, marginBottom: 16, paddingHorizontal: 16 },
+              ]}
+            >
               Business Photos
             </Text>
-            
-            <ScrollView 
-              horizontal 
+
+            <ScrollView
+              horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.photosScrollContent}
             >
-              {business.businessImages.map((image) => (
+              {business.businessImages.map(image => (
                 <View key={image.id} style={styles.photoContainer}>
                   <Image
                     source={{ uri: image.url }}
@@ -370,17 +504,33 @@ const BusinessProfile = ({ navigation, route }: any) => {
             style={[styles.actionButton, styles.primaryButton]}
             onPress={() => navigation.navigate('BusinessDeals')}
           >
-            <Icon name="local-offer" size={18} color="#FFFFFF" style={{ marginRight: 8 }} />
+            <Icon
+              name="local-offer"
+              size={18}
+              color="#FFFFFF"
+              style={{ marginRight: 8 }}
+            />
             <Text style={[iOSUIKit.bodyEmphasized, { color: '#FFFFFF' }]}>
               View My Deals
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.actionButton, styles.outlineButton, { borderColor: colors.text }]}
-            onPress={() => navigation.navigate('EditBusiness', { businessId: business.id })}
+            style={[
+              styles.actionButton,
+              styles.outlineButton,
+              { borderColor: colors.text },
+            ]}
+            onPress={() =>
+              navigation.navigate('EditBusiness', { businessId: business.id })
+            }
           >
-            <Icon name="edit" size={18} color={colors.text} style={{ marginRight: 8 }} />
+            <Icon
+              name="edit"
+              size={18}
+              color={colors.text}
+              style={{ marginRight: 8 }}
+            />
             <Text style={[iOSUIKit.bodyEmphasized, { color: colors.text }]}>
               Edit Profile
             </Text>

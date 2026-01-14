@@ -17,29 +17,40 @@ import Toolbar from '../../components/Toolbar';
 type TabType = 'ready' | 'share' | 'redeemed';
 
 const SavedDealsScreen = ({ navigation }: any) => {
-  const { isDarkMode, deals, heartedDeals, isDealHearted, toggleHeartDeal } = useAuth();
+  const { isDarkMode, deals, heartedDeals, isDealHearted, toggleHeartDeal } =
+    useAuth();
   const colors = getColors(isDarkMode);
   const [activeTab, setActiveTab] = useState<TabType>('ready');
 
   // Build a list of full deal objects for hearted deals
-  const heartedDealIds = new Set((heartedDeals || []).map(d => d.deal_id || d.id));
-  const allSavedDeals = deals.filter(deal => heartedDealIds.has(deal.id || deal.deal_id));
+  const heartedDealIds = new Set(
+    (heartedDeals || []).map(d => d.deal_id || d.id),
+  );
+  const allSavedDeals = deals.filter(deal =>
+    heartedDealIds.has(deal.id || deal.deal_id),
+  );
 
   // Filter deals by status
   const readyToRedeemDeals = allSavedDeals.filter(
-    deal => deal.redemption_status && deal.redemption_status.toLowerCase() === 'ready to redeem'
+    deal =>
+      deal.redemption_status &&
+      deal.redemption_status.toLowerCase() === 'ready to redeem',
   );
 
   const redeemedDeals = allSavedDeals.filter(
-    deal => deal.redemption_status && deal.redemption_status.toLowerCase() === 'redeemed'
+    deal =>
+      deal.redemption_status &&
+      deal.redemption_status.toLowerCase() === 'redeemed',
   );
 
   const shareMoreDeals = allSavedDeals.filter(deal => {
     if (!deal.redemption_status) return true; // Newly hearted
     const status = deal.redemption_status.toLowerCase();
-    return status === 'almost there, a few more shares!' || 
-           status === 'not enough shares' ||
-           status === '';
+    return (
+      status === 'almost there, a few more shares!' ||
+      status === 'not enough shares' ||
+      status === ''
+    );
   });
 
   // Get current tab's deals
@@ -63,7 +74,10 @@ const SavedDealsScreen = ({ navigation }: any) => {
     }
     if (deal.deal_image_url) return deal.deal_image_url;
     if (deal.image_url) return deal.image_url;
-    if (deal.business_images?.length > 0 && deal.business_images[0]?.image_url) {
+    if (
+      deal.business_images?.length > 0 &&
+      deal.business_images[0]?.image_url
+    ) {
       return deal.business_images[0].image_url;
     }
     return null;
@@ -71,7 +85,8 @@ const SavedDealsScreen = ({ navigation }: any) => {
 
   const renderDealCard = ({ item }: { item: any }) => {
     const imageUrl = getDealImageUrl(item);
-    const isPremium = item.is_premium === true || item.is_premium_business === true;
+    const isPremium =
+      item.is_premium === true || item.is_premium_business === true;
     const isFeatured = item.priority_score && item.priority_score > 0;
     const currentShares = item.current_shares || item.shares_count || 0;
     const requiredShares = item.min_shares_required || 3;
@@ -83,22 +98,32 @@ const SavedDealsScreen = ({ navigation }: any) => {
         {/* Image Section */}
         <View style={styles.cardImageContainer}>
           {imageUrl ? (
-            <Image source={{ uri: imageUrl }} style={styles.cardImage} resizeMode="cover" />
+            <Image
+              source={{ uri: imageUrl }}
+              style={styles.cardImage}
+              resizeMode="cover"
+            />
           ) : (
             <View style={[styles.cardImage, styles.emojiContainer]}>
               <Text style={styles.emojiText}>🎁</Text>
             </View>
           )}
-          
+
           {/* Heart Button */}
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.heartButton}
             onPress={() => toggleHeartDeal(item.id || item.deal_id)}
           >
-            <MaterialIcons 
-              name={isDealHearted(item.id || item.deal_id) ? "favorite" : "favorite-border"} 
-              size={18} 
-              color={isDealHearted(item.id || item.deal_id) ? "#FF9500" : "#666"} 
+            <MaterialIcons
+              name={
+                isDealHearted(item.id || item.deal_id)
+                  ? 'favorite'
+                  : 'favorite-border'
+              }
+              size={18}
+              color={
+                isDealHearted(item.id || item.deal_id) ? '#FF9500' : '#666'
+              }
             />
           </TouchableOpacity>
 
@@ -116,15 +141,24 @@ const SavedDealsScreen = ({ navigation }: any) => {
 
         {/* Content Section */}
         <View style={styles.cardContent}>
-          <Text style={[styles.businessName, { color: colors.text }]} numberOfLines={1}>
+          <Text
+            style={[styles.businessName, { color: colors.text }]}
+            numberOfLines={1}
+          >
             {item.business_name || item.business || 'Unknown Business'}
           </Text>
-          <Text style={[styles.dealDescription, { color: colors.subText }]} numberOfLines={2}>
+          <Text
+            style={[styles.dealDescription, { color: colors.subText }]}
+            numberOfLines={2}
+          >
             {item.description || item.descrption || 'No description available'}
           </Text>
-          
+
           <Text style={styles.sharesText}>
-            Shares: <Text style={styles.sharesCount}>{currentShares}/{requiredShares}</Text>
+            Shares:{' '}
+            <Text style={styles.sharesCount}>
+              {currentShares}/{requiredShares}
+            </Text>
           </Text>
 
           {!isRedeemed && (
@@ -157,7 +191,9 @@ const SavedDealsScreen = ({ navigation }: any) => {
   const currentDeals = getCurrentDeals();
 
   return (
-    <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
+    <View
+      style={[styles.screenContainer, { backgroundColor: colors.background }]}
+    >
       {/* Header */}
       <Toolbar
         title="Saved Deals"
@@ -168,7 +204,11 @@ const SavedDealsScreen = ({ navigation }: any) => {
 
       {/* Tab Navigation */}
       <View style={styles.tabContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabScrollContent}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabScrollContent}
+        >
           {tabs.map(tab => (
             <TouchableOpacity
               key={tab.key}
@@ -176,7 +216,13 @@ const SavedDealsScreen = ({ navigation }: any) => {
               onPress={() => setActiveTab(tab.key)}
               activeOpacity={0.7}
             >
-              <Text style={[styles.tabText, activeTab === tab.key && styles.tabTextSelected, { color: activeTab === tab.key ? colors.text : '#999' }]}>
+              <Text
+                style={[
+                  styles.tabText,
+                  activeTab === tab.key && styles.tabTextSelected,
+                  { color: activeTab === tab.key ? colors.text : '#999' },
+                ]}
+              >
                 {tab.label}
               </Text>
               {activeTab === tab.key && <View style={styles.tabIndicator} />}
@@ -191,27 +237,33 @@ const SavedDealsScreen = ({ navigation }: any) => {
         {currentDeals.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyEmoji}>
-              {activeTab === 'ready' ? '🎉' : activeTab === 'share' ? '📤' : '✅'}
+              {activeTab === 'ready'
+                ? '🎉'
+                : activeTab === 'share'
+                ? '📤'
+                : '✅'}
             </Text>
             <Text style={[styles.emptyTitle, { color: colors.text }]}>
-              {activeTab === 'ready' 
-                ? 'No deals ready to redeem' 
-                : activeTab === 'share' 
-                  ? 'No deals need more shares' 
-                  : 'No redeemed deals yet'}
+              {activeTab === 'ready'
+                ? 'No deals ready to redeem'
+                : activeTab === 'share'
+                ? 'No deals need more shares'
+                : 'No redeemed deals yet'}
             </Text>
             <Text style={[styles.emptySubtitle, { color: colors.subText }]}>
-              {activeTab === 'ready' 
-                ? 'Share deals to unlock redemptions!' 
-                : activeTab === 'share' 
-                  ? 'Heart deals and share them with friends' 
-                  : 'Redeem your deals to see them here'}
+              {activeTab === 'ready'
+                ? 'Share deals to unlock redemptions!'
+                : activeTab === 'share'
+                ? 'Heart deals and share them with friends'
+                : 'Redeem your deals to see them here'}
             </Text>
           </View>
         ) : (
           <FlatList
             data={currentDeals}
-            keyExtractor={(item, index) => (item.id || item.deal_id || index).toString()}
+            keyExtractor={(item, index) =>
+              (item.id || item.deal_id || index).toString()
+            }
             renderItem={renderDealCard}
             contentContainerStyle={styles.listContent}
             showsVerticalScrollIndicator={false}

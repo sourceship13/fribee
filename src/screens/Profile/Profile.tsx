@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -13,16 +19,20 @@ const ProfileScreen = ({ navigation }: any) => {
 
   // Get actual stats
   const savedDealsCount = heartedDeals?.length || 0;
-  const redeemedCount = heartedDeals?.filter(
-    (d: any) => d.redemption_status?.toLowerCase() === 'redeemed'
-  ).length || 0;
+  const redeemedCount =
+    heartedDeals?.filter(
+      (d: any) => d.redemption_status?.toLowerCase() === 'redeemed',
+    ).length || 0;
   const referralsCount = 24; // TODO: Get from API
 
   // Format member since date
   const getMemberSince = () => {
     if (user?.created_at) {
       const date = new Date(user.created_at);
-      return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      return date.toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric',
+      });
     }
     return 'December 2025';
   };
@@ -49,14 +59,14 @@ const ProfileScreen = ({ navigation }: any) => {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
-        <Toolbar
+      <Toolbar
         title="Profile"
         onSettings={() => navigation.navigate('Settings')}
         showSettings
         showLogo
       />
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
