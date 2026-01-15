@@ -3,11 +3,7 @@ module.exports = {
     ios: {},
     android: {},
   },
-  assets: [
-    './assets/fonts/',
-    './assets/imgs/',
-    './node_modules/react-native-vector-icons/Fonts/',
-  ],
+  assets: ['./assets/fonts/', './assets/imgs/'],
   dependencies: {
     'react-native-config': {
       platforms: {
@@ -15,4 +11,13 @@ module.exports = {
       },
     },
   },
+  // Exclude license and readme files to prevent duplicates
+  plugins: [
+    [
+      'module-resolver',
+      {
+        extensions: ['.ios.js', '.android.js', '.js', '.json'],
+      },
+    ],
+  ],
 };
