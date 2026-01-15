@@ -1,73 +1,73 @@
-Inter Variable Font
-===================
+Roboto Variable Font
+====================
 
-This download contains Inter as both variable fonts and static fonts.
+This download contains Roboto as both variable fonts and static fonts.
 
-Inter is a variable font with these axes:
-  opsz
+Roboto is a variable font with these axes:
+  wdth
   wght
 
 This means all the styles are contained in these files:
-  Inter/Inter-VariableFont_opsz,wght.ttf
-  Inter/Inter-Italic-VariableFont_opsz,wght.ttf
+  Roboto/Roboto-VariableFont_wdth,wght.ttf
+  Roboto/Roboto-Italic-VariableFont_wdth,wght.ttf
 
 If your app fully supports variable fonts, you can now pick intermediate styles
 that aren’t available as static fonts. Not all apps support variable fonts, and
-in those cases you can use the static font files for Inter:
-  Inter/static/Inter_18pt-Thin.ttf
-  Inter/static/Inter_18pt-ExtraLight.ttf
-  Inter/static/Inter_18pt-Light.ttf
-  Inter/static/Inter_18pt-Regular.ttf
-  Inter/static/Inter_18pt-Medium.ttf
-  Inter/static/Inter_18pt-SemiBold.ttf
-  Inter/static/Inter_18pt-Bold.ttf
-  Inter/static/Inter_18pt-ExtraBold.ttf
-  Inter/static/Inter_18pt-Black.ttf
-  Inter/static/Inter_24pt-Thin.ttf
-  Inter/static/Inter_24pt-ExtraLight.ttf
-  Inter/static/Inter_24pt-Light.ttf
-  Inter/static/Inter_24pt-Regular.ttf
-  Inter/static/Inter_24pt-Medium.ttf
-  Inter/static/Inter_24pt-SemiBold.ttf
-  Inter/static/Inter_24pt-Bold.ttf
-  Inter/static/Inter_24pt-ExtraBold.ttf
-  Inter/static/Inter_24pt-Black.ttf
-  Inter/static/Inter_28pt-Thin.ttf
-  Inter/static/Inter_28pt-ExtraLight.ttf
-  Inter/static/Inter_28pt-Light.ttf
-  Inter/static/Inter_28pt-Regular.ttf
-  Inter/static/Inter_28pt-Medium.ttf
-  Inter/static/Inter_28pt-SemiBold.ttf
-  Inter/static/Inter_28pt-Bold.ttf
-  Inter/static/Inter_28pt-ExtraBold.ttf
-  Inter/static/Inter_28pt-Black.ttf
-  Inter/static/Inter_18pt-ThinItalic.ttf
-  Inter/static/Inter_18pt-ExtraLightItalic.ttf
-  Inter/static/Inter_18pt-LightItalic.ttf
-  Inter/static/Inter_18pt-Italic.ttf
-  Inter/static/Inter_18pt-MediumItalic.ttf
-  Inter/static/Inter_18pt-SemiBoldItalic.ttf
-  Inter/static/Inter_18pt-BoldItalic.ttf
-  Inter/static/Inter_18pt-ExtraBoldItalic.ttf
-  Inter/static/Inter_18pt-BlackItalic.ttf
-  Inter/static/Inter_24pt-ThinItalic.ttf
-  Inter/static/Inter_24pt-ExtraLightItalic.ttf
-  Inter/static/Inter_24pt-LightItalic.ttf
-  Inter/static/Inter_24pt-Italic.ttf
-  Inter/static/Inter_24pt-MediumItalic.ttf
-  Inter/static/Inter_24pt-SemiBoldItalic.ttf
-  Inter/static/Inter_24pt-BoldItalic.ttf
-  Inter/static/Inter_24pt-ExtraBoldItalic.ttf
-  Inter/static/Inter_24pt-BlackItalic.ttf
-  Inter/static/Inter_28pt-ThinItalic.ttf
-  Inter/static/Inter_28pt-ExtraLightItalic.ttf
-  Inter/static/Inter_28pt-LightItalic.ttf
-  Inter/static/Inter_28pt-Italic.ttf
-  Inter/static/Inter_28pt-MediumItalic.ttf
-  Inter/static/Inter_28pt-SemiBoldItalic.ttf
-  Inter/static/Inter_28pt-BoldItalic.ttf
-  Inter/static/Inter_28pt-ExtraBoldItalic.ttf
-  Inter/static/Inter_28pt-BlackItalic.ttf
+in those cases you can use the static font files for Roboto:
+  Roboto/static/Roboto_Condensed-Thin.ttf
+  Roboto/static/Roboto_Condensed-ExtraLight.ttf
+  Roboto/static/Roboto_Condensed-Light.ttf
+  Roboto/static/Roboto_Condensed-Regular.ttf
+  Roboto/static/Roboto_Condensed-Medium.ttf
+  Roboto/static/Roboto_Condensed-SemiBold.ttf
+  Roboto/static/Roboto_Condensed-Bold.ttf
+  Roboto/static/Roboto_Condensed-ExtraBold.ttf
+  Roboto/static/Roboto_Condensed-Black.ttf
+  Roboto/static/Roboto_SemiCondensed-Thin.ttf
+  Roboto/static/Roboto_SemiCondensed-ExtraLight.ttf
+  Roboto/static/Roboto_SemiCondensed-Light.ttf
+  Roboto/static/Roboto_SemiCondensed-Regular.ttf
+  Roboto/static/Roboto_SemiCondensed-Medium.ttf
+  Roboto/static/Roboto_SemiCondensed-SemiBold.ttf
+  Roboto/static/Roboto_SemiCondensed-Bold.ttf
+  Roboto/static/Roboto_SemiCondensed-ExtraBold.ttf
+  Roboto/static/Roboto_SemiCondensed-Black.ttf
+  Roboto/static/Roboto-Thin.ttf
+  Roboto/static/Roboto-ExtraLight.ttf
+  Roboto/static/Roboto-Light.ttf
+  Roboto/static/Roboto-Regular.ttf
+  Roboto/static/Roboto-Medium.ttf
+  Roboto/static/Roboto-SemiBold.ttf
+  Roboto/static/Roboto-Bold.ttf
+  Roboto/static/Roboto-ExtraBold.ttf
+  Roboto/static/Roboto-Black.ttf
+  Roboto/static/Roboto_Condensed-ThinItalic.ttf
+  Roboto/static/Roboto_Condensed-ExtraLightItalic.ttf
+  Roboto/static/Roboto_Condensed-LightItalic.ttf
+  Roboto/static/Roboto_Condensed-Italic.ttf
+  Roboto/static/Roboto_Condensed-MediumItalic.ttf
+  Roboto/static/Roboto_Condensed-SemiBoldItalic.ttf
+  Roboto/static/Roboto_Condensed-BoldItalic.ttf
+  Roboto/static/Roboto_Condensed-ExtraBoldItalic.ttf
+  Roboto/static/Roboto_Condensed-BlackItalic.ttf
+  Roboto/static/Roboto_SemiCondensed-ThinItalic.ttf
+  Roboto/static/Roboto_SemiCondensed-ExtraLightItalic.ttf
+  Roboto/static/Roboto_SemiCondensed-LightItalic.ttf
+  Roboto/static/Roboto_SemiCondensed-Italic.ttf
+  Roboto/static/Roboto_SemiCondensed-MediumItalic.ttf
+  Roboto/static/Roboto_SemiCondensed-SemiBoldItalic.ttf
+  Roboto/static/Roboto_SemiCondensed-BoldItalic.ttf
+  Roboto/static/Roboto_SemiCondensed-ExtraBoldItalic.ttf
+  Roboto/static/Roboto_SemiCondensed-BlackItalic.ttf
+  Roboto/static/Roboto-ThinItalic.ttf
+  Roboto/static/Roboto-ExtraLightItalic.ttf
+  Roboto/static/Roboto-LightItalic.ttf
+  Roboto/static/Roboto-Italic.ttf
+  Roboto/static/Roboto-MediumItalic.ttf
+  Roboto/static/Roboto-SemiBoldItalic.ttf
+  Roboto/static/Roboto-BoldItalic.ttf
+  Roboto/static/Roboto-ExtraBoldItalic.ttf
+  Roboto/static/Roboto-BlackItalic.ttf
 
 Get started
 -----------

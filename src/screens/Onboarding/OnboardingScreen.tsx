@@ -16,7 +16,6 @@ import { iOSUIKit } from 'react-native-typography';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import FribeeLogo from '../../../assets/imgs/fribee-logo.svg';
 const FribeeLogoPNG = require('../../../assets/imgs/fribee-logo.png');
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
