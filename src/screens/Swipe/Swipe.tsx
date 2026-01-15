@@ -42,6 +42,11 @@ const SwipeScreen = ({ navigation }: any) => {
   const colors = getColors(isDarkMode);
   const [currentDealIndex, setCurrentDealIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  
+  // Track image loading state for each card
+  const [currentCardLoaded, setCurrentCardLoaded] = useState(false);
+  const [nextCardLoaded, setNextCardLoaded] = useState(false);
+  const [thirdCardLoaded, setThirdCardLoaded] = useState(false);
 
   // Filter out hearted deals
   const heartedDealIds = new Set(
@@ -87,6 +92,25 @@ const SwipeScreen = ({ navigation }: any) => {
       : 0;
   const thirdDeal =
     unheartedDeals.length > 2 ? unheartedDeals[thirdDealIndex] : null;
+
+  // Reset loading states when deal index changes
+  useEffect(() => {
+    setCurrentCardLoaded(false);
+    setNextCardLoaded(false);
+    setThirdCardLoaded(false);
+  }, [currentDealIndex]);
+
+  // Determine if all visible cards are loaded
+  const allCardsReady = () => {
+    // If current deal has no image, consider it loaded
+    const currentReady = !getDealImageUrl(currentDeal) || currentCardLoaded;
+    // If next deal doesn't exist or has no image, consider it loaded
+    const nextReady = !nextDeal || !getDealImageUrl(nextDeal) || nextCardLoaded;
+    // If third deal doesn't exist or has no image, consider it loaded
+    const thirdReady = !thirdDeal || !getDealImageUrl(thirdDeal) || thirdCardLoaded;
+    
+    return currentReady && nextReady && thirdReady;
+  };
 
   // Helper function to get deal image URL
   const getDealImageUrl = (deal: any): string | null => {
@@ -235,6 +259,7 @@ const SwipeScreen = ({ navigation }: any) => {
       source={{ uri: item }}
       style={styles.fullScreenImage}
       resizeMode="cover"
+      onLoad={() => setCurrentCardLoaded(true)}
     >
       <LinearGradient
         colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
@@ -266,15 +291,32 @@ const SwipeScreen = ({ navigation }: any) => {
         showLogo
       />
 
+      {/* Loading indicator for card images */}
+      {!dealsLoading && !error && !allCardsReady() && (
+        <View style={styles.cardLoadingOverlay}>
+          <View style={styles.cardLoadingContainer}>
+            <Text
+              style={[
+                iOSUIKit.body,
+                { color: colors.text, textAlign: 'center' },
+              ]}
+            >
+              Loading cards...
+            </Text>
+          </View>
+        </View>
+      )}
+
       {/* Next deal card rendered BEHIND the main card */}
       {!dealsLoading && !error && nextDeal && (
         <View style={styles.nextDealContainer} pointerEvents="none">
-          <View style={styles.nextDealCard}>
+          <View style={[styles.nextDealCard, { opacity: allCardsReady() ? 1 : 0 }]}>
             {getDealImageUrl(nextDeal) ? (
               <ImageBackground
                 source={{ uri: getDealImageUrl(nextDeal)! }}
                 style={styles.nextDealImage}
                 resizeMode="cover"
+                onLoad={() => setNextCardLoaded(true)}
               >
                 <LinearGradient
                   colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
@@ -305,12 +347,13 @@ const SwipeScreen = ({ navigation }: any) => {
       {/* Third deal card rendered BEHIND the second card */}
       {!dealsLoading && !error && thirdDeal && (
         <View style={styles.thirdDealContainer} pointerEvents="none">
-          <View style={styles.thirdDealCard}>
+          <View style={[styles.thirdDealCard, { opacity: allCardsReady() ? 1 : 0 }]}>
             {getDealImageUrl(thirdDeal) ? (
               <ImageBackground
                 source={{ uri: getDealImageUrl(thirdDeal)! }}
                 style={styles.thirdDealImage}
                 resizeMode="cover"
+                onLoad={() => setThirdCardLoaded(true)}
               >
                 <LinearGradient
                   colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
@@ -348,6 +391,7 @@ const SwipeScreen = ({ navigation }: any) => {
           style={[
             styles.contentContainer,
             {
+              opacity: allCardsReady() ? 1 : 0,
               transform: [
                 { translateX: translateX },
                 { translateY: translateY },
@@ -554,6 +598,19 @@ const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
     paddingBottom: 60,
+  },
+  // Card loading overlay
+  cardLoadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  cardLoadingContainer: {
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
   },
   // Next deal card behind current card
   nextDealContainer: {
