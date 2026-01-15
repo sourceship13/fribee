@@ -42,7 +42,7 @@ const SwipeScreen = ({ navigation }: any) => {
   const colors = getColors(isDarkMode);
   const [currentDealIndex, setCurrentDealIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Track image loading state for each card
   const [currentCardLoaded, setCurrentCardLoaded] = useState(false);
   const [nextCardLoaded, setNextCardLoaded] = useState(false);
@@ -107,8 +107,9 @@ const SwipeScreen = ({ navigation }: any) => {
     // If next deal doesn't exist or has no image, consider it loaded
     const nextReady = !nextDeal || !getDealImageUrl(nextDeal) || nextCardLoaded;
     // If third deal doesn't exist or has no image, consider it loaded
-    const thirdReady = !thirdDeal || !getDealImageUrl(thirdDeal) || thirdCardLoaded;
-    
+    const thirdReady =
+      !thirdDeal || !getDealImageUrl(thirdDeal) || thirdCardLoaded;
+
     return currentReady && nextReady && thirdReady;
   };
 
@@ -310,7 +311,9 @@ const SwipeScreen = ({ navigation }: any) => {
       {/* Next deal card rendered BEHIND the main card */}
       {!dealsLoading && !error && nextDeal && (
         <View style={styles.nextDealContainer} pointerEvents="none">
-          <View style={[styles.nextDealCard, { opacity: allCardsReady() ? 1 : 0 }]}>
+          <View
+            style={[styles.nextDealCard, { opacity: allCardsReady() ? 1 : 0 }]}
+          >
             {getDealImageUrl(nextDeal) ? (
               <ImageBackground
                 source={{ uri: getDealImageUrl(nextDeal)! }}
@@ -347,7 +350,9 @@ const SwipeScreen = ({ navigation }: any) => {
       {/* Third deal card rendered BEHIND the second card */}
       {!dealsLoading && !error && thirdDeal && (
         <View style={styles.thirdDealContainer} pointerEvents="none">
-          <View style={[styles.thirdDealCard, { opacity: allCardsReady() ? 1 : 0 }]}>
+          <View
+            style={[styles.thirdDealCard, { opacity: allCardsReady() ? 1 : 0 }]}
+          >
             {getDealImageUrl(thirdDeal) ? (
               <ImageBackground
                 source={{ uri: getDealImageUrl(thirdDeal)! }}
