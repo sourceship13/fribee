@@ -57,7 +57,7 @@ post_install do |installer|
     :mac_catalyst_enabled => false
   )
   
-  # Aggressive Xcode 16 duplicate bundle fix
+  # Basic build settings only - removed aggressive target manipulation
   installer.pods_project.build_configurations.each do |config|
     config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
   end
@@ -77,31 +77,4 @@ post_install do |installer|
       end
     end
   end
-  
-  # Nuclear option: Completely remove one of the duplicate privacy bundle targets
-  targets_to_remove = []
-  installer.pods_project.targets.each do |target|
-    if target.name.include?('React-Core') && target.name.include?('privacy') && target.name != 'React-Core.common-React-Core_privacy'
-      targets_to_remove << target
-    end
-  end
-  
-  targets_to_remove.each do |target|
-    puts "Removing duplicate privacy bundle target: #{target.name}"
-    target.build_phases.each { |phase| phase.clear }
-    installer.pods_project.targets.delete(target)
-  end
-  
-  # Remove references from aggregate targets
-  installer.aggregate_targets.each do |aggregate_target|
-    aggregate_target.pod_targets.delete_if do |pod_target|
-      targets_to_remove.any? { |t| pod_target.name == t.name }
-    end
-  end
-  
-  installer.pods_project.save
-  
-  # Post-save: Clean up generated files
-  `find Pods/Target\\ Support\\ Files -name "*.xcconfig" -type f -exec sed -i '' '/React-Core-f955c501\\/React-Core_privacy\\.bundle/d' {} \\;`
-  `find Pods/Target\\ Support\\ Files -name "*-resources.sh" -type f -exec sed -i '' '/React-Core-f955c501\\/React-Core_privacy\\.bundle/d' {} \\;`
 end

@@ -4,6 +4,8 @@ import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Contacts from 'react-native-contacts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SendSMS from 'react-native-sms';
+import Share from 'react-native-share';
+import RNFS from 'react-native-fs';
 import AppReturnUtils from '../libs/utils/appReturnUtils';
 import { uuidToBase62 } from '../libs/utils/deeplink.utils';
 import { apiConfig } from '../libs/utils/api.utils';
@@ -262,10 +264,120 @@ class DealSharingService {
         return false;
       }
 
-      // Use AppReturnUtils for SMS with "Return to App" breadcrumb support
-      return await AppReturnUtils.sendSMSWithReturn(cleanedNumbers, message);
+      // Get deal image URL
+      const dealImageUrl = this.getDealImageUrl(dealInfo);
+
+      // Use react-native-share for MMS with image attachments
+      return await this.sendMMSWithShare(cleanedNumbers, message, dealImageUrl);
     } catch (error) {
-      console.error('❌ SMS Method Error:', error);
+      console.error('❌ MMS Method Error:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Send MMS with image attachment by downloading image locally
+   * Opens share sheet with Messages, including both text and image
+   */
+  private async sendMMSWithShare(
+    phoneNumbers: string[],
+    message: string,
+    imageUrl: string | null,
+  ): Promise<boolean> {
+    try {
+      console.log('📤 Sending MMS via share sheet...');
+      console.log('📱 Recipients:', phoneNumbers);
+      console.log('📸 Image URL:', imageUrl);
+
+      let localImagePath: string | null = null;
+
+      // Download image to local storage if URL exists
+      if (imageUrl) {
+        try {
+          console.log('⬇️ Downloading image for MMS...');
+          const filename = `deal_image_${Date.now()}.jpg`;
+          const downloadPath = `${RNFS.CachesDirectoryPath}/${filename}`;
+
+          const downloadResult = await RNFS.downloadFile({
+            fromUrl: imageUrl,
+            toFile: downloadPath,
+          }).promise;
+
+          if (downloadResult.statusCode === 200) {
+            localImagePath = `file://${downloadPath}`;
+            console.log('✅ Image downloaded:', localImagePath);
+          } else {
+            console.warn(
+              '⚠️ Image download failed with status:',
+              downloadResult.statusCode,
+            );
+          }
+        } catch (downloadError) {
+          console.error('❌ Failed to download image:', downloadError);
+          // Continue without image
+        }
+      }
+
+      // Build share options with local image
+      const shareOptions: any = {
+        title: 'Share Deal via Messages',
+        message: message,
+      };
+
+      // Add local image file if downloaded
+      if (localImagePath) {
+        shareOptions.url = localImagePath;
+        shareOptions.type = 'image/jpeg';
+        console.log('📎 Attaching image to share');
+      }
+
+      // iOS: Try to suggest Messages app
+      if (Platform.OS === 'ios') {
+        shareOptions.social = Share.Social.SMS;
+
+        // Pre-fill recipients if possible
+        if (phoneNumbers.length > 0) {
+          shareOptions.recipient = phoneNumbers.join(',');
+        }
+      }
+
+      console.log('📤 Opening share sheet...');
+
+      // Open share sheet
+      const result = await Share.open(shareOptions);
+
+      console.log('✅ Share completed:', result);
+
+      // Clean up downloaded image
+      if (localImagePath) {
+        try {
+          const cleanPath = localImagePath.replace('file://', '');
+          await RNFS.unlink(cleanPath);
+          console.log('🗑️ Cleaned up temporary image');
+        } catch (cleanupError) {
+          console.warn('⚠️ Failed to cleanup image:', cleanupError);
+        }
+      }
+
+      return true;
+    } catch (error: any) {
+      console.log('📤 Share interaction:', error);
+
+      // User dismissed - this is normal, not an error
+      if (
+        error.message &&
+        (error.message.includes('User did not share') ||
+          error.message.includes('cancelled'))
+      ) {
+        console.log('ℹ️ User cancelled share sheet');
+        return false;
+      }
+
+      // Actual error
+      console.error('❌ Share error:', error);
+      Alert.alert('Sharing Failed', 'Could not share deal. Please try again.', [
+        { text: 'OK' },
+      ]);
       return false;
     }
   }
@@ -352,23 +464,141 @@ class DealSharingService {
   private createShareMessage(dealInfo: any): string {
     const dealId = dealInfo.id || dealInfo.deal_id || '';
     console.log(`🔗 Creating share message for deal ID: ${dealId}`);
-    
+
     // Encode UUID to base62 for shorter URLs
     const shortId = uuidToBase62(dealId);
     console.log(`🔗 Base62 encoded: ${dealId} → ${shortId}`);
-    
+
     // Use environment-based base URL (staging.fribee.io or fribee.io)
     const webBaseUrl = apiConfig.baseURL;
-    console.log(`🌐 Using base URL: ${webBaseUrl} (environment: ${apiConfig.environment})`);
-    
+    console.log(
+      `🌐 Using base URL: ${webBaseUrl} (environment: ${apiConfig.environment})`,
+    );
+
     const appLink = `nolimitseradeals://deal/${shortId}`;
     const webLink = `${webBaseUrl}/deal/${shortId}`;
-    
-    return `🎉 Check out this amazing deal at ${
-      dealInfo.business_name || dealInfo.business
-    }!\n\n${
-      dealInfo.description || dealInfo.descrption
-    }\n\nOpen in app: ${appLink}\nView in browser: ${webLink}`;
+
+    // Extract deal image URL from multiple possible sources
+    const dealImageUrl = this.getDealImageUrl(dealInfo);
+
+    // Business name
+    const businessName =
+      dealInfo.business_name || dealInfo.business || 'this business';
+
+    // Description
+    const description = dealInfo.description || dealInfo.descrption || '';
+
+    // Get discount/deal info if available
+    const discount = dealInfo.discount || dealInfo.offer || '';
+    const expiryDate = dealInfo.expires || dealInfo.expiry || '';
+
+    // Build professional SMS message with sections
+    let message = `✨ You've been sent an exclusive deal!\n\n`;
+
+    // Deal headline
+    message += `🎉 ${businessName}\n`;
+
+    // Discount/offer highlight
+    if (discount) {
+      message += `💰 ${discount}\n\n`;
+    } else {
+      message += `\n`;
+    }
+
+    // Deal description
+    if (description) {
+      message += `📌 ${description}\n`;
+    }
+
+    // Expiry info
+    if (expiryDate) {
+      message += `⏰ Expires: ${expiryDate}\n`;
+    }
+
+    message += `\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+    // CTA Section with rich preview
+    message += `📸 See the full deal with photo:\n`;
+    message += `${webLink}\n\n`;
+
+    // App download CTA
+    message += `📱 Open in Fribee App:\n`;
+    message += `${appLink}\n\n`;
+
+    // Fribee branding footer - professional
+    message += `━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `🐝 NoLimit Sera Deals\n`;
+    message += `Share deals. Unlock savings.\n`;
+    message += `Join millions discovering local deals!`;
+
+    return message;
+  }
+
+  /**
+   * Extract the best available image URL from deal data
+   */
+  private getDealImageUrl(dealInfo: any): string | null {
+    // Try deal_images array first (preferred)
+    if (
+      dealInfo.deal_images &&
+      Array.isArray(dealInfo.deal_images) &&
+      dealInfo.deal_images.length > 0
+    ) {
+      const firstImage = dealInfo.deal_images[0];
+      if (
+        firstImage &&
+        typeof firstImage === 'object' &&
+        firstImage.image_url
+      ) {
+        return firstImage.image_url;
+      }
+    }
+
+    // Try direct deal image URL properties
+    if (
+      dealInfo.deal_image_url &&
+      typeof dealInfo.deal_image_url === 'string'
+    ) {
+      return dealInfo.deal_image_url;
+    }
+
+    if (dealInfo.image_url && typeof dealInfo.image_url === 'string') {
+      return dealInfo.image_url;
+    }
+
+    // Try generic images array
+    if (
+      dealInfo.images &&
+      Array.isArray(dealInfo.images) &&
+      dealInfo.images.length > 0
+    ) {
+      const firstImage = dealInfo.images[0];
+      if (typeof firstImage === 'string') {
+        return firstImage;
+      }
+      if (typeof firstImage === 'object' && firstImage.image_url) {
+        return firstImage.image_url;
+      }
+    }
+
+    // Fall back to business images if no deal images available
+    if (
+      dealInfo.business_images &&
+      Array.isArray(dealInfo.business_images) &&
+      dealInfo.business_images.length > 0
+    ) {
+      const firstImage = dealInfo.business_images[0];
+      if (
+        firstImage &&
+        typeof firstImage === 'object' &&
+        firstImage.image_url
+      ) {
+        return firstImage.image_url;
+      }
+    }
+
+    return null;
   }
 
   private async trackShares(dealId: string, shareCount: number): Promise<void> {
