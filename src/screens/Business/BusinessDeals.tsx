@@ -15,7 +15,7 @@ import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from '@react-native-vector-icons/material-icons';
 import ApiService from '../../services/api.service';
 import VersionFooter from '../../components/VersionFooter';
 
@@ -66,13 +66,17 @@ const BusinessDeals = ({ navigation }: any) => {
     setError(null);
 
     try {
-      if (userBusiness && Array.isArray(userBusiness) && userBusiness.length > 0) {
+      if (
+        userBusiness &&
+        Array.isArray(userBusiness) &&
+        userBusiness.length > 0
+      ) {
         const primaryBusiness = userBusiness[0];
         const businessId = primaryBusiness.businessId;
 
         // Filter deals that belong to this business
         const filteredDeals = deals.filter(
-          (deal: any) => deal.business_id === businessId
+          (deal: any) => deal.business_id === businessId,
         );
 
         setBusinessDeals(filteredDeals);
@@ -108,13 +112,15 @@ const BusinessDeals = ({ navigation }: any) => {
     setIsDeleting(true);
     try {
       const response = await ApiService.deleteDeal(dealToDelete.deal_id);
-      
+
       if (response.success) {
         // Remove the deal from local state
-        setBusinessDeals(prev => prev.filter(d => d.deal_id !== dealToDelete.deal_id));
+        setBusinessDeals(prev =>
+          prev.filter(d => d.deal_id !== dealToDelete.deal_id),
+        );
         setDeleteModalVisible(false);
         setDealToDelete(null);
-        
+
         // Show success message
         Alert.alert('Success', 'Deal deleted successfully');
       } else {
@@ -122,7 +128,10 @@ const BusinessDeals = ({ navigation }: any) => {
       }
     } catch (error: any) {
       console.error('Error deleting deal:', error);
-      Alert.alert('Error', error.message || 'Failed to delete deal. Please try again.');
+      Alert.alert(
+        'Error',
+        error.message || 'Failed to delete deal. Please try again.',
+      );
     } finally {
       setIsDeleting(false);
       await refreshDeals();
@@ -163,10 +172,10 @@ const BusinessDeals = ({ navigation }: any) => {
   const renderDealCard = ({ item }: { item: Deal }) => {
     // Log the entire deal object to see the structure
     console.log('📦 Full Deal Object:', JSON.stringify(item, null, 2));
-    
+
     // Try multiple possible image sources from the API response
-    const dealImage = 
-      item.deal_images?.[0]?.image_url || 
+    const dealImage =
+      item.deal_images?.[0]?.image_url ||
       item.deal_images?.[0]?.url ||
       (item as any).dealImages?.[0]?.url ||
       (item as any).dealImage ||
@@ -182,7 +191,10 @@ const BusinessDeals = ({ navigation }: any) => {
       >
         {/* Delete Button - Top Right */}
         <TouchableOpacity
-          style={[styles.deleteButton, { backgroundColor: 'rgba(239, 68, 68, 0.9)' }]}
+          style={[
+            styles.deleteButton,
+            { backgroundColor: 'rgba(239, 68, 68, 0.9)' },
+          ]}
           onPress={() => handleDeletePress(item)}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
@@ -191,9 +203,18 @@ const BusinessDeals = ({ navigation }: any) => {
 
         {/* Deal Image */}
         {dealImage ? (
-          <Image source={{ uri: dealImage }} style={styles.dealImage} resizeMode="cover" />
+          <Image
+            source={{ uri: dealImage }}
+            style={styles.dealImage}
+            resizeMode="cover"
+          />
         ) : (
-          <View style={[styles.dealImagePlaceholder, { backgroundColor: colors.border }]}>
+          <View
+            style={[
+              styles.dealImagePlaceholder,
+              { backgroundColor: colors.border },
+            ]}
+          >
             <Icon name="local-offer" size={48} color={colors.textSecondary} />
           </View>
         )}
@@ -206,17 +227,25 @@ const BusinessDeals = ({ navigation }: any) => {
               { backgroundColor: getDealTypeColor(item.deal_type) },
             ]}
           >
-            <Text style={styles.dealTypeText}>{getDealTypeLabel(item.deal_type)}</Text>
+            <Text style={styles.dealTypeText}>
+              {getDealTypeLabel(item.deal_type)}
+            </Text>
           </View>
 
           {/* Deal Title */}
-          <Text style={[iOSUIKit.title3, { color: colors.text }]} numberOfLines={2}>
+          <Text
+            style={[iOSUIKit.title3, { color: colors.text }]}
+            numberOfLines={2}
+          >
             {item.deal_title}
           </Text>
 
           {/* Deal Description */}
           <Text
-            style={[iOSUIKit.body, { color: colors.textSecondary, marginTop: 4 }]}
+            style={[
+              iOSUIKit.body,
+              { color: colors.textSecondary, marginTop: 4 },
+            ]}
             numberOfLines={2}
           >
             {item.description}
@@ -226,15 +255,29 @@ const BusinessDeals = ({ navigation }: any) => {
           <View style={styles.statsRow}>
             <View style={styles.statItem}>
               <Icon name="share" size={16} color={colors.textSecondary} />
-              <Text style={[iOSUIKit.footnote, { color: colors.textSecondary, marginLeft: 4 }]}>
+              <Text
+                style={[
+                  iOSUIKit.footnote,
+                  { color: colors.textSecondary, marginLeft: 4 },
+                ]}
+              >
                 {item.min_shares_required} shares
               </Text>
             </View>
 
             {item.percentage_discount > 0 && (
               <View style={styles.statItem}>
-                <Icon name="local-offer" size={16} color={colors.textSecondary} />
-                <Text style={[iOSUIKit.footnote, { color: colors.textSecondary, marginLeft: 4 }]}>
+                <Icon
+                  name="local-offer"
+                  size={16}
+                  color={colors.textSecondary}
+                />
+                <Text
+                  style={[
+                    iOSUIKit.footnote,
+                    { color: colors.textSecondary, marginLeft: 4 },
+                  ]}
+                >
                   {item.percentage_discount}% off
                 </Text>
               </View>
@@ -242,7 +285,12 @@ const BusinessDeals = ({ navigation }: any) => {
 
             <View style={styles.statItem}>
               <Icon name="access-time" size={16} color={colors.textSecondary} />
-              <Text style={[iOSUIKit.footnote, { color: colors.textSecondary, marginLeft: 4 }]}>
+              <Text
+                style={[
+                  iOSUIKit.footnote,
+                  { color: colors.textSecondary, marginLeft: 4 },
+                ]}
+              >
                 {item.end_time}
               </Text>
             </View>
@@ -252,7 +300,9 @@ const BusinessDeals = ({ navigation }: any) => {
           {item.priority_score > 0 && (
             <View style={styles.priorityBadge}>
               <Icon name="star" size={14} color="#FFD700" />
-              <Text style={[iOSUIKit.footnote, { color: '#FFD700', marginLeft: 4 }]}>
+              <Text
+                style={[iOSUIKit.footnote, { color: '#FFD700', marginLeft: 4 }]}
+              >
                 Featured
               </Text>
             </View>
@@ -264,10 +314,20 @@ const BusinessDeals = ({ navigation }: any) => {
 
   const renderEmptyState = () => (
     <View style={styles.emptyContainer}>
-      <View style={[styles.emptyIconContainer, { borderColor: colors.textSecondary }]}>
+      <View
+        style={[
+          styles.emptyIconContainer,
+          { borderColor: colors.textSecondary },
+        ]}
+      >
         <Icon name="local-offer" size={32} color={colors.textSecondary} />
       </View>
-      <Text style={[iOSUIKit.title3Emphasized, { color: colors.text, marginTop: 20, textAlign: 'center' }]}>
+      <Text
+        style={[
+          iOSUIKit.title3Emphasized,
+          { color: colors.text, marginTop: 20, textAlign: 'center' },
+        ]}
+      >
         No deals yet
       </Text>
       <Text
@@ -293,10 +353,19 @@ const BusinessDeals = ({ navigation }: any) => {
   if (isLoading && !refreshing) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <Toolbar title="My Deals" onBack={() => navigation.goBack()} showSettings={false} />
+        <Toolbar
+          title="My Deals"
+          onBack={() => navigation.goBack()}
+          showSettings={false}
+        />
         <View style={styles.centerContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
-          <Text style={[iOSUIKit.body, { color: colors.textSecondary, marginTop: 16 }]}>
+          <Text
+            style={[
+              iOSUIKit.body,
+              { color: colors.textSecondary, marginTop: 16 },
+            ]}
+          >
             Loading deals...
           </Text>
         </View>
@@ -307,17 +376,31 @@ const BusinessDeals = ({ navigation }: any) => {
   if (error) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <Toolbar title="My Deals" onBack={() => navigation.goBack()} showSettings={false} />
+        <Toolbar
+          title="My Deals"
+          onBack={() => navigation.goBack()}
+          showSettings={false}
+        />
         <View style={styles.centerContainer}>
           <Icon name="error-outline" size={64} color={colors.error} />
-          <Text style={[iOSUIKit.title3, { color: colors.text, marginTop: 16, textAlign: 'center' }]}>
+          <Text
+            style={[
+              iOSUIKit.title3,
+              { color: colors.text, marginTop: 16, textAlign: 'center' },
+            ]}
+          >
             {error}
           </Text>
           <TouchableOpacity
             style={[styles.retryButton, { backgroundColor: colors.primary }]}
             onPress={loadBusinessDeals}
           >
-            <Text style={[iOSUIKit.body, { color: colors.background, fontWeight: '600' }]}>
+            <Text
+              style={[
+                iOSUIKit.body,
+                { color: colors.background, fontWeight: '600' },
+              ]}
+            >
               Try Again
             </Text>
           </TouchableOpacity>
@@ -328,44 +411,66 @@ const BusinessDeals = ({ navigation }: any) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <Toolbar title="My Deals" onBack={() => navigation.goBack()} showSettings={false} />
+      <Toolbar
+        title="My Deals"
+        onBack={() => navigation.goBack()}
+        showSettings={false}
+      />
 
       {/* Header Stats */}
       <View style={styles.headerStats}>
         <View style={styles.statBox}>
-          <Text style={[styles.statNumber, { color: colors.primary }]}>{businessDeals.length}</Text>
-          <Text style={[iOSUIKit.caption2, { color: colors.textSecondary }]}>Total Deals</Text>
+          <Text style={[styles.statNumber, { color: colors.primary }]}>
+            {businessDeals.length}
+          </Text>
+          <Text style={[iOSUIKit.caption2, { color: colors.textSecondary }]}>
+            Total Deals
+          </Text>
         </View>
-        <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
+        <View
+          style={[styles.statDivider, { backgroundColor: colors.border }]}
+        />
         <View style={styles.statBox}>
           <Text style={[styles.statNumber, { color: colors.primary }]}>
-            {businessDeals.filter((d) => d.priority_score > 0).length}
+            {businessDeals.filter(d => d.priority_score > 0).length}
           </Text>
-          <Text style={[iOSUIKit.caption2, { color: colors.textSecondary }]}>Featured</Text>
+          <Text style={[iOSUIKit.caption2, { color: colors.textSecondary }]}>
+            Featured
+          </Text>
         </View>
-        <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
+        <View
+          style={[styles.statDivider, { backgroundColor: colors.border }]}
+        />
         <View style={styles.statBox}>
           <Text style={[styles.statNumber, { color: colors.primary }]}>
-            {businessDeals.filter((d) => d.is_hearted).length}
+            {businessDeals.filter(d => d.is_hearted).length}
           </Text>
-          <Text style={[iOSUIKit.caption2, { color: colors.textSecondary }]}>Liked</Text>
+          <Text style={[iOSUIKit.caption2, { color: colors.textSecondary }]}>
+            Liked
+          </Text>
         </View>
       </View>
 
       {/* Divider */}
-      <View style={[styles.sectionDivider, { backgroundColor: colors.border }]} />
+      <View
+        style={[styles.sectionDivider, { backgroundColor: colors.border }]}
+      />
 
       <FlatList
         data={businessDeals}
         renderItem={renderDealCard}
-        keyExtractor={(item) => item.deal_id}
+        keyExtractor={item => item.deal_id}
         contentContainerStyle={[
           styles.listContent,
           businessDeals.length === 0 && styles.emptyListContent,
         ]}
         ListEmptyComponent={renderEmptyState}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.primary}
+          />
         }
         showsVerticalScrollIndicator={false}
       />
@@ -388,36 +493,65 @@ const BusinessDeals = ({ navigation }: any) => {
         onRequestClose={cancelDelete}
       >
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+          <View
+            style={[styles.modalContent, { backgroundColor: colors.surface }]}
+          >
             <View style={styles.modalHeader}>
               <Icon name="warning" size={48} color="#EF4444" />
-              <Text style={[iOSUIKit.title3Emphasized, { color: colors.text, marginTop: 16 }]}>
+              <Text
+                style={[
+                  iOSUIKit.title3Emphasized,
+                  { color: colors.text, marginTop: 16 },
+                ]}
+              >
                 Delete Deal?
               </Text>
             </View>
 
-            <Text style={[iOSUIKit.body, { color: colors.textSecondary, textAlign: 'center', marginTop: 8 }]}>
-              Are you sure you want to delete "{dealToDelete?.deal_title}"? This action cannot be undone.
+            <Text
+              style={[
+                iOSUIKit.body,
+                {
+                  color: colors.textSecondary,
+                  textAlign: 'center',
+                  marginTop: 8,
+                },
+              ]}
+            >
+              Are you sure you want to delete "{dealToDelete?.deal_title}"? This
+              action cannot be undone.
             </Text>
 
             <View style={styles.modalButtons}>
               <TouchableOpacity
-                style={[styles.modalButton, styles.cancelButton, { backgroundColor: colors.border }]}
+                style={[
+                  styles.modalButton,
+                  styles.cancelButton,
+                  { backgroundColor: colors.border },
+                ]}
                 onPress={cancelDelete}
                 disabled={isDeleting}
               >
-                <Text style={[iOSUIKit.bodyEmphasized, { color: colors.text }]}>Cancel</Text>
+                <Text style={[iOSUIKit.bodyEmphasized, { color: colors.text }]}>
+                  Cancel
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.modalButton, styles.deleteConfirmButton, { backgroundColor: '#EF4444' }]}
+                style={[
+                  styles.modalButton,
+                  styles.deleteConfirmButton,
+                  { backgroundColor: '#EF4444' },
+                ]}
                 onPress={confirmDelete}
                 disabled={isDeleting}
               >
                 {isDeleting ? (
                   <ActivityIndicator size="small" color="#FFFFFF" />
                 ) : (
-                  <Text style={[iOSUIKit.bodyEmphasized, { color: '#FFFFFF' }]}>Delete</Text>
+                  <Text style={[iOSUIKit.bodyEmphasized, { color: '#FFFFFF' }]}>
+                    Delete
+                  </Text>
                 )}
               </TouchableOpacity>
             </View>

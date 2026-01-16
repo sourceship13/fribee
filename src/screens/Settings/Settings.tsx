@@ -13,8 +13,8 @@ import { getColors } from '../../libs/colors';
 import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
 import VersionFooter from '../../components/VersionFooter';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from '@react-native-vector-icons/ionicons';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 
 const SettingsScreen = ({ navigation }: any) => {
   const {
@@ -85,7 +85,9 @@ const SettingsScreen = ({ navigation }: any) => {
             {label}
           </Text>
           {subtitle && (
-            <Text style={[styles.settingSubtitle, { color: colors.textSecondary }]}>
+            <Text
+              style={[styles.settingSubtitle, { color: colors.textSecondary }]}
+            >
               {subtitle}
             </Text>
           )}
@@ -98,7 +100,9 @@ const SettingsScreen = ({ navigation }: any) => {
           ios_backgroundColor="#E5E5EA"
         />
       </View>
-      {!isLast && <View style={[styles.divider, { backgroundColor: colors.border }]} />}
+      {!isLast && (
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+      )}
     </View>
   );
 
@@ -114,16 +118,17 @@ const SettingsScreen = ({ navigation }: any) => {
         </Text>
         <Ionicons name="arrow-forward" size={20} color={colors.textSecondary} />
       </TouchableOpacity>
-      {!isLast && <View style={[styles.divider, { backgroundColor: colors.border }]} />}
+      {!isLast && (
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+      )}
     </View>
   );
 
   return (
-    <View style={[styles.screenContainer, { backgroundColor: colors.background }]}>
-      <Toolbar
-        title="Preferences"
-        onBack={() => navigation.goBack()}
-      />
+    <View
+      style={[styles.screenContainer, { backgroundColor: colors.background }]}
+    >
+      <Toolbar title="Preferences" onBack={() => navigation.goBack()} />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.container}
@@ -134,7 +139,13 @@ const SettingsScreen = ({ navigation }: any) => {
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Theme
           </Text>
-          {renderSettingRow('Saved Deals', isDarkMode, setDarkMode, undefined, true)}
+          {renderSettingRow(
+            'Saved Deals',
+            isDarkMode,
+            setDarkMode,
+            undefined,
+            true,
+          )}
         </View>
 
         {/* Location Settings Section */}
@@ -160,7 +171,10 @@ const SettingsScreen = ({ navigation }: any) => {
           {Object.keys(categories).length === 0 &&
           availableCategories.length === 0 ? (
             <Text
-              style={[styles.settingSubtitle, { color: colors.textSecondary, fontStyle: 'italic' }]}
+              style={[
+                styles.settingSubtitle,
+                { color: colors.textSecondary, fontStyle: 'italic' },
+              ]}
             >
               Loading categories...
             </Text>
@@ -170,7 +184,8 @@ const SettingsScreen = ({ navigation }: any) => {
                 {renderSettingRow(
                   category.name,
                   categories[category.slug] ?? true,
-                  value => setCategories({ ...categories, [category.slug]: value }),
+                  value =>
+                    setCategories({ ...categories, [category.slug]: value }),
                   undefined,
                   index === availableCategories.length - 1,
                 )}
@@ -196,10 +211,8 @@ const SettingsScreen = ({ navigation }: any) => {
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Notifications
           </Text>
-          {renderSettingRow(
-            'New deals nearby',
-            notifications.deals,
-            value => setNotifications({ ...notifications, deals: value }),
+          {renderSettingRow('New deals nearby', notifications.deals, value =>
+            setNotifications({ ...notifications, deals: value }),
           )}
           {renderSettingRow(
             'Deal expiry reminders',
@@ -216,11 +229,13 @@ const SettingsScreen = ({ navigation }: any) => {
         </View>
 
         {/* Sign Out Button */}
-        <TouchableOpacity
-          style={styles.signOutButton}
-          onPress={handleLogout}
-        >
-          <MaterialIcons name="logout" size={20} color="#FFFFFF" style={styles.signOutIcon} />
+        <TouchableOpacity style={styles.signOutButton} onPress={handleLogout}>
+          <MaterialIcons
+            name="logout"
+            size={20}
+            color="#FFFFFF"
+            style={styles.signOutIcon}
+          />
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
 
@@ -230,11 +245,23 @@ const SettingsScreen = ({ navigation }: any) => {
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               Developer Options
             </Text>
-            {renderNavigationRow('Debug Console', () => navigation.navigate('Debug'))}
-            {renderNavigationRow('Network Debug', () => navigation.navigate('NetworkDebug'))}
-            {renderNavigationRow('Font Debug', () => navigation.navigate('FontDebug'))}
-            {renderNavigationRow('Test Permissions', () => navigation.navigate('PermissionTest'))}
-            {renderNavigationRow('Test Deal Sharing', () => navigation.navigate('DemoShare'), true)}
+            {renderNavigationRow('Debug Console', () =>
+              navigation.navigate('Debug'),
+            )}
+            {renderNavigationRow('Network Debug', () =>
+              navigation.navigate('NetworkDebug'),
+            )}
+            {renderNavigationRow('Font Debug', () =>
+              navigation.navigate('FontDebug'),
+            )}
+            {renderNavigationRow('Test Permissions', () =>
+              navigation.navigate('PermissionTest'),
+            )}
+            {renderNavigationRow(
+              'Test Deal Sharing',
+              () => navigation.navigate('DemoShare'),
+              true,
+            )}
           </View>
         )}
       </ScrollView>

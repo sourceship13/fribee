@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from '@react-native-vector-icons/material-icons';
 import VersionFooter from '../../components/VersionFooter';
 
 interface FontDebugProps {
@@ -23,7 +23,7 @@ const FontDebug: React.FC<FontDebugProps> = ({ navigation }) => {
     // System fonts
     { name: 'System', label: 'System Default' },
     { name: 'System', label: 'System Bold', weight: '700' as const },
-    
+
     // Inter fonts
     { name: 'Inter', label: 'Inter (Variable)' },
     { name: 'Inter', label: 'Inter Weight 300', weight: '300' as const },
@@ -33,7 +33,7 @@ const FontDebug: React.FC<FontDebugProps> = ({ navigation }) => {
     { name: 'Inter-Variable', label: 'Inter-Variable' },
     { name: 'Inter-Regular', label: 'Inter-Regular' },
     { name: 'Inter-Bold', label: 'Inter-Bold' },
-    
+
     // Roboto fonts
     { name: 'Roboto', label: 'Roboto' },
     { name: 'Roboto-Regular', label: 'Roboto-Regular' },
@@ -42,7 +42,7 @@ const FontDebug: React.FC<FontDebugProps> = ({ navigation }) => {
     { name: 'Roboto', label: 'Roboto Weight 300', weight: '300' as const },
     { name: 'Roboto', label: 'Roboto Weight 500', weight: '500' as const },
     { name: 'Roboto', label: 'Roboto Weight 700', weight: '700' as const },
-    
+
     // Other available fonts
     { name: 'Barlow-Regular', label: 'Barlow-Regular' },
     { name: 'Barlow-Bold', label: 'Barlow-Bold' },
@@ -53,18 +53,33 @@ const FontDebug: React.FC<FontDebugProps> = ({ navigation }) => {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+      <View
+        style={[
+          styles.header,
+          { backgroundColor: colors.surface, borderBottomColor: colors.border },
+        ]}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Icon name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Font Debug</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>
+          Font Debug
+        </Text>
         <View style={{ width: 40 }} />
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* Platform Info */}
         <View style={[styles.infoCard, { backgroundColor: colors.card }]}>
-          <Text style={[styles.infoTitle, { color: colors.text }]}>Platform Information</Text>
+          <Text style={[styles.infoTitle, { color: colors.text }]}>
+            Platform Information
+          </Text>
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
             Platform: {Platform.OS}
           </Text>
@@ -75,8 +90,15 @@ const FontDebug: React.FC<FontDebugProps> = ({ navigation }) => {
 
         {/* Font Tests */}
         <View style={[styles.section, { backgroundColor: colors.card }]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Font Tests</Text>
-          <Text style={[styles.infoText, { color: colors.textSecondary, marginBottom: 16 }]}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            Font Tests
+          </Text>
+          <Text
+            style={[
+              styles.infoText,
+              { color: colors.textSecondary, marginBottom: 16 },
+            ]}
+          >
             If fonts are working, each line should look different.
           </Text>
 
@@ -91,7 +113,7 @@ const FontDebug: React.FC<FontDebugProps> = ({ navigation }) => {
                 <Text
                   style={[
                     styles.fontSample,
-                    { 
+                    {
                       color: colors.text,
                       fontFamily: font.name,
                       ...(font.weight && { fontWeight: font.weight }),
@@ -110,33 +132,42 @@ const FontDebug: React.FC<FontDebugProps> = ({ navigation }) => {
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Weight Comparison (Same Font Family)
           </Text>
-          
-          <Text style={[styles.subsectionTitle, { color: colors.text }]}>Inter with fontWeight:</Text>
-          {['100', '200', '300', '400', '500', '600', '700', '800', '900'].map((weight) => (
-            <Text
-              key={weight}
-              style={[
-                styles.weightSample,
-                { 
-                  color: colors.text,
-                  fontFamily: 'Inter',
-                  fontWeight: weight as any,
-                },
-              ]}
-            >
-              Weight {weight}: The quick brown fox
-            </Text>
-          ))}
 
-          <Text style={[styles.subsectionTitle, { color: colors.text, marginTop: 20 }]}>
+          <Text style={[styles.subsectionTitle, { color: colors.text }]}>
+            Inter with fontWeight:
+          </Text>
+          {['100', '200', '300', '400', '500', '600', '700', '800', '900'].map(
+            weight => (
+              <Text
+                key={weight}
+                style={[
+                  styles.weightSample,
+                  {
+                    color: colors.text,
+                    fontFamily: 'Inter',
+                    fontWeight: weight as any,
+                  },
+                ]}
+              >
+                Weight {weight}: The quick brown fox
+              </Text>
+            ),
+          )}
+
+          <Text
+            style={[
+              styles.subsectionTitle,
+              { color: colors.text, marginTop: 20 },
+            ]}
+          >
             Roboto with fontWeight:
           </Text>
-          {['300', '400', '500', '700', '900'].map((weight) => (
+          {['300', '400', '500', '700', '900'].map(weight => (
             <Text
               key={weight}
               style={[
                 styles.weightSample,
-                { 
+                {
                   color: colors.text,
                   fontFamily: 'Roboto',
                   fontWeight: weight as any,
@@ -150,18 +181,39 @@ const FontDebug: React.FC<FontDebugProps> = ({ navigation }) => {
 
         {/* Expected Results */}
         <View style={[styles.section, { backgroundColor: colors.card }]}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Expected Results</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            Expected Results
+          </Text>
           <Text style={[styles.infoText, { color: colors.textSecondary }]}>
-            ✅ <Text style={{ fontWeight: 'bold' }}>Working:</Text> Each font family should look visually different
+            ✅ <Text style={{ fontWeight: 'bold' }}>Working:</Text> Each font
+            family should look visually different
           </Text>
-          <Text style={[styles.infoText, { color: colors.textSecondary, marginTop: 8 }]}>
-            ✅ <Text style={{ fontWeight: 'bold' }}>Working:</Text> Different weights (300, 400, 700) should have different thickness
+          <Text
+            style={[
+              styles.infoText,
+              { color: colors.textSecondary, marginTop: 8 },
+            ]}
+          >
+            ✅ <Text style={{ fontWeight: 'bold' }}>Working:</Text> Different
+            weights (300, 400, 700) should have different thickness
           </Text>
-          <Text style={[styles.infoText, { color: colors.textSecondary, marginTop: 8 }]}>
-            ❌ <Text style={{ fontWeight: 'bold' }}>Not Working:</Text> All fonts look the same
+          <Text
+            style={[
+              styles.infoText,
+              { color: colors.textSecondary, marginTop: 8 },
+            ]}
+          >
+            ❌ <Text style={{ fontWeight: 'bold' }}>Not Working:</Text> All
+            fonts look the same
           </Text>
-          <Text style={[styles.infoText, { color: colors.textSecondary, marginTop: 8 }]}>
-            ❌ <Text style={{ fontWeight: 'bold' }}>Not Working:</Text> Weight changes have no effect
+          <Text
+            style={[
+              styles.infoText,
+              { color: colors.textSecondary, marginTop: 8 },
+            ]}
+          >
+            ❌ <Text style={{ fontWeight: 'bold' }}>Not Working:</Text> Weight
+            changes have no effect
           </Text>
         </View>
 

@@ -1,10 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Linking, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Linking,
+  TouchableOpacity,
+} from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import VersionFooter from '../../components/VersionFooter';
 
 interface AboutBusinessProps {
@@ -218,22 +225,24 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
           {/* Phone Number */}
           {deal.business_phone && (
             <TouchableOpacity onPress={handlePhonePress}>
-            <View style={styles.businessInfoRow}>
-              <MaterialIcons name="phone" size={20} color={colors.primary} />
-              <View style={styles.businessInfoContent}>
-                <Text
-                  style={[
-                    styles.businessInfoLabel,
-                    { color: colors.textSecondary },
-                  ]}
-                >
-                  Phone
-                </Text>
-                <Text style={[styles.businessInfoText, { color: colors.text }]}>
-                  {deal.business_phone}
-                </Text>
+              <View style={styles.businessInfoRow}>
+                <MaterialIcons name="phone" size={20} color={colors.primary} />
+                <View style={styles.businessInfoContent}>
+                  <Text
+                    style={[
+                      styles.businessInfoLabel,
+                      { color: colors.textSecondary },
+                    ]}
+                  >
+                    Phone
+                  </Text>
+                  <Text
+                    style={[styles.businessInfoText, { color: colors.text }]}
+                  >
+                    {deal.business_phone}
+                  </Text>
+                </View>
               </View>
-            </View>
             </TouchableOpacity>
           )}
 
@@ -241,23 +250,27 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
           {deal.business_website && (
             <TouchableOpacity onPress={handleWebsitePress}>
               <View style={styles.businessInfoRow}>
-                <MaterialIcons name="language" size={20} color={colors.primary} />
+                <MaterialIcons
+                  name="language"
+                  size={20}
+                  color={colors.primary}
+                />
                 <View style={styles.businessInfoContent}>
                   <Text
                     style={[
-                    styles.businessInfoLabel,
-                    { color: colors.textSecondary },
-                  ]}
-                >
-                  Website
-                </Text>
-                <Text
-                  style={[styles.businessInfoText, { color: colors.primary }]}
-                >
-                  {deal.business_website}
-                </Text>
+                      styles.businessInfoLabel,
+                      { color: colors.textSecondary },
+                    ]}
+                  >
+                    Website
+                  </Text>
+                  <Text
+                    style={[styles.businessInfoText, { color: colors.primary }]}
+                  >
+                    {deal.business_website}
+                  </Text>
+                </View>
               </View>
-            </View>
             </TouchableOpacity>
           )}
         </View>

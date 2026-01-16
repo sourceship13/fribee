@@ -11,23 +11,70 @@ import {
 import { useAuth } from '../../../libs/hooks/useAuth';
 import { getColors } from '../../../libs/colors';
 import Toolbar from '../../../components/Toolbar';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from '@react-native-vector-icons/material-icons';
 
 const COUNTRIES = ['United States', 'Canada', 'Mexico', 'United Kingdom'];
 const STATES: Record<string, string[]> = {
   'United States': [
-    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-    'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia',
-    'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
-    'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
-    'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri',
-    'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey',
-    'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio',
-    'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina',
-    'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-    'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming',
+    'Alabama',
+    'Alaska',
+    'Arizona',
+    'Arkansas',
+    'California',
+    'Colorado',
+    'Connecticut',
+    'Delaware',
+    'Florida',
+    'Georgia',
+    'Hawaii',
+    'Idaho',
+    'Illinois',
+    'Indiana',
+    'Iowa',
+    'Kansas',
+    'Kentucky',
+    'Louisiana',
+    'Maine',
+    'Maryland',
+    'Massachusetts',
+    'Michigan',
+    'Minnesota',
+    'Mississippi',
+    'Missouri',
+    'Montana',
+    'Nebraska',
+    'Nevada',
+    'New Hampshire',
+    'New Jersey',
+    'New Mexico',
+    'New York',
+    'North Carolina',
+    'North Dakota',
+    'Ohio',
+    'Oklahoma',
+    'Oregon',
+    'Pennsylvania',
+    'Rhode Island',
+    'South Carolina',
+    'South Dakota',
+    'Tennessee',
+    'Texas',
+    'Utah',
+    'Vermont',
+    'Virginia',
+    'Washington',
+    'West Virginia',
+    'Wisconsin',
+    'Wyoming',
   ],
-  Canada: ['Ontario', 'Quebec', 'British Columbia', 'Alberta', 'Manitoba', 'Saskatchewan'],
+  Canada: [
+    'Ontario',
+    'Quebec',
+    'British Columbia',
+    'Alberta',
+    'Manitoba',
+    'Saskatchewan',
+  ],
   Mexico: ['Mexico City', 'Jalisco', 'Nuevo León', 'Puebla', 'Guanajuato'],
   'United Kingdom': ['England', 'Scotland', 'Wales', 'Northern Ireland'],
 };
@@ -37,7 +84,9 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
   const colors = getColors(isDarkMode);
 
   const [businessName, setBusinessName] = useState('Debug Business');
-  const [description, setDescription] = useState('This is a debug description for the business.');
+  const [description, setDescription] = useState(
+    'This is a debug description for the business.',
+  );
   const [address, setAddress] = useState('19208 Kenya St');
   const [city, setCity] = useState('Northridge');
   const [country, setCountry] = useState('United States');
@@ -65,7 +114,7 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
     value: string,
     placeholder: string,
     onPress: () => void,
-    flex?: number
+    flex?: number,
   ) => (
     <TouchableOpacity
       style={[
@@ -79,10 +128,7 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
       onPress={onPress}
     >
       <Text
-        style={[
-          styles.dropdownText,
-          { color: value ? colors.text : '#999' },
-        ]}
+        style={[styles.dropdownText, { color: value ? colors.text : '#999' }]}
         numberOfLines={1}
       >
         {value || placeholder}
@@ -96,7 +142,7 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
     onClose: () => void,
     options: string[],
     onSelect: (value: string) => void,
-    title: string
+    title: string,
   ) => {
     if (!visible) return null;
 
@@ -106,10 +152,14 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
         activeOpacity={1}
         onPress={onClose}
       >
-        <View style={[styles.pickerModal, { backgroundColor: colors.background }]}>
-          <Text style={[styles.pickerTitle, { color: colors.text }]}>{title}</Text>
+        <View
+          style={[styles.pickerModal, { backgroundColor: colors.background }]}
+        >
+          <Text style={[styles.pickerTitle, { color: colors.text }]}>
+            {title}
+          </Text>
           <ScrollView style={styles.pickerList}>
-            {options.map((option) => (
+            {options.map(option => (
               <TouchableOpacity
                 key={option}
                 style={styles.pickerItem}
@@ -130,7 +180,9 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
   };
 
   return (
-    <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
+    <View
+      style={[styles.mainContainer, { backgroundColor: colors.background }]}
+    >
       <Toolbar
         title="Business Creation"
         onBack={() => navigation.goBack()}
@@ -145,10 +197,12 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
         {/* Step Header */}
         <View style={styles.headerSection}>
           <Text style={[styles.stepTitle, { color: colors.text }]}>
-            Step 1. <Text style={styles.stepTitleBold}>General Information</Text>
+            Step 1.{' '}
+            <Text style={styles.stepTitleBold}>General Information</Text>
           </Text>
           <Text style={[styles.stepSubtitle, { color: '#666' }]}>
-            Let's get started by collecting some basic information about your business
+            Let's get started by collecting some basic information about your
+            business
           </Text>
         </View>
 
@@ -257,18 +311,18 @@ const BusinessCreationScreen1 = ({ navigation, route }: any) => {
         showCountryPicker,
         () => setShowCountryPicker(false),
         COUNTRIES,
-        (value) => {
+        value => {
           setCountry(value);
           setState(''); // Reset state when country changes
         },
-        'Select Country'
+        'Select Country',
       )}
       {renderPickerModal(
         showStatePicker,
         () => setShowStatePicker(false),
         STATES[country] || STATES['United States'],
         setState,
-        'Select State'
+        'Select State',
       )}
     </View>
   );
@@ -301,7 +355,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 22,
     fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
-    marginTop:10,
+    marginTop: 10,
   },
   formSection: {
     gap: 16,

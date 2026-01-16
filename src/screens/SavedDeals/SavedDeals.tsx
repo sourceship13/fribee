@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import Toolbar from '../../components/Toolbar';
 
 type TabType = 'ready' | 'share' | 'redeemed';

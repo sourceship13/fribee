@@ -13,7 +13,7 @@ import { useAuth } from '../../../libs/hooks/useAuth';
 import { getColors } from '../../../libs/colors';
 import Toolbar from '../../../components/Toolbar';
 import { launchImageLibrary, Asset } from 'react-native-image-picker';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from '@react-native-vector-icons/material-icons';
 
 const BusinessCreationScreen2 = ({ navigation, route }: any) => {
   const { isDarkMode } = useAuth();
@@ -76,7 +76,10 @@ const BusinessCreationScreen2 = ({ navigation, route }: any) => {
 
   const handleNext = () => {
     if (!logoFile) {
-      Alert.alert('Missing Logo', 'Please upload your Business Logo before continuing.');
+      Alert.alert(
+        'Missing Logo',
+        'Please upload your Business Logo before continuing.',
+      );
       return;
     }
     navigation.navigate('BusinessCreationScreen3', {
@@ -97,7 +100,7 @@ const BusinessCreationScreen2 = ({ navigation, route }: any) => {
   const renderUploadBox = (
     file: Asset | null,
     type: 'logo' | 'cover',
-    isRequired: boolean = false
+    isRequired: boolean = false,
   ) => {
     const hasFile = file !== null;
 
@@ -127,8 +130,7 @@ const BusinessCreationScreen2 = ({ navigation, route }: any) => {
               <Icon name="cloud-upload" size={32} color="#E4760F" />
             </View>
             <Text style={styles.uploadText}>
-              Drag & drop files or{' '}
-              <Text style={styles.browseText}>Browse</Text>
+              Drag & drop files or <Text style={styles.browseText}>Browse</Text>
             </Text>
             <Text style={styles.supportedText}>
               Supported formates: SVG, PNG, JPG
@@ -140,7 +142,9 @@ const BusinessCreationScreen2 = ({ navigation, route }: any) => {
   };
 
   return (
-    <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
+    <View
+      style={[styles.mainContainer, { backgroundColor: colors.background }]}
+    >
       <Toolbar
         title="Business Creation"
         onBack={() => navigation.goBack()}
@@ -158,7 +162,8 @@ const BusinessCreationScreen2 = ({ navigation, route }: any) => {
             Step 2. <Text style={styles.stepTitleBold}>Logo & Cover Photo</Text>
           </Text>
           <Text style={[styles.stepSubtitle, { color: '#666' }]}>
-            Upload your business logo and cover photo to make your profile stand out. This helps customers recognize your brand easily
+            Upload your business logo and cover photo to make your profile stand
+            out. This helps customers recognize your brand easily
           </Text>
         </View>
 

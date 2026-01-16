@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from '@react-native-vector-icons/material-icons';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import { iOSUIKit } from 'react-native-typography';
@@ -24,7 +24,6 @@ import VersionFooter from '../../components/VersionFooter';
 import instagramAuthService from '../../services/instagram-auth.service';
 import apiService from '../../services/api.service';
 import AuthService from '../../services/auth.service';
-
 
 const signInBackground = require('../../../assets/imgs/signInBackground.png');
 const FribeeLogoPNG = require('../../../assets/imgs/fribee-logo.png');
@@ -37,7 +36,9 @@ const SignInScreen = ({ navigation, route }: any) => {
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [instagramLoading, setInstagramLoading] = useState(false);
-  const [createUserModal, setCreateUserModal] = useState(route?.params?.showSignUp || false);
+  const [createUserModal, setCreateUserModal] = useState(
+    route?.params?.showSignUp || false,
+  );
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState<any>({});
   const [phone, setPhone] = useState('');
@@ -54,14 +55,17 @@ const SignInScreen = ({ navigation, route }: any) => {
   const formatPhoneNumber = (text: string) => {
     // Remove all non-digits
     const digits = text.replace(/\D/g, '');
-    
+
     // Format based on length
     if (digits.length <= 3) {
       return digits;
     } else if (digits.length <= 6) {
       return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
     } else {
-      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(
+        6,
+        10,
+      )}`;
     }
   };
 
@@ -315,286 +319,374 @@ const SignInScreen = ({ navigation, route }: any) => {
             }}
           >
             <ScrollView
-              contentContainerStyle={{ padding: 20, }}
+              contentContainerStyle={{ padding: 20 }}
               showsVerticalScrollIndicator={false}
               keyboardShouldPersistTaps="handled"
             >
-          {createUserModal ? (
-            <>
-              <Text style={[styles.title, { color: colors.text }]}>
-                Create Account
-              </Text>
-              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                Enter your details to create a new account.
-              </Text>
-
-              <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
-                <View style={{ flex: 1 }}>
-                  <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                    First Name
-                  </Text>
-                  <TextInput
-                    style={[
-                      styles.input,
-                      { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
-                      errors.firstName && styles.inputError,
-                    ]}
-                    placeholder="First Name"
-                    placeholderTextColor={colors.textPlaceholder}
-                    value={fields.firstName}
-                    onChangeText={(text) => {
-                      setFields({ ...fields, firstName: text });
-                      clearFieldError('firstName');
-                    }}
-                    autoCapitalize="words"
-                    textContentType="givenName"
-                    autoComplete="off"
-                  />
-                  {errors.firstName && (
-                    <Text style={styles.errorText}>{errors.firstName}</Text>
-                  )}
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                    Last Name
-                  </Text>
-                  <TextInput
-                    style={[
-                      styles.input,
-                      { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
-                      errors.lastName && styles.inputError,
-                    ]}
-                    placeholder="Last Name"
-                    placeholderTextColor={colors.textPlaceholder}
-                    value={fields.lastName}
-                    onChangeText={(text) => {
-                      setFields({ ...fields, lastName: text });
-                      clearFieldError('lastName');
-                    }}
-                    autoCapitalize="words"
-                    textContentType="familyName"
-                    autoComplete="off"
-                  />
-                  {errors.lastName && (
-                    <Text style={styles.errorText}>{errors.lastName}</Text>
-                  )}
-                </View>
-              </View>
-
-              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                Email
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
-                  errors.email && styles.inputError,
-                ]}
-                placeholder="Email"
-                placeholderTextColor={colors.textPlaceholder}
-                value={fields.email}
-                onChangeText={(text) => {
-                  setFields({ ...fields, email: text });
-                  clearFieldError('email');
-                }}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                textContentType="none"
-                autoComplete="off"
-              />
-              {errors.email && (
-                <Text style={styles.errorText}>{errors.email}</Text>
-              )}
-
-              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                Phone Number
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
-                  errors.phone && styles.inputError,
-                ]}
-                placeholder="(555) 123-4567"
-                placeholderTextColor={colors.textPlaceholder}
-                value={formatPhoneNumber(fields.phone)}
-                onChangeText={(text) => {
-                  // Store only digits for API
-                  const digits = text.replace(/\D/g, '');
-                  setFields({ ...fields, phone: digits });
-                  clearFieldError('phone');
-                }}
-                keyboardType="phone-pad"
-                autoCapitalize="none"
-                maxLength={14}
-              />
-              {errors.phone && (
-                <Text style={styles.errorText}>{errors.phone}</Text>
-              )}
-
-              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                Password
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
-                  errors.password && styles.inputError,
-                ]}
-                placeholder="Password"
-                placeholderTextColor={colors.textPlaceholder}
-                value={fields.password}
-                onChangeText={(text) => {
-                  setFields({ ...fields, password: text });
-                  clearFieldError('password');
-                }}
-                secureTextEntry
-              />
-              {errors.password && (
-                <Text style={styles.errorText}>{errors.password}</Text>
-              )}
-
-              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                Confirm Password
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
-                  errors.confirmPassword && styles.inputError,
-                ]}
-                placeholder="Confirm Password"
-                placeholderTextColor={colors.textPlaceholder}
-                value={confirmPassword}
-                onChangeText={(text) => {
-                  setConfirmPassword(text);
-                  clearFieldError('confirmPassword');
-                }}
-                secureTextEntry
-              />
-              {errors.confirmPassword && (
-                <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-              )}
-
-              <TouchableOpacity
-                style={[
-                  styles.button,
-                  { backgroundColor: colors.text },
-                  loading && styles.buttonDisabled,
-                ]}
-                onPress={handleSignUp}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator color={colors.background} />
-                ) : (
-                  <Text
-                    style={{ color: colors.background, fontWeight: 'bold' }}
-                  >
+              {createUserModal ? (
+                <>
+                  <Text style={[styles.title, { color: colors.text }]}>
                     Create Account
                   </Text>
-                )}
-              </TouchableOpacity>
-
-              <View style={{ alignItems: 'center', marginTop: 12 }}>
-                <TouchableOpacity onPress={() => setCreateUserModal(false)}>
                   <Text
                     style={[styles.subtitle, { color: colors.textSecondary }]}
                   >
-                    Already have an account?{' '}
-                    <Text
-                      style={{
-                        color: colors.text,
-                        textDecorationLine: 'underline',
-                      }}
-                    >
-                      Sign In
-                    </Text>
+                    Enter your details to create a new account.
                   </Text>
-                </TouchableOpacity>
-              </View>
-            </>
-          ) : (
-            <>
-              <Text style={[styles.title, { color: colors.text }]}>
-                Sign In
-              </Text>
-              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                Enter your credentials to access your account.
-              </Text>
 
-              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                Email
-              </Text>
-
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
-                ]}
-                placeholder="Email"
-                placeholderTextColor={colors.textPlaceholder}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-                Password
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  { color: colors.text, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.loginInputBorder },
-                ]}
-                placeholder="Password"
-                placeholderTextColor={colors.textPlaceholder}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-              />
-              <TouchableOpacity
-                style={[
-                  styles.button,
-                  { backgroundColor: loading ? colors.disabled : colors.text },
-                ]}
-                onPress={handleSignIn}
-                disabled={loading}
-              >
-                {loading ? (
-                  <ActivityIndicator size="small" color={colors.background} />
-                ) : (
-                  <Text
-                    style={[
-                      iOSUIKit.callout,
-                      { color: colors.background, fontWeight: 'bold' },
-                    ]}
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'flex-start',
+                      justifyContent: 'space-between',
+                      gap: 10,
+                    }}
                   >
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={[
+                          styles.subtitle,
+                          { color: colors.textSecondary },
+                        ]}
+                      >
+                        First Name
+                      </Text>
+                      <TextInput
+                        style={[
+                          styles.input,
+                          {
+                            color: colors.text,
+                            backgroundColor: colors.surface,
+                            borderWidth: 1,
+                            borderColor: colors.loginInputBorder,
+                          },
+                          errors.firstName && styles.inputError,
+                        ]}
+                        placeholder="First Name"
+                        placeholderTextColor={colors.textPlaceholder}
+                        value={fields.firstName}
+                        onChangeText={text => {
+                          setFields({ ...fields, firstName: text });
+                          clearFieldError('firstName');
+                        }}
+                        autoCapitalize="words"
+                        textContentType="givenName"
+                        autoComplete="off"
+                      />
+                      {errors.firstName && (
+                        <Text style={styles.errorText}>{errors.firstName}</Text>
+                      )}
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={[
+                          styles.subtitle,
+                          { color: colors.textSecondary },
+                        ]}
+                      >
+                        Last Name
+                      </Text>
+                      <TextInput
+                        style={[
+                          styles.input,
+                          {
+                            color: colors.text,
+                            backgroundColor: colors.surface,
+                            borderWidth: 1,
+                            borderColor: colors.loginInputBorder,
+                          },
+                          errors.lastName && styles.inputError,
+                        ]}
+                        placeholder="Last Name"
+                        placeholderTextColor={colors.textPlaceholder}
+                        value={fields.lastName}
+                        onChangeText={text => {
+                          setFields({ ...fields, lastName: text });
+                          clearFieldError('lastName');
+                        }}
+                        autoCapitalize="words"
+                        textContentType="familyName"
+                        autoComplete="off"
+                      />
+                      {errors.lastName && (
+                        <Text style={styles.errorText}>{errors.lastName}</Text>
+                      )}
+                    </View>
+                  </View>
+
+                  <Text
+                    style={[styles.subtitle, { color: colors.textSecondary }]}
+                  >
+                    Email
+                  </Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        color: colors.text,
+                        backgroundColor: colors.surface,
+                        borderWidth: 1,
+                        borderColor: colors.loginInputBorder,
+                      },
+                      errors.email && styles.inputError,
+                    ]}
+                    placeholder="Email"
+                    placeholderTextColor={colors.textPlaceholder}
+                    value={fields.email}
+                    onChangeText={text => {
+                      setFields({ ...fields, email: text });
+                      clearFieldError('email');
+                    }}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    textContentType="none"
+                    autoComplete="off"
+                  />
+                  {errors.email && (
+                    <Text style={styles.errorText}>{errors.email}</Text>
+                  )}
+
+                  <Text
+                    style={[styles.subtitle, { color: colors.textSecondary }]}
+                  >
+                    Phone Number
+                  </Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        color: colors.text,
+                        backgroundColor: colors.surface,
+                        borderWidth: 1,
+                        borderColor: colors.loginInputBorder,
+                      },
+                      errors.phone && styles.inputError,
+                    ]}
+                    placeholder="(555) 123-4567"
+                    placeholderTextColor={colors.textPlaceholder}
+                    value={formatPhoneNumber(fields.phone)}
+                    onChangeText={text => {
+                      // Store only digits for API
+                      const digits = text.replace(/\D/g, '');
+                      setFields({ ...fields, phone: digits });
+                      clearFieldError('phone');
+                    }}
+                    keyboardType="phone-pad"
+                    autoCapitalize="none"
+                    maxLength={14}
+                  />
+                  {errors.phone && (
+                    <Text style={styles.errorText}>{errors.phone}</Text>
+                  )}
+
+                  <Text
+                    style={[styles.subtitle, { color: colors.textSecondary }]}
+                  >
+                    Password
+                  </Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        color: colors.text,
+                        backgroundColor: colors.surface,
+                        borderWidth: 1,
+                        borderColor: colors.loginInputBorder,
+                      },
+                      errors.password && styles.inputError,
+                    ]}
+                    placeholder="Password"
+                    placeholderTextColor={colors.textPlaceholder}
+                    value={fields.password}
+                    onChangeText={text => {
+                      setFields({ ...fields, password: text });
+                      clearFieldError('password');
+                    }}
+                    secureTextEntry
+                  />
+                  {errors.password && (
+                    <Text style={styles.errorText}>{errors.password}</Text>
+                  )}
+
+                  <Text
+                    style={[styles.subtitle, { color: colors.textSecondary }]}
+                  >
+                    Confirm Password
+                  </Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        color: colors.text,
+                        backgroundColor: colors.surface,
+                        borderWidth: 1,
+                        borderColor: colors.loginInputBorder,
+                      },
+                      errors.confirmPassword && styles.inputError,
+                    ]}
+                    placeholder="Confirm Password"
+                    placeholderTextColor={colors.textPlaceholder}
+                    value={confirmPassword}
+                    onChangeText={text => {
+                      setConfirmPassword(text);
+                      clearFieldError('confirmPassword');
+                    }}
+                    secureTextEntry
+                  />
+                  {errors.confirmPassword && (
+                    <Text style={styles.errorText}>
+                      {errors.confirmPassword}
+                    </Text>
+                  )}
+
+                  <TouchableOpacity
+                    style={[
+                      styles.button,
+                      { backgroundColor: colors.text },
+                      loading && styles.buttonDisabled,
+                    ]}
+                    onPress={handleSignUp}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <ActivityIndicator color={colors.background} />
+                    ) : (
+                      <Text
+                        style={{ color: colors.background, fontWeight: 'bold' }}
+                      >
+                        Create Account
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+
+                  <View style={{ alignItems: 'center', marginTop: 12 }}>
+                    <TouchableOpacity onPress={() => setCreateUserModal(false)}>
+                      <Text
+                        style={[
+                          styles.subtitle,
+                          { color: colors.textSecondary },
+                        ]}
+                      >
+                        Already have an account?{' '}
+                        <Text
+                          style={{
+                            color: colors.text,
+                            textDecorationLine: 'underline',
+                          }}
+                        >
+                          Sign In
+                        </Text>
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
+              ) : (
+                <>
+                  <Text style={[styles.title, { color: colors.text }]}>
                     Sign In
                   </Text>
-                )}
-              </TouchableOpacity>
-
-              <View style={{ alignItems: 'center', marginTop: 12 }}>
-                <TouchableOpacity onPress={() => setCreateUserModal(true)}>
                   <Text
                     style={[styles.subtitle, { color: colors.textSecondary }]}
                   >
-                    Don't have an account?{' '}
-                    <Text
-                      onPress={() => setCreateUserModal(true)}
-                      style={{
-                        color: colors.text,
-                        textDecorationLine: 'underline',
-                      }}
-                    >
-                      Sign Up
-                    </Text>
+                    Enter your credentials to access your account.
                   </Text>
-                </TouchableOpacity>
-              </View>
-            </>
-          )}
+
+                  <Text
+                    style={[styles.subtitle, { color: colors.textSecondary }]}
+                  >
+                    Email
+                  </Text>
+
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        color: colors.text,
+                        backgroundColor: colors.surface,
+                        borderWidth: 1,
+                        borderColor: colors.loginInputBorder,
+                      },
+                    ]}
+                    placeholder="Email"
+                    placeholderTextColor={colors.textPlaceholder}
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                  <Text
+                    style={[styles.subtitle, { color: colors.textSecondary }]}
+                  >
+                    Password
+                  </Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        color: colors.text,
+                        backgroundColor: colors.surface,
+                        borderWidth: 1,
+                        borderColor: colors.loginInputBorder,
+                      },
+                    ]}
+                    placeholder="Password"
+                    placeholderTextColor={colors.textPlaceholder}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                  />
+                  <TouchableOpacity
+                    style={[
+                      styles.button,
+                      {
+                        backgroundColor: loading
+                          ? colors.disabled
+                          : colors.text,
+                      },
+                    ]}
+                    onPress={handleSignIn}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <ActivityIndicator
+                        size="small"
+                        color={colors.background}
+                      />
+                    ) : (
+                      <Text
+                        style={[
+                          iOSUIKit.callout,
+                          { color: colors.background, fontWeight: 'bold' },
+                        ]}
+                      >
+                        Sign In
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+
+                  <View style={{ alignItems: 'center', marginTop: 12 }}>
+                    <TouchableOpacity onPress={() => setCreateUserModal(true)}>
+                      <Text
+                        style={[
+                          styles.subtitle,
+                          { color: colors.textSecondary },
+                        ]}
+                      >
+                        Don't have an account?{' '}
+                        <Text
+                          onPress={() => setCreateUserModal(true)}
+                          style={{
+                            color: colors.text,
+                            textDecorationLine: 'underline',
+                          }}
+                        >
+                          Sign Up
+                        </Text>
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
             </ScrollView>
           </View>
         </KeyboardAvoidingView>

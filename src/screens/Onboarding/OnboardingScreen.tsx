@@ -13,7 +13,7 @@ import {
   Modal,
 } from 'react-native';
 import { iOSUIKit } from 'react-native-typography';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons } from '@react-native-vector-icons/material-icons';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const FribeeLogoPNG = require('../../../assets/imgs/fribee-logo.png');

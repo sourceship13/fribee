@@ -11,7 +11,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { getColors } from '../../libs/colors';
 
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import { useAuth } from '../../libs/hooks/useAuth';
 import Toolbar from '../../components/Toolbar';
 import { iOSUIKit } from 'react-native-typography';
@@ -174,7 +174,7 @@ const RedemptionScreen = () => {
         <View
           style={[styles.modalHeader, { borderBottomColor: colors.border }]}
         >
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.closeButton, { borderColor: colors.border }]}
             onPress={() => navigation.goBack()}
           >
@@ -210,7 +210,14 @@ const RedemptionScreen = () => {
               justifyContent: 'center',
             }}
           >
-            <Text style={{ fontWeight: '600', fontSize: 16, color: colors.text, marginBottom: 4 }}>
+            <Text
+              style={{
+                fontWeight: '600',
+                fontSize: 16,
+                color: colors.text,
+                marginBottom: 4,
+              }}
+            >
               {deal.business_name}
             </Text>
             <Text
@@ -223,11 +230,21 @@ const RedemptionScreen = () => {
             >
               {deal.description}
             </Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text style={{ color: '#FF9500', fontSize: 14, fontWeight: '500' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Text
+                style={{ color: '#FF9500', fontSize: 14, fontWeight: '500' }}
+              >
                 Goal achieved!
               </Text>
-              <Text style={{ color: '#FF9500', fontSize: 14, fontWeight: '500' }}>
+              <Text
+                style={{ color: '#FF9500', fontSize: 14, fontWeight: '500' }}
+              >
                 0/3
               </Text>
             </View>
@@ -236,32 +253,48 @@ const RedemptionScreen = () => {
         <View style={styles.couponWrapper}>
           {/* Coupon Card with SVG background */}
           <View style={styles.couponTopBackground}>
-              <RedeemBg
-                width={screenWidth - 40}
-                height={150}
-                preserveAspectRatio="xMidYMin slice"
-              />
-            </View>
+            <RedeemBg
+              width={screenWidth - 40}
+              height={150}
+              preserveAspectRatio="xMidYMin slice"
+            />
+          </View>
           <View style={styles.couponCardContainer}>
             {/* SVG Background for top section */}
-            
-            
+
             {/* Coupon Content Card */}
-            <View style={[styles.couponCard, { backgroundColor: colors.surface }]}>
+            <View
+              style={[styles.couponCard, { backgroundColor: colors.surface }]}
+            >
               {/* Top Section - Promo Code */}
               <View style={styles.couponTopSection}>
-                <Text style={[styles.couponLabel, { color: colors.textTertiary }]}>Your promocode:</Text>
+                <Text
+                  style={[styles.couponLabel, { color: colors.textTertiary }]}
+                >
+                  Your promocode:
+                </Text>
                 <View style={styles.codeRow}>
                   <Text style={styles.couponCode}>{redemptionCode}</Text>
                   <TouchableOpacity style={styles.copyButton}>
-                    <MaterialIcons name="content-copy" size={20} color={colors.textTertiary} />
+                    <MaterialIcons
+                      name="content-copy"
+                      size={20}
+                      color={colors.textTertiary}
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
 
               {/* Bottom Section - Barcode */}
-              <View style={[styles.couponBottomSection, { backgroundColor: colors.surface }]}>
-                <Text style={[styles.scanLabel, { color: colors.text }]}>Or scan QR code below:</Text>
+              <View
+                style={[
+                  styles.couponBottomSection,
+                  { backgroundColor: colors.surface },
+                ]}
+              >
+                <Text style={[styles.scanLabel, { color: colors.text }]}>
+                  Or scan QR code below:
+                </Text>
                 <View style={styles.barcodeContainer}>
                   <BarcodeCreatorView
                     value={redemptionCode}
@@ -274,8 +307,18 @@ const RedemptionScreen = () => {
               </View>
 
               {/* Divider and Button */}
-              <View style={[styles.redeemSection, { backgroundColor: colors.surface }]}>
-                <View style={[styles.redeemDivider, { backgroundColor: colors.border }]} />
+              <View
+                style={[
+                  styles.redeemSection,
+                  { backgroundColor: colors.surface },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.redeemDivider,
+                    { backgroundColor: colors.border },
+                  ]}
+                />
                 <TouchableOpacity
                   style={styles.redeemButton}
                   activeOpacity={0.7}
@@ -301,7 +344,11 @@ const RedemptionScreen = () => {
                     }
                   }}
                 >
-                  <Text style={[styles.redeemButtonText, { color: colors.text }]}>Set Deal as Redeemed</Text>
+                  <Text
+                    style={[styles.redeemButtonText, { color: colors.text }]}
+                  >
+                    Set Deal as Redeemed
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -398,8 +445,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  redeemSection: {
-  },
+  redeemSection: {},
   redeemDivider: {
     height: 1,
   },

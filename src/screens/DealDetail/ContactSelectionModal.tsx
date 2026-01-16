@@ -9,7 +9,7 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import { getColors } from '../../libs/hooks/useAuth';
 import { iOSUIKit } from 'react-native-typography';
 import { TextInput } from 'react-native-gesture-handler';
@@ -71,7 +71,12 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
         activeOpacity={0.7}
       >
         <View style={styles.contactInfo}>
-          <View style={[styles.avatar, { backgroundColor: colors.lightContactBadge }]}>
+          <View
+            style={[
+              styles.avatar,
+              { backgroundColor: colors.lightContactBadge },
+            ]}
+          >
             <Text style={[styles.avatarText, { color: colors.text }]}>
               {item.displayName?.charAt(0)?.toUpperCase() || '?'}
             </Text>
@@ -104,7 +109,13 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
       >
         {/* Modal Header */}
         <View
-          style={[styles.modalHeader, { borderBottomColor: colors.border, backgroundColor: colors.background }]}
+          style={[
+            styles.modalHeader,
+            {
+              borderBottomColor: colors.border,
+              backgroundColor: colors.background,
+            },
+          ]}
         >
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <MaterialIcons name="close" size={24} color={colors.text} />
@@ -115,7 +126,16 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
         </View>
 
         {/* Deal Badge */}
-        <View style={[styles.dealBadge, { borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface }]}>
+        <View
+          style={[
+            styles.dealBadge,
+            {
+              borderWidth: 1,
+              borderColor: colors.border,
+              backgroundColor: colors.surface,
+            },
+          ]}
+        >
           <View style={[styles.dealIcon, { backgroundColor: colors.primary }]}>
             <Text style={styles.dealEmoji}>🛍️</Text>
           </View>
@@ -208,7 +228,15 @@ const ContactSelectionModal: React.FC<ContactSelectionModalProps> = ({
         />
 
         {/* Share Button */}
-        <View style={[styles.modalFooter, { borderTopColor: colors.border, backgroundColor: colors.background }]}>
+        <View
+          style={[
+            styles.modalFooter,
+            {
+              borderTopColor: colors.border,
+              backgroundColor: colors.background,
+            },
+          ]}
+        >
           <TouchableOpacity
             style={[
               styles.shareModalButton,

@@ -13,7 +13,7 @@ import { useAuth } from '../../../libs/hooks/useAuth';
 import { getColors } from '../../../libs/colors';
 import Toolbar from '../../../components/Toolbar';
 import { launchImageLibrary, Asset } from 'react-native-image-picker';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from '@react-native-vector-icons/material-icons';
 
 const MAX_PHOTOS = 3;
 
@@ -38,7 +38,10 @@ const BusinessCreationScreen3 = ({ navigation, route }: any) => {
 
   const pickImages = async () => {
     if (businessPhotos.length >= MAX_PHOTOS) {
-      Alert.alert('Limit Reached', `You can only upload up to ${MAX_PHOTOS} photos`);
+      Alert.alert(
+        'Limit Reached',
+        `You can only upload up to ${MAX_PHOTOS} photos`,
+      );
       return;
     }
 
@@ -59,7 +62,10 @@ const BusinessCreationScreen3 = ({ navigation, route }: any) => {
       }
 
       if (result.assets && result.assets.length > 0) {
-        const newPhotos = [...businessPhotos, ...result.assets].slice(0, MAX_PHOTOS);
+        const newPhotos = [...businessPhotos, ...result.assets].slice(
+          0,
+          MAX_PHOTOS,
+        );
         setBusinessPhotos(newPhotos);
       }
     } catch (error) {
@@ -101,7 +107,7 @@ const BusinessCreationScreen3 = ({ navigation, route }: any) => {
             fileSize: coverFile.fileSize,
           }
         : null,
-      businessPhotos: businessPhotos.map((photo) => ({
+      businessPhotos: businessPhotos.map(photo => ({
         uri: photo.uri,
         type: photo.type,
         fileName: photo.fileName,
@@ -122,8 +128,7 @@ const BusinessCreationScreen3 = ({ navigation, route }: any) => {
             <Icon name="cloud-upload" size={32} color="#E4760F" />
           </View>
           <Text style={styles.uploadText}>
-            Drag & drop files or{' '}
-            <Text style={styles.browseText}>Browse</Text>
+            Drag & drop files or <Text style={styles.browseText}>Browse</Text>
           </Text>
           <Text style={styles.supportedText}>
             Supported formates: SVG, PNG, JPG
@@ -158,7 +163,9 @@ const BusinessCreationScreen3 = ({ navigation, route }: any) => {
   };
 
   return (
-    <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
+    <View
+      style={[styles.mainContainer, { backgroundColor: colors.background }]}
+    >
       <Toolbar
         title="Business Creation"
         onBack={() => navigation.goBack()}
@@ -176,14 +183,16 @@ const BusinessCreationScreen3 = ({ navigation, route }: any) => {
             Step 3. <Text style={styles.stepTitleBold}>Business Photos</Text>
           </Text>
           <Text style={[styles.stepSubtitle, { color: '#666' }]}>
-            Upload photos of your business to enhance your profile and drive customers into your establishmant
+            Upload photos of your business to enhance your profile and drive
+            customers into your establishmant
           </Text>
         </View>
 
         {/* Photos Upload Section */}
         <View style={styles.uploadSection}>
           <Text style={[styles.labelText, { color: colors.text }]}>
-            Business Photos <Text style={styles.optionalText}>(up to {MAX_PHOTOS})</Text>
+            Business Photos{' '}
+            <Text style={styles.optionalText}>(up to {MAX_PHOTOS})</Text>
           </Text>
           {renderUploadBox()}
           {renderPhotoPreview()}

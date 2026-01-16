@@ -2,12 +2,10 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useAuth, getColors } from '../libs/hooks/useAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { iOSUIKit } from 'react-native-typography';
 import IconLogo from '../../assets/imgs/icon_logo.svg';
 import SettingsIcon from '../../assets/imgs/settings-icon.svg';
-
-
 
 interface ToolbarProps {
   title?: string;
@@ -25,8 +23,6 @@ interface ToolbarProps {
   backgroundColor?: string;
   skipSafeArea?: boolean;
 }
-
-
 
 const Toolbar: React.FC<ToolbarProps> = ({
   title = '',
@@ -55,7 +51,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
   return (
     <Wrapper {...wrapperProps} style={{ backgroundColor: colors.background }}>
-      <View style={[styles.toolbar, { borderBottomColor: colors.border }]}>  
+      <View style={[styles.toolbar, { borderBottomColor: colors.border }]}>
         <View style={styles.leftContainer}>
           {showLogo ? (
             <IconLogo width={21} height={24} fill="#FF9500" />
@@ -68,7 +64,11 @@ const Toolbar: React.FC<ToolbarProps> = ({
               delayPressIn={0}
               delayPressOut={50}
             >
-              <Ionicons name="chevron-back" size={32} color={isDarkMode ? '#fff' : '#222'} />
+              <Ionicons
+                name="chevron-back"
+                size={32}
+                color={isDarkMode ? '#fff' : '#222'}
+              />
             </TouchableOpacity>
           ) : (
             <View style={{ width: 48 }} />
@@ -89,7 +89,11 @@ const Toolbar: React.FC<ToolbarProps> = ({
               delayPressIn={0}
               delayPressOut={50}
             >
-              <Ionicons name="bookmark" size={24} color={isDarkMode ? '#fff' : '#222'} />
+              <Ionicons
+                name="bookmark"
+                size={24}
+                color={isDarkMode ? '#fff' : '#222'}
+              />
             </TouchableOpacity>
           ) : null}
           {showSettings ? (
@@ -107,7 +111,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
           {showHearted && dealId ? (
             <TouchableOpacity
-              onPress={() => onToggleHearted && onToggleHearted(dealId, dealObject)}
+              onPress={() =>
+                onToggleHearted && onToggleHearted(dealId, dealObject)
+              }
               style={styles.settingsBtn}
               hitSlop={{ top: 32, bottom: 32, left: 32, right: 32 }}
               activeOpacity={0.6}
@@ -115,13 +121,15 @@ const Toolbar: React.FC<ToolbarProps> = ({
               delayPressOut={50}
             >
               <Ionicons
-                name={hearted ? "heart" : "heart-outline"}
+                name={hearted ? 'heart' : 'heart-outline'}
                 size={28}
                 color={hearted ? '#e0245e' : isDarkMode ? '#fff' : '#222'}
               />
             </TouchableOpacity>
           ) : null}
-          {!showSettings && !showRedemptions && !showHearted ? <View style={{ width: 40 }} /> : null}
+          {!showSettings && !showRedemptions && !showHearted ? (
+            <View style={{ width: 40 }} />
+          ) : null}
         </View>
       </View>
     </Wrapper>

@@ -14,8 +14,8 @@ import {
 } from 'react-native';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -141,7 +141,7 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
         deal?.business_latitude ||
         deal?.lat ||
         deal?.business_lat ||
-        ''
+        '',
     );
 
     const lng = parseFloat(
@@ -151,7 +151,7 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
         deal?.lon ||
         deal?.business_lng ||
         deal?.business_lon ||
-        ''
+        '',
     );
 
     if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
@@ -261,7 +261,9 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
         </View>
 
         {/* Content Card - Overlaps Hero */}
-        <View style={[styles.contentCard, { backgroundColor: colors.background }]}>
+        <View
+          style={[styles.contentCard, { backgroundColor: colors.background }]}
+        >
           {/* Category Chip */}
           {deal.category_name && (
             <View style={styles.categoryChip}>
@@ -298,11 +300,15 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
             {/* State */}
             {deal.business_state && (
               <View style={styles.locationRow}>
-                <View style={[styles.locationIcon, { backgroundColor: '#FFF5E6' }]}>
+                <View
+                  style={[styles.locationIcon, { backgroundColor: '#FFF5E6' }]}
+                >
                   <MaterialIcons name="location-on" size={20} color="#FF9500" />
                 </View>
                 <View style={styles.locationContent}>
-                  <Text style={[styles.locationLabel, { color: colors.subText }]}>
+                  <Text
+                    style={[styles.locationLabel, { color: colors.subText }]}
+                  >
                     State
                   </Text>
                   <Text style={[styles.locationValue, { color: colors.text }]}>
@@ -315,11 +321,19 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
             {/* City */}
             {deal.business_city && (
               <View style={styles.locationRow}>
-                <View style={[styles.locationIcon, { backgroundColor: '#FFF5E6' }]}>
-                  <MaterialIcons name="location-city" size={20} color="#FF9500" />
+                <View
+                  style={[styles.locationIcon, { backgroundColor: '#FFF5E6' }]}
+                >
+                  <MaterialIcons
+                    name="location-city"
+                    size={20}
+                    color="#FF9500"
+                  />
                 </View>
                 <View style={styles.locationContent}>
-                  <Text style={[styles.locationLabel, { color: colors.subText }]}>
+                  <Text
+                    style={[styles.locationLabel, { color: colors.subText }]}
+                  >
                     City
                   </Text>
                   <Text style={[styles.locationValue, { color: colors.text }]}>
@@ -335,11 +349,19 @@ const AboutBusiness: React.FC<AboutBusinessProps> = ({ navigation, route }) => {
               deal.zip_code ||
               deal.zipCode) && (
               <View style={styles.locationRow}>
-                <View style={[styles.locationIcon, { backgroundColor: '#FFF5E6' }]}>
-                  <MaterialIcons name="local-post-office" size={20} color="#FF9500" />
+                <View
+                  style={[styles.locationIcon, { backgroundColor: '#FFF5E6' }]}
+                >
+                  <MaterialIcons
+                    name="local-post-office"
+                    size={20}
+                    color="#FF9500"
+                  />
                 </View>
                 <View style={styles.locationContent}>
-                  <Text style={[styles.locationLabel, { color: colors.subText }]}>
+                  <Text
+                    style={[styles.locationLabel, { color: colors.subText }]}
+                  >
                     Postal Code
                   </Text>
                   <Text style={[styles.locationValue, { color: colors.text }]}>

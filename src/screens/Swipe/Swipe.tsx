@@ -13,7 +13,7 @@ import {
   Image,
 } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
 import { iOSUIKit } from 'react-native-typography';
 import VersionFooter from '../../components/VersionFooter';

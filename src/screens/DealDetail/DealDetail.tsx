@@ -12,8 +12,8 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { useAuth, getColors } from '../../libs/hooks/useAuth';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { iOSUIKit } from 'react-native-typography';
@@ -99,10 +99,10 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
   const initialDeal = routeParams.deal || null;
   const deepLinkDealId = routeParams.dealId ? String(routeParams.dealId) : null;
 
-  console.log('🔗 DealDetailScreen render - params:', { 
-    hasInitialDeal: !!initialDeal, 
+  console.log('🔗 DealDetailScreen render - params:', {
+    hasInitialDeal: !!initialDeal,
     deepLinkDealId,
-    allParams: routeParams 
+    allParams: routeParams,
   });
 
   const {
@@ -126,28 +126,30 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
 
   // Fetch deal from API when opened via deep link
   useEffect(() => {
-    console.log(`🔗 DealDetailScreen: useEffect triggered`, { 
-      deepLinkDealId, 
+    console.log(`🔗 DealDetailScreen: useEffect triggered`, {
+      deepLinkDealId,
       hasInitialDeal: !!initialDeal,
       hasDeal: !!deal,
       isAuthenticated,
-      isGuestView
+      isGuestView,
     });
-    
+
     const fetchDealFromDeepLink = async () => {
       // Only fetch if we have a dealId but no deal object
       if (deepLinkDealId && !initialDeal) {
         console.log(`🔗 Deep link: Fetching deal with ID: ${deepLinkDealId}`);
         setLoading(true);
         setError(null);
-        
+
         try {
           // First try to find deal in existing deals list (only if authenticated)
           if (isAuthenticated && deals.length > 0) {
             const existingDeal = deals.find(
-              d => String(d.id) === deepLinkDealId || String(d.deal_id) === deepLinkDealId
+              d =>
+                String(d.id) === deepLinkDealId ||
+                String(d.deal_id) === deepLinkDealId,
             );
-            
+
             if (existingDeal) {
               console.log('✅ Found deal in local cache');
               setDeal(existingDeal);
@@ -155,23 +157,29 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               return;
             }
           }
-          
+
           // Fetch from API - use public endpoint for guest users
-          console.log(`📡 Fetching deal from API (${isGuestView ? 'public' : 'authenticated'})...`);
-          
+          console.log(
+            `📡 Fetching deal from API (${
+              isGuestView ? 'public' : 'authenticated'
+            })...`,
+          );
+
           let response;
           if (isGuestView) {
             // Try public endpoint first for guest users
             try {
               response = await ApiService.getDealByIdPublic(deepLinkDealId);
             } catch (publicErr) {
-              console.log('📡 Public endpoint failed, trying authenticated endpoint...');
+              console.log(
+                '📡 Public endpoint failed, trying authenticated endpoint...',
+              );
               response = await ApiService.getDealById(deepLinkDealId);
             }
           } else {
             response = await ApiService.getDealById(deepLinkDealId);
           }
-          
+
           if (response.data) {
             console.log('✅ Deal fetched successfully:', response.data);
             setDeal(response.data);
@@ -187,7 +195,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
         }
       }
     };
-    
+
     fetchDealFromDeepLink();
   }, [deepLinkDealId, initialDeal, deals, isAuthenticated, isGuestView]);
 
@@ -290,7 +298,18 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
   if (loading) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <View style={[styles.overlayButtons, { top: insets.top + 10, position: 'absolute', left: 16, right: 16, zIndex: 10 }]}>
+        <View
+          style={[
+            styles.overlayButtons,
+            {
+              top: insets.top + 10,
+              position: 'absolute',
+              left: 16,
+              right: 16,
+              zIndex: 10,
+            },
+          ]}
+        >
           <TouchableOpacity
             style={[
               styles.circleButton,
@@ -304,7 +323,9 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
         </View>
         <View style={styles.centerContent}>
           <ActivityIndicator size="large" color={colors.primary} />
-          <Text style={[styles.errorText, { color: colors.text, marginTop: 16 }]}>
+          <Text
+            style={[styles.errorText, { color: colors.text, marginTop: 16 }]}
+          >
             Loading deal...
           </Text>
         </View>
@@ -315,7 +336,18 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
   if (!deal) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <View style={[styles.overlayButtons, { top: insets.top + 10, position: 'absolute', left: 16, right: 16, zIndex: 10 }]}>
+        <View
+          style={[
+            styles.overlayButtons,
+            {
+              top: insets.top + 10,
+              position: 'absolute',
+              left: 16,
+              right: 16,
+              zIndex: 10,
+            },
+          ]}
+        >
           <TouchableOpacity
             style={[
               styles.circleButton,
@@ -464,7 +496,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
     console.log('🔄 Recalculating filteredContacts with query:', searchQuery);
     return searchContacts(searchQuery);
   }, [searchQuery, searchContacts]);
-  
+
   const currentShares = shareProgress?.currentShares || 0;
   const canRedeem = shareProgress?.canRedeem || false;
 
@@ -610,7 +642,10 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
           {/* Business Info */}
           <View style={styles.businessHeader}>
             <View
-              style={[styles.categoryContainer, { backgroundColor: colors.categoryBackground }]}
+              style={[
+                styles.categoryContainer,
+                { backgroundColor: colors.categoryBackground },
+              ]}
             >
               <Text
                 style={[styles.categoryText, { color: colors.textSecondary }]}
@@ -763,7 +798,12 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
               <Text style={[styles.guestCtaTitle, { color: colors.text }]}>
                 Want to claim this deal?
               </Text>
-              <Text style={[styles.guestCtaSubtitle, { color: colors.textSecondary }]}>
+              <Text
+                style={[
+                  styles.guestCtaSubtitle,
+                  { color: colors.textSecondary },
+                ]}
+              >
                 Sign in or create an account to unlock and redeem amazing deals!
               </Text>
               <TouchableOpacity
@@ -771,96 +811,116 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
                 onPress={async () => {
                   // Store the pending deep link so user is redirected back after login
                   if (deepLinkDealId) {
-                    await storePendingDeepLink(`nolimitseradeals://deal/${deepLinkDealId}`);
+                    await storePendingDeepLink(
+                      `nolimitseradeals://deal/${deepLinkDealId}`,
+                    );
                   }
                   navigation.navigate('SignIn');
                 }}
               >
-                <MaterialIcons name="login" size={20} color={colors.background} />
+                <MaterialIcons
+                  name="login"
+                  size={20}
+                  color={colors.background}
+                />
                 <Text style={[styles.buttonText, { color: colors.background }]}>
                   Sign In to Claim
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.secondaryButton, { borderColor: colors.primary }]}
+                style={[
+                  styles.secondaryButton,
+                  { borderColor: colors.primary },
+                ]}
                 onPress={async () => {
                   // Store the pending deep link so user is redirected back after signup
                   if (deepLinkDealId) {
-                    await storePendingDeepLink(`nolimitseradeals://deal/${deepLinkDealId}`);
+                    await storePendingDeepLink(
+                      `nolimitseradeals://deal/${deepLinkDealId}`,
+                    );
                   }
                   navigation.navigate('SignUp');
                 }}
               >
-                <Text style={[styles.secondaryButtonText, { color: colors.primary }]}>
+                <Text
+                  style={[
+                    styles.secondaryButtonText,
+                    { color: colors.primary },
+                  ]}
+                >
                   Create Account
                 </Text>
               </TouchableOpacity>
             </View>
           ) : (
-          <>
-            <TouchableOpacity
-              style={[styles.button, { backgroundColor: colors.primary }]}
-              onPress={handlePress}
-              disabled={sharingLoading}
-            >
-              <MaterialIcons name="share" size={20} color={colors.background} />
-              <Text style={[styles.buttonText, { color: colors.background }]}>
-                {canRedeem
-                  ? 'Unlocked! Tap to Redeem'
-                  : `Share to Unlock (${currentShares}/${
-                      deal.min_shares_required || 3
-                    })`}
-              </Text>
-              {sharingLoading && (
+            <>
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: colors.primary }]}
+                onPress={handlePress}
+                disabled={sharingLoading}
+              >
                 <MaterialIcons
-                  name="hourglass-empty"
-                  size={16}
+                  name="share"
+                  size={20}
                   color={colors.background}
                 />
-              )}
-            </TouchableOpacity>
+                <Text style={[styles.buttonText, { color: colors.background }]}>
+                  {canRedeem
+                    ? 'Unlocked! Tap to Redeem'
+                    : `Share to Unlock (${currentShares}/${
+                        deal.min_shares_required || 3
+                      })`}
+                </Text>
+                {sharingLoading && (
+                  <MaterialIcons
+                    name="hourglass-empty"
+                    size={16}
+                    color={colors.background}
+                  />
+                )}
+              </TouchableOpacity>
 
-            {/* Contact Selection Modal */}
-            <ContactSelectionModal
-              visible={showModal}
-              onClose={() => setShowModal(false)}
-              deal={deal}
-              colors={colors}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              filteredContacts={filteredContacts}
-              selectedContacts={selectedContacts}
-              selectedCount={selectedCount}
-              toggleContactSelection={toggleContactSelection}
-              clearSelection={clearSelection}
-              onShare={handleShare}
-              canShare={canShare}
-              sharingLoading={sharingLoading}
-              requestContactsAccess={requestContactsAccess}
-            />
-          </>
+              {/* Contact Selection Modal */}
+              <ContactSelectionModal
+                visible={showModal}
+                onClose={() => setShowModal(false)}
+                deal={deal}
+                colors={colors}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                filteredContacts={filteredContacts}
+                selectedContacts={selectedContacts}
+                selectedCount={selectedCount}
+                toggleContactSelection={toggleContactSelection}
+                clearSelection={clearSelection}
+                onShare={handleShare}
+                canShare={canShare}
+                sharingLoading={sharingLoading}
+                requestContactsAccess={requestContactsAccess}
+              />
+            </>
           )}
 
           {/* Action Buttons - Only for authenticated users */}
           {!isGuestView && (
-          <View style={styles.actionButtons}>
-            <TouchableOpacity
-              style={[
-                styles.redeemButton,
-                {
-                  backgroundColor:
-                    loading || !shareProgress?.canRedeem
-                      ? colors.disabled
-                      : colors.primary,
-                },
-              ]}
-              onPress={handleRedeem}
-              // disabled={loading || !shareProgress?.canRedeem}
-            >
-              <MaterialIcons name="redeem" size={20} color="#fff" />
-              <Text style={styles.redeemButtonText}>Redeem Deal</Text>
-            </TouchableOpacity>
-          </View>
+            <View style={styles.actionButtons}>
+              <TouchableOpacity
+                style={[
+                  styles.redeemButton,
+                  {
+                    backgroundColor:
+                      loading || !shareProgress?.canRedeem
+                        ? colors.disabled
+                        : colors.primary,
+                  },
+                ]}
+                onPress={handleRedeem}
+                // disabled={loading || !shareProgress?.canRedeem}
+              >
+                <MaterialIcons name="redeem" size={20} color="#fff" />
+                <Text style={styles.redeemButtonText}>Redeem Deal</Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
         <Text

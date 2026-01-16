@@ -13,8 +13,8 @@ import {
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import AnalyticsService from '../../services/analytics.service';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from '@react-native-vector-icons/material-icons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import IconLogo from '../../../assets/imgs/icon_logo.svg';
 import Toolbar from '../../components/Toolbar';
 

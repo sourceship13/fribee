@@ -14,7 +14,7 @@ import {
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import { iOSUIKit } from 'react-native-typography';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from '@react-native-vector-icons/material-icons';
 import IconLogo from '../../../assets/imgs/icon_logo.svg';
 import SettingsIcon from '../../../assets/imgs/settings-icon.svg';
 import ApiService from '../../services/api.service';

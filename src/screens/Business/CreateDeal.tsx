@@ -16,7 +16,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import { iOSUIKit } from 'react-native-typography';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from '@react-native-vector-icons/material-icons';
 import AuthService from '../../services/auth.service';
 import ApiConfig from '../../libs/utils/api.utils';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -78,7 +78,7 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
         selectionLimit: 5,
         quality: 0.8,
       },
-      (response) => {
+      response => {
         if (response.didCancel) {
           return;
         }
@@ -89,7 +89,7 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
         if (response.assets) {
           setSelectedImages([...selectedImages, ...response.assets]);
         }
-      }
+      },
     );
   };
 
@@ -101,7 +101,7 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
     if (Platform.OS === 'android') {
       setShowDatePicker(false);
     }
-    
+
     if (date) {
       setSelectedDate(date);
       // Format date as YYYY-MM-DD
@@ -131,12 +131,24 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
     }
     if (dealType === 'percentage') {
       const discount = parseFloat(percentageDiscount);
-      if (!percentageDiscount.trim() || isNaN(discount) || discount <= 0 || discount > 100) {
-        Alert.alert('Validation Error', 'Please enter a discount between 1 and 100');
+      if (
+        !percentageDiscount.trim() ||
+        isNaN(discount) ||
+        discount <= 0 ||
+        discount > 100
+      ) {
+        Alert.alert(
+          'Validation Error',
+          'Please enter a discount between 1 and 100',
+        );
         return false;
       }
     }
-    if (!minSharesRequired.trim() || isNaN(parseInt(minSharesRequired)) || parseInt(minSharesRequired) < 1) {
+    if (
+      !minSharesRequired.trim() ||
+      isNaN(parseInt(minSharesRequired)) ||
+      parseInt(minSharesRequired) < 1
+    ) {
       Alert.alert('Validation Error', 'Minimum shares must be at least 1');
       return false;
     }
@@ -159,12 +171,12 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
     setLoading(true);
     try {
       const formData = new FormData();
-      
+
       // Required fields
       formData.append('businessId', businessId);
       formData.append('title', dealTitle.trim());
       formData.append('description', description.trim());
-      
+
       // Optional fields
       formData.append('dealType', dealType);
       formData.append('category', category);
@@ -210,7 +222,7 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
           headers: {
             // Don't set Content-Type for FormData, let the browser set it with boundary
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -218,21 +230,20 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
       if (response.ok && data.success) {
         // Refresh deals to get the newly created deal
         await refreshDeals();
-        
-        Alert.alert(
-          'Success',
-          'Deal created successfully!',
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                navigation.navigate('BusinessDeals');
-              },
+
+        Alert.alert('Success', 'Deal created successfully!', [
+          {
+            text: 'OK',
+            onPress: () => {
+              navigation.navigate('BusinessDeals');
             },
-          ]
-        );
+          },
+        ]);
       } else {
-        Alert.alert('Error', data.message || data.error || 'Failed to create deal');
+        Alert.alert(
+          'Error',
+          data.message || data.error || 'Failed to create deal',
+        );
       }
     } catch (error: any) {
       console.error('Create deal error:', error);
@@ -240,27 +251,53 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
     } finally {
       await refreshDeals();
       setLoading(false);
-      
     }
   };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+      <View
+        style={[
+          styles.header,
+          {
+            backgroundColor: colors.background,
+            borderBottomColor: colors.border,
+          },
+        ]}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Icon name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={[iOSUIKit.title3Emphasized, { color: colors.text }]}>Create Deal</Text>
+        <Text style={[iOSUIKit.title3Emphasized, { color: colors.text }]}>
+          Create Deal
+        </Text>
         <View style={{ width: 40 }} />
       </View>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+      >
         {/* Deal Title */}
         <View style={styles.section}>
-          <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}>Deal Title *</Text>
+          <Text
+            style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}
+          >
+            Deal Title *
+          </Text>
           <TextInput
-            style={[styles.input, { backgroundColor: colors.card, color: colors.text, borderColor: colors.border }]}
+            style={[
+              styles.input,
+              {
+                backgroundColor: colors.card,
+                color: colors.text,
+                borderColor: colors.border,
+              },
+            ]}
             placeholder="e.g., 50% Off All Pizzas"
             placeholderTextColor={colors.textSecondary}
             value={dealTitle}
@@ -270,9 +307,20 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
 
         {/* Description */}
         <View style={styles.section}>
-          <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}>Description *</Text>
+          <Text
+            style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}
+          >
+            Description *
+          </Text>
           <TextInput
-            style={[styles.textArea, { backgroundColor: colors.card, color: colors.text, borderColor: colors.border }]}
+            style={[
+              styles.textArea,
+              {
+                backgroundColor: colors.card,
+                color: colors.text,
+                borderColor: colors.border,
+              },
+            ]}
             placeholder="Describe your deal..."
             placeholderTextColor={colors.textSecondary}
             value={description}
@@ -285,21 +333,27 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
 
         {/* Category Dropdown */}
         <View style={styles.section}>
-          <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}>Category *</Text>
+          <Text
+            style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}
+          >
+            Category *
+          </Text>
           <TouchableOpacity
             style={[
               styles.input,
-              { 
-                backgroundColor: colors.card, 
+              {
+                backgroundColor: colors.card,
                 borderColor: colors.border,
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-              }
+              },
             ]}
             onPress={() => setShowCategoryModal(true)}
           >
-            <Text style={[{ color: category ? colors.text : colors.textSecondary }]}>
+            <Text
+              style={[{ color: category ? colors.text : colors.textSecondary }]}
+            >
               {category || 'Select Category'}
             </Text>
             <Icon name="arrow-drop-down" size={24} color={colors.text} />
@@ -308,27 +362,45 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
 
         {/* Deal Type */}
         <View style={styles.section}>
-          <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}>Deal Type *</Text>
+          <Text
+            style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}
+          >
+            Deal Type *
+          </Text>
           <View style={styles.dealTypeGrid}>
-            {DEAL_TYPES.map((type) => (
+            {DEAL_TYPES.map(type => (
               <TouchableOpacity
                 key={type.value}
                 style={[
                   styles.dealTypeOption,
                   { backgroundColor: colors.card, borderColor: colors.border },
-                  dealType === type.value && { borderColor: colors.primary, backgroundColor: colors.primary + '20' },
+                  dealType === type.value && {
+                    borderColor: colors.primary,
+                    backgroundColor: colors.primary + '20',
+                  },
                 ]}
                 onPress={() => setDealType(type.value)}
               >
                 <Icon
                   name={type.icon}
                   size={24}
-                  color={dealType === type.value ? colors.primary : colors.textSecondary}
+                  color={
+                    dealType === type.value
+                      ? colors.primary
+                      : colors.textSecondary
+                  }
                 />
                 <Text
                   style={[
                     iOSUIKit.footnote,
-                    { color: dealType === type.value ? colors.primary : colors.textSecondary, marginTop: 4, textAlign: 'center' },
+                    {
+                      color:
+                        dealType === type.value
+                          ? colors.primary
+                          : colors.textSecondary,
+                      marginTop: 4,
+                      textAlign: 'center',
+                    },
                   ]}
                 >
                   {type.label}
@@ -341,9 +413,23 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
         {/* Price and Discount Row */}
         <View style={styles.rowSection}>
           <View style={[styles.halfInput, { marginRight: 8 }]}>
-            <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}>Original Price *</Text>
+            <Text
+              style={[
+                iOSUIKit.subhead,
+                { color: colors.text, marginBottom: 8 },
+              ]}
+            >
+              Original Price *
+            </Text>
             <TextInput
-              style={[styles.input, { backgroundColor: colors.card, color: colors.text, borderColor: colors.border }]}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: colors.card,
+                  color: colors.text,
+                  borderColor: colors.border,
+                },
+              ]}
               placeholder="$0.00"
               placeholderTextColor={colors.textSecondary}
               value={dealPrice}
@@ -354,9 +440,23 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
 
           {dealType === 'percentage' && (
             <View style={[styles.halfInput, { marginLeft: 8 }]}>
-              <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}>Discount % *</Text>
+              <Text
+                style={[
+                  iOSUIKit.subhead,
+                  { color: colors.text, marginBottom: 8 },
+                ]}
+              >
+                Discount % *
+              </Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.card, color: colors.text, borderColor: colors.border }]}
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: colors.card,
+                    color: colors.text,
+                    borderColor: colors.border,
+                  },
+                ]}
                 placeholder="0"
                 placeholderTextColor={colors.textSecondary}
                 value={percentageDiscount}
@@ -370,9 +470,23 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
         {/* Shares Required and End Date Row */}
         <View style={styles.rowSection}>
           <View style={[styles.halfInput, { marginRight: 8 }]}>
-            <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}>Min Shares *</Text>
+            <Text
+              style={[
+                iOSUIKit.subhead,
+                { color: colors.text, marginBottom: 8 },
+              ]}
+            >
+              Min Shares *
+            </Text>
             <TextInput
-              style={[styles.input, { backgroundColor: colors.card, color: colors.text, borderColor: colors.border }]}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: colors.card,
+                  color: colors.text,
+                  borderColor: colors.border,
+                },
+              ]}
               placeholder="3"
               placeholderTextColor={colors.textSecondary}
               value={minSharesRequired}
@@ -382,12 +496,30 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
           </View>
 
           <View style={[styles.halfInput, { marginLeft: 8 }]}>
-            <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}>End Date *</Text>
+            <Text
+              style={[
+                iOSUIKit.subhead,
+                { color: colors.text, marginBottom: 8 },
+              ]}
+            >
+              End Date *
+            </Text>
             <TouchableOpacity
-              style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, justifyContent: 'center' }]}
+              style={[
+                styles.input,
+                {
+                  backgroundColor: colors.card,
+                  borderColor: colors.border,
+                  justifyContent: 'center',
+                },
+              ]}
               onPress={showDatepickerModal}
             >
-              <Text style={[{ color: endDate ? colors.text : colors.textSecondary }]}>
+              <Text
+                style={[
+                  { color: endDate ? colors.text : colors.textSecondary },
+                ]}
+              >
                 {endDate || 'Select Date'}
               </Text>
             </TouchableOpacity>
@@ -409,24 +541,43 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
         {/* iOS Date Picker Confirm Button */}
         {showDatePicker && Platform.OS === 'ios' && (
           <TouchableOpacity
-            style={[styles.datePickerButton, { backgroundColor: colors.primary }]}
+            style={[
+              styles.datePickerButton,
+              { backgroundColor: colors.primary },
+            ]}
             onPress={() => setShowDatePicker(false)}
           >
-            <Text style={[iOSUIKit.bodyEmphasized, { color: '#FFFFFF' }]}>Confirm Date</Text>
+            <Text style={[iOSUIKit.bodyEmphasized, { color: '#FFFFFF' }]}>
+              Confirm Date
+            </Text>
           </TouchableOpacity>
         )}
 
         {/* Images */}
         <View style={styles.section}>
-          <Text style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}>Deal Images</Text>
-          
+          <Text
+            style={[iOSUIKit.subhead, { color: colors.text, marginBottom: 8 }]}
+          >
+            Deal Images
+          </Text>
+
           {selectedImages.length > 0 && (
-            <ScrollView horizontal style={styles.imagePreviewContainer} showsHorizontalScrollIndicator={false}>
+            <ScrollView
+              horizontal
+              style={styles.imagePreviewContainer}
+              showsHorizontalScrollIndicator={false}
+            >
               {selectedImages.map((image, index) => (
                 <View key={index} style={styles.imagePreview}>
-                  <Image source={{ uri: image.uri }} style={styles.previewImage} />
+                  <Image
+                    source={{ uri: image.uri }}
+                    style={styles.previewImage}
+                  />
                   <TouchableOpacity
-                    style={[styles.removeImageButton, { backgroundColor: colors.error }]}
+                    style={[
+                      styles.removeImageButton,
+                      { backgroundColor: colors.error },
+                    ]}
                     onPress={() => removeImage(index)}
                   >
                     <Icon name="close" size={16} color="#FFFFFF" />
@@ -437,11 +588,19 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
           )}
 
           <TouchableOpacity
-            style={[styles.imagePickerButton, { backgroundColor: colors.card, borderColor: colors.border }]}
+            style={[
+              styles.imagePickerButton,
+              { backgroundColor: colors.card, borderColor: colors.border },
+            ]}
             onPress={handleImagePicker}
           >
             <Icon name="add-photo-alternate" size={32} color={colors.primary} />
-            <Text style={[iOSUIKit.footnote, { color: colors.textSecondary, marginTop: 8 }]}>
+            <Text
+              style={[
+                iOSUIKit.footnote,
+                { color: colors.textSecondary, marginTop: 8 },
+              ]}
+            >
               Add Photos (Max 5)
             </Text>
           </TouchableOpacity>
@@ -449,7 +608,11 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
 
         {/* Submit Button */}
         <TouchableOpacity
-          style={[styles.submitButton, { backgroundColor: colors.primary }, loading && styles.submitButtonDisabled]}
+          style={[
+            styles.submitButton,
+            { backgroundColor: colors.primary },
+            loading && styles.submitButtonDisabled,
+          ]}
           onPress={handleSubmit}
           disabled={loading}
         >
@@ -458,7 +621,14 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
           ) : (
             <>
               <Icon name="check-circle" size={20} color="#FFFFFF" />
-              <Text style={[iOSUIKit.bodyEmphasized, { color: '#FFFFFF', marginLeft: 8 }]}>Create Deal</Text>
+              <Text
+                style={[
+                  iOSUIKit.bodyEmphasized,
+                  { color: '#FFFFFF', marginLeft: 8 },
+                ]}
+              >
+                Create Deal
+              </Text>
             </>
           )}
         </TouchableOpacity>
@@ -473,13 +643,17 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
         animationType="slide"
         onRequestClose={() => setShowCategoryModal(false)}
       >
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setShowCategoryModal(false)}
         >
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
-            <View style={[styles.modalHeader, { borderBottomColor: colors.border }]}>
+          <View
+            style={[styles.modalContent, { backgroundColor: colors.surface }]}
+          >
+            <View
+              style={[styles.modalHeader, { borderBottomColor: colors.border }]}
+            >
               <Text style={[iOSUIKit.title3Emphasized, { color: colors.text }]}>
                 Select Category
               </Text>
@@ -487,25 +661,31 @@ const CreateDeal: React.FC<CreateDealProps> = ({ navigation, route }) => {
                 <Icon name="close" size={24} color={colors.text} />
               </TouchableOpacity>
             </View>
-            
+
             <ScrollView style={styles.modalScroll}>
-              {BUSINESS_CATEGORIES.map((cat) => (
+              {BUSINESS_CATEGORIES.map(cat => (
                 <TouchableOpacity
                   key={cat}
                   style={[
                     styles.categoryOption,
                     { borderBottomColor: colors.border },
-                    category === cat && { backgroundColor: colors.primary + '20' }
+                    category === cat && {
+                      backgroundColor: colors.primary + '20',
+                    },
                   ]}
                   onPress={() => {
                     setCategory(cat);
                     setShowCategoryModal(false);
                   }}
                 >
-                  <Text style={[
-                    iOSUIKit.body,
-                    { color: category === cat ? colors.primary : colors.text }
-                  ]}>
+                  <Text
+                    style={[
+                      iOSUIKit.body,
+                      {
+                        color: category === cat ? colors.primary : colors.text,
+                      },
+                    ]}
+                  >
                     {cat}
                   </Text>
                   {category === cat && (

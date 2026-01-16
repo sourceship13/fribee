@@ -1,31 +1,43 @@
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  StyleSheet, 
-  TouchableOpacity, 
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
   Alert,
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
 } from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from '@react-native-vector-icons/fontawesome';
+import FontAwesome5 from '@react-native-vector-icons/fontawesome5';
 import { useAuth } from '../../libs/hooks/useAuth';
 import { getColors } from '../../libs/colors';
 import AuthService from '../../services/auth.service';
 import { iOSUIKit } from 'react-native-typography';
 import VersionFooter from '../../components/VersionFooter';
 
-const fieldKeys = ["firstName", "lastName", "email", "phone", "password"] as const;
-const fieldLabels = ["First Name", "Last Name", "Email", "Phone Number", "Password"];
+const fieldKeys = [
+  'firstName',
+  'lastName',
+  'email',
+  'phone',
+  'password',
+] as const;
+const fieldLabels = [
+  'First Name',
+  'Last Name',
+  'Email',
+  'Phone Number',
+  'Password',
+];
 
 const SignUpScreen = ({ navigation }: any) => {
   const { isDarkMode } = useAuth();
   const colors = getColors(isDarkMode);
-  
+
   const [fields, setFields] = useState({
     firstName: '',
     lastName: '',
@@ -33,7 +45,7 @@ const SignUpScreen = ({ navigation }: any) => {
     phone: '',
     password: '',
   });
-  
+
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>({});
@@ -54,8 +66,11 @@ const SignUpScreen = ({ navigation }: any) => {
       newErrors.password = 'Password is required';
     } else if (fields.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(fields.password)) {
-      newErrors.password = 'Must contain uppercase, lowercase, number and special character';
+    } else if (
+      !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(fields.password)
+    ) {
+      newErrors.password =
+        'Must contain uppercase, lowercase, number and special character';
     }
 
     // Confirm password
@@ -98,9 +113,12 @@ const SignUpScreen = ({ navigation }: any) => {
         [
           {
             text: 'OK',
-            onPress: () => navigation.navigate('Verification', { phoneNumber: fields.phone.trim() })
+            onPress: () =>
+              navigation.navigate('Verification', {
+                phoneNumber: fields.phone.trim(),
+              }),
           },
-        ]
+        ],
       );
       // Clear form
       setFields({
@@ -111,12 +129,11 @@ const SignUpScreen = ({ navigation }: any) => {
         password: '',
       });
       setConfirmPassword('');
-
     } catch (error: any) {
       console.error('Registration error:', error);
       Alert.alert(
         'Registration Failed',
-        error.message || 'Something went wrong. Please try again.'
+        error.message || 'Something went wrong. Please try again.',
       );
     } finally {
       setLoading(false);
@@ -125,16 +142,14 @@ const SignUpScreen = ({ navigation }: any) => {
 
   // Handle social sign up (placeholder for now)
   const handleSocialSignUp = (provider: string) => {
-    Alert.alert(
-      'Coming Soon',
-      `${provider} sign up will be available soon!`,
-      [{ text: 'OK' }]
-    );
+    Alert.alert('Coming Soon', `${provider} sign up will be available soon!`, [
+      { text: 'OK' },
+    ]);
     // TODO: Implement OAuth when backend supports it
   };
 
   // Update field and clear error
-  const updateField = (key: typeof fieldKeys[number], value: string) => {
+  const updateField = (key: (typeof fieldKeys)[number], value: string) => {
     setFields({ ...fields, [key]: value });
     if (errors[key]) {
       setErrors({ ...errors, [key]: null });
@@ -142,25 +157,32 @@ const SignUpScreen = ({ navigation }: any) => {
   };
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView 
-        contentContainerStyle={[styles.scrollContainer, { backgroundColor: colors.background }]}
+      <ScrollView
+        contentContainerStyle={[
+          styles.scrollContainer,
+          { backgroundColor: colors.background },
+        ]}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styles.container, { backgroundColor: colors.background }]}>  
-          <Text style={[styles.title, { color: colors.text }]}>Create Account</Text>
-          
+        <View
+          style={[styles.container, { backgroundColor: colors.background }]}
+        >
+          <Text style={[styles.title, { color: colors.text }]}>
+            Create Account
+          </Text>
+
           {/* Form Fields */}
           {fieldLabels.map((field, idx) => (
             <View key={field} style={styles.inputWrapper}>
               <TextInput
                 style={[
-                  styles.input, 
+                  styles.input,
                   { color: colors.text, backgroundColor: colors.surface },
-                  errors[fieldKeys[idx]] && styles.inputError
+                  errors[fieldKeys[idx]] && styles.inputError,
                 ]}
                 placeholder={field}
                 placeholderTextColor={colors.textPlaceholder}
@@ -168,15 +190,26 @@ const SignUpScreen = ({ navigation }: any) => {
                 onChangeText={text => updateField(fieldKeys[idx], text)}
                 secureTextEntry={field === 'Password'}
                 keyboardType={
-                  field === 'Email' ? 'email-address' : 
-                  field === 'Phone Number' ? 'phone-pad' : 
-                  'default'
+                  field === 'Email'
+                    ? 'email-address'
+                    : field === 'Phone Number'
+                    ? 'phone-pad'
+                    : 'default'
                 }
-                autoCapitalize={field === 'Email' || field === 'Password' ? 'none' : 'sentences'}
+                autoCapitalize={
+                  field === 'Email' || field === 'Password'
+                    ? 'none'
+                    : 'sentences'
+                }
                 editable={!loading}
               />
               {errors[fieldKeys[idx]] && (
-                <Text style={[styles.errorText, { color: colors.error || '#ff3b30' }]}>
+                <Text
+                  style={[
+                    styles.errorText,
+                    { color: colors.error || '#ff3b30' },
+                  ]}
+                >
                   {errors[fieldKeys[idx]]}
                 </Text>
               )}
@@ -187,9 +220,9 @@ const SignUpScreen = ({ navigation }: any) => {
           <View style={styles.inputWrapper}>
             <TextInput
               style={[
-                styles.input, 
+                styles.input,
                 { color: colors.text, backgroundColor: colors.surface },
-                errors.confirmPassword && styles.inputError
+                errors.confirmPassword && styles.inputError,
               ]}
               placeholder="Confirm Password"
               placeholderTextColor={colors.textPlaceholder}
@@ -205,83 +238,131 @@ const SignUpScreen = ({ navigation }: any) => {
               editable={!loading}
             />
             {errors.confirmPassword && (
-              <Text style={[styles.errorText, { color: colors.error || '#ff3b30' }]}>
+              <Text
+                style={[styles.errorText, { color: colors.error || '#ff3b30' }]}
+              >
                 {errors.confirmPassword}
               </Text>
             )}
           </View>
 
           {/* Sign Up Button */}
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
-              styles.button, 
+              styles.button,
               { backgroundColor: colors.text },
-              loading && styles.buttonDisabled
-            ]} 
+              loading && styles.buttonDisabled,
+            ]}
             onPress={handleSignUp}
             disabled={loading}
           >
             {loading ? (
               <ActivityIndicator color={colors.background} />
             ) : (
-              <Text style={{ color: colors.background, fontWeight: 'bold' }}>Join DEALZ</Text>
+              <Text style={{ color: colors.background, fontWeight: 'bold' }}>
+                Join DEALZ
+              </Text>
             )}
           </TouchableOpacity>
 
           {/* Sign In Link */}
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => navigation.navigate('SignIn')}
             disabled={loading}
           >
             <Text style={[styles.linkText, { color: colors.textSecondary }]}>
-              Already have an account? 
-              <Text style={{ color: colors.text, fontWeight: 'bold' }}> Sign In</Text>
+              Already have an account?
+              <Text style={{ color: colors.text, fontWeight: 'bold' }}>
+                {' '}
+                Sign In
+              </Text>
             </Text>
           </TouchableOpacity>
 
           {/* Divider */}
           <View style={styles.divider}>
-            <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-            <Text style={[styles.dividerText, { color: colors.textSecondary }]}>OR</Text>
-            <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+            <View
+              style={[styles.dividerLine, { backgroundColor: colors.border }]}
+            />
+            <Text style={[styles.dividerText, { color: colors.textSecondary }]}>
+              OR
+            </Text>
+            <View
+              style={[styles.dividerLine, { backgroundColor: colors.border }]}
+            />
           </View>
 
           {/* Social Sign Up Buttons */}
           <View style={styles.socialContainer}>
-            <TouchableOpacity 
-              style={[styles.socialBtn, { backgroundColor: colors.google, borderColor: colors.border, borderWidth: 1 }]}
+            <TouchableOpacity
+              style={[
+                styles.socialBtn,
+                {
+                  backgroundColor: colors.google,
+                  borderColor: colors.border,
+                  borderWidth: 1,
+                },
+              ]}
               onPress={() => handleSocialSignUp('Google')}
               disabled={loading}
-            > 
-              <FontAwesome name="google" size={22} color={colors.background} style={styles.socialIcon} />
-              <Text style={[styles.socialText, { color: colors.background }]}>Sign up with Google</Text>
+            >
+              <FontAwesome
+                name="google"
+                size={22}
+                color={colors.background}
+                style={styles.socialIcon}
+              />
+              <Text style={[styles.socialText, { color: colors.background }]}>
+                Sign up with Google
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.socialBtn, { backgroundColor: colors.facebook }]}
               onPress={() => handleSocialSignUp('Facebook')}
               disabled={loading}
-            > 
-              <FontAwesome name="facebook" size={22} color={colors.background} style={styles.socialIcon} />
-              <Text style={[styles.socialText, { color: colors.background }]}>Sign up with Facebook</Text>
+            >
+              <FontAwesome
+                name="facebook"
+                size={22}
+                color={colors.background}
+                style={styles.socialIcon}
+              />
+              <Text style={[styles.socialText, { color: colors.background }]}>
+                Sign up with Facebook
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.socialBtn, { backgroundColor: colors.instagram }]}
               onPress={() => handleSocialSignUp('Instagram')}
               disabled={loading}
-            > 
-              <FontAwesome name="instagram" size={22} color={colors.background} style={styles.socialIcon} />
-              <Text style={[styles.socialText, { color: colors.background }]}>Sign up with Instagram</Text>
+            >
+              <FontAwesome
+                name="instagram"
+                size={22}
+                color={colors.background}
+                style={styles.socialIcon}
+              />
+              <Text style={[styles.socialText, { color: colors.background }]}>
+                Sign up with Instagram
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.socialBtn, { backgroundColor: colors.apple }]}
               onPress={() => handleSocialSignUp('Apple')}
               disabled={loading}
-            > 
-              <FontAwesome5 name="apple" size={22} color={colors.background} style={styles.socialIcon} />
-              <Text style={[styles.socialText, { color: colors.background }]}>Sign up with Apple</Text>
+            >
+              <FontAwesome5
+                name="apple"
+                size={22}
+                color={colors.background}
+                style={styles.socialIcon}
+              />
+              <Text style={[styles.socialText, { color: colors.background }]}>
+                Sign up with Apple
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -305,7 +386,7 @@ const styles = StyleSheet.create({
     iOSUIKit.largeTitleEmphasized,
     {
       marginBottom: 16,
-    }
+    },
   ]),
   inputWrapper: {
     width: '100%',
@@ -317,7 +398,7 @@ const styles = StyleSheet.create({
       width: '100%',
       borderRadius: 12,
       padding: 16,
-    }
+    },
   ]),
   inputError: {
     borderWidth: 1,
@@ -328,7 +409,7 @@ const styles = StyleSheet.create({
     {
       marginTop: 4,
       marginLeft: 8,
-    }
+    },
   ]),
   button: {
     width: '100%',
@@ -345,7 +426,7 @@ const styles = StyleSheet.create({
     {
       textAlign: 'center',
       marginBottom: 20,
-    }
+    },
   ]),
   divider: {
     flexDirection: 'row',
@@ -361,7 +442,7 @@ const styles = StyleSheet.create({
     iOSUIKit.subhead,
     {
       marginHorizontal: 10,
-    }
+    },
   ]),
   socialContainer: {
     width: '100%',
@@ -382,7 +463,7 @@ const styles = StyleSheet.create({
     iOSUIKit.callout,
     {
       fontWeight: 'bold',
-    }
+    },
   ]),
 });
 
