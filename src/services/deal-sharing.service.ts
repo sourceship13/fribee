@@ -267,117 +267,19 @@ class DealSharingService {
       // Get deal image URL
       const dealImageUrl = this.getDealImageUrl(dealInfo);
 
-      // Use react-native-share for MMS with image attachments
-      return await this.sendMMSWithShare(cleanedNumbers, message, dealImageUrl);
-    } catch (error) {
-      console.error('❌ MMS Method Error:', error);
-      return false;
-    }
-  }
-
-  /**
-   * Send MMS with image attachment by downloading image locally
-   * Opens share sheet with Messages, including both text and image
-   */
-  private async sendMMSWithShare(
-    phoneNumbers: string[],
-    message: string,
-    imageUrl: string | null,
-  ): Promise<boolean> {
-    try {
-      console.log('📤 Sending MMS via share sheet...');
-      console.log('📱 Recipients:', phoneNumbers);
-      console.log('📸 Image URL:', imageUrl);
-
-      let localImagePath: string | null = null;
-
-      // Download image to local storage if URL exists
-      if (imageUrl) {
-        try {
-          console.log('⬇️ Downloading image for MMS...');
-          const filename = `deal_image_${Date.now()}.jpg`;
-          const downloadPath = `${RNFS.CachesDirectoryPath}/${filename}`;
-
-          const downloadResult = await RNFS.downloadFile({
-            fromUrl: imageUrl,
-            toFile: downloadPath,
-          }).promise;
-
-          if (downloadResult.statusCode === 200) {
-            localImagePath = `file://${downloadPath}`;
-            console.log('✅ Image downloaded:', localImagePath);
-          } else {
-            console.warn(
-              '⚠️ Image download failed with status:',
-              downloadResult.statusCode,
-            );
-          }
-        } catch (downloadError) {
-          console.error('❌ Failed to download image:', downloadError);
-          // Continue without image
-        }
-      }
-
-      // Build share options with local image
-      const shareOptions: any = {
-        title: 'Share Deal via Messages',
-        message: message,
-      };
-
-      // Add local image file if downloaded
-      if (localImagePath) {
-        shareOptions.url = localImagePath;
-        shareOptions.type = 'image/jpeg';
-        console.log('📎 Attaching image to share');
-      }
-
-      // iOS: Try to suggest Messages app
+      console.log('📱 Platform:', Platform.OS);
+      console.log('📞 Cleaned phone numbers:', cleanedNumbers);
+      console.log('💬 Message:', message.substring(0, 100) + '...');
+      console.log('🖼️ Deal image URL:', dealImageUrl);
+      
+      // Send MMS with image attachment
       if (Platform.OS === 'ios') {
-        shareOptions.social = Share.Social.SMS;
-
-        // Pre-fill recipients if possible
-        if (phoneNumbers.length > 0) {
-          shareOptions.recipient = phoneNumbers.join(',');
-        }
+        return await this.sendMMS_iOS(cleanedNumbers, message, dealImageUrl);
+      } else {
+        return await this.sendMMS_Android(cleanedNumbers, message, dealImageUrl);
       }
-
-      console.log('📤 Opening share sheet...');
-
-      // Open share sheet
-      const result = await Share.open(shareOptions);
-
-      console.log('✅ Share completed:', result);
-
-      // Clean up downloaded image
-      if (localImagePath) {
-        try {
-          const cleanPath = localImagePath.replace('file://', '');
-          await RNFS.unlink(cleanPath);
-          console.log('🗑️ Cleaned up temporary image');
-        } catch (cleanupError) {
-          console.warn('⚠️ Failed to cleanup image:', cleanupError);
-        }
-      }
-
-      return true;
-    } catch (error: any) {
-      console.log('📤 Share interaction:', error);
-
-      // User dismissed - this is normal, not an error
-      if (
-        error.message &&
-        (error.message.includes('User did not share') ||
-          error.message.includes('cancelled'))
-      ) {
-        console.log('ℹ️ User cancelled share sheet');
-        return false;
-      }
-
-      // Actual error
-      console.error('❌ Share error:', error);
-      Alert.alert('Sharing Failed', 'Could not share deal. Please try again.', [
-        { text: 'OK' },
-      ]);
+    } catch (error) {
+      console.error('❌ SMS Method Error:', error);
       return false;
     }
   }
@@ -385,77 +287,156 @@ class DealSharingService {
   private async sendSMSiOS(
     phoneNumbers: string[],
     message: string,
+    imageUrl: string | null,
   ): Promise<boolean> {
     try {
-      // Create SMS URL for iOS
-      const encodedMessage = encodeURIComponent(message);
-      let smsUrl: string;
-
-      if (phoneNumbers.length === 1) {
-        // Single recipient - most reliable format
-        smsUrl = `sms:${phoneNumbers[0]}&body=${encodedMessage}`;
-      } else {
-        // Multiple recipients - iOS format
-        const recipients = phoneNumbers.join(',');
-        smsUrl = `sms://open?addresses=${recipients}&body=${encodedMessage}`;
-
-        // Alternative format for iOS if the above doesn't work
-        if (!(await Linking.canOpenURL(smsUrl))) {
-          smsUrl = `sms:${recipients}&body=${encodedMessage}`;
-        }
-      }
-
-      // Check if SMS URL can be opened
-      const canOpen = await Linking.canOpenURL(smsUrl);
-
-      if (!canOpen) {
-        throw new Error('SMS URL scheme not supported');
-      }
-
-      // Open iOS Messages app
-      await Linking.openURL(smsUrl);
-
-      // On iOS with Linking, we assume success since the Messages app opened
-      return true;
+      console.log('📱 iOS: Using native URL scheme for SMS');
+      
+      // Try react-native-sms first
+      return await this.sendMMS_iOS(phoneNumbers, message, imageUrl);
     } catch (error) {
       console.error('❌ iOS SMS Error:', error);
-
-      // Fallback to react-native-sms for iOS if Linking fails
-      return await this.sendSMSAndroid(phoneNumbers, message);
+      return false;
     }
   }
 
   private async sendSMSAndroid(
     phoneNumbers: string[],
     message: string,
+    imageUrl: string | null,
   ): Promise<boolean> {
-    return new Promise(resolve => {
+    try {
+      console.log('🤖 Android: Using SendSMS for MMS');
+      
+      return await this.sendMMS_Android(phoneNumbers, message, imageUrl);
+    } catch (error) {
+      console.error('❌ Android SMS Error:', error);
+      return false;
+    }
+  }
+
+  /**
+   * iOS: Send SMS via native URL scheme
+   * Note: iOS doesn't support attaching images via SMS URL scheme.
+   * For MMS with images, would need native implementation.
+   */
+  private async sendMMS_iOS(
+    phoneNumbers: string[],
+    message: string,
+    imageUrl: string | null,
+  ): Promise<boolean> {
+    try {
+      // Log if image was available but can't be attached
+      if (imageUrl) {
+        console.log('⚠️ [iOS] Image available but iOS SMS URL scheme does not support attachments');
+        console.log('📸 Image URL (not used):', imageUrl);
+      }
+
+      // Use native SMS URL scheme (most reliable on iOS)
+      console.log('📱 [iOS] Opening native Messages app via sms: URL scheme');
+      
+      const encodedMessage = encodeURIComponent(message);
+      let smsUrl: string;
+      
+      if (phoneNumbers.length === 1) {
+        smsUrl = `sms:${phoneNumbers[0]}?body=${encodedMessage}`;
+      } else {
+        const recipients = phoneNumbers.join(';');
+        smsUrl = `sms:${recipients}?body=${encodedMessage}`;
+      }
+
+      console.log('🔗 [iOS] SMS URL:', smsUrl.substring(0, 100) + '...');
+      
+      const canOpen = await Linking.canOpenURL(smsUrl);
+      console.log('✅ [iOS] Can open SMS URL:', canOpen);
+      
+      if (canOpen) {
+        await Linking.openURL(smsUrl);
+        console.log('✅ [iOS] Opened native Messages app');
+        return true;
+      } else {
+        console.warn('⚠️ [iOS] Cannot open SMS URL');
+        Alert.alert('SMS Error', 'Cannot open Messages app on this device.', [{ text: 'OK' }]);
+        return false;
+      }
+    } catch (error) {
+      console.error('❌ [iOS] SendMMS_iOS error:', error);
+      console.error('❌ [iOS] Error details:', error instanceof Error ? error.message : String(error));
+      Alert.alert('SMS Error', 'Could not open Messages app. Please try again.', [{ text: 'OK' }]);
+      return false;
+    }
+  }
+
+  /**
+   * Android: Send MMS using react-native-sms library
+   */
+  private async sendMMS_Android(
+    phoneNumbers: string[],
+    message: string,
+    imageUrl: string | null,
+  ): Promise<boolean> {
+    return new Promise((resolve) => {
       try {
-        SendSMS.send(
-          {
+        let localImagePath: string | null = null;
+
+        const downloadAndSend = async () => {
+          if (imageUrl) {
+            try {
+              console.log('⬇️ [Android] Downloading image for MMS...');
+              const filename = `deal_image_${Date.now()}.jpg`;
+              const downloadPath = `${RNFS.CachesDirectoryPath}/${filename}`;
+
+              const downloadResult = await RNFS.downloadFile({
+                fromUrl: imageUrl,
+                toFile: downloadPath,
+              }).promise;
+
+              if (downloadResult.statusCode === 200) {
+                localImagePath = `file://${downloadPath}`;
+                console.log('✅ [Android] Image downloaded:', localImagePath);
+              }
+            } catch (downloadError) {
+              console.error('❌ [Android] Failed to download image:', downloadError);
+            }
+          }
+
+          const smsOptions: any = {
             body: message,
             recipients: phoneNumbers,
             allowAndroidSendWithoutReadPermission: true,
-          },
-          (completed: boolean, cancelled: boolean, error: boolean) => {
-            if (completed) {
-              resolve(true);
-            } else if (cancelled) {
-              resolve(false);
-            } else if (error) {
-              resolve(false);
-            } else {
-              resolve(false);
+          };
+
+          if (localImagePath) {
+            smsOptions.attachment = localImagePath;
+            smsOptions.attachmentType = 'image/jpeg';
+            console.log('📎 [Android] Attaching image');
+          }
+
+          console.log('📤 [Android] SendSMS.send');
+
+          SendSMS.send(smsOptions, (completed, cancelled, error) => {
+            console.log('📞 [Android] SMS callback - completed:', completed, 'cancelled:', cancelled, 'error:', error);
+            
+            if (localImagePath) {
+              try {
+                const cleanPath = localImagePath.replace('file://', '');
+                RNFS.unlink(cleanPath).catch(() => {});
+              } catch (e) {
+                // ignore
+              }
             }
-          },
-        );
-      } catch (sendError) {
-        console.error('❌ react-native-sms Error:', sendError);
-        Alert.alert(
-          'SMS Error',
-          'Could not open SMS composer. Please check your device settings.',
-          [{ text: 'OK' }],
-        );
+
+            resolve(completed === true);
+          });
+        };
+
+        downloadAndSend().catch(err => {
+          console.error('❌ [Android] Download error:', err);
+          resolve(false);
+        });
+      } catch (error) {
+        console.error('❌ [Android] SendSMS error:', error);
+        Alert.alert('SMS Error', 'Could not send SMS. Please try again.', [{ text: 'OK' }]);
         resolve(false);
       }
     });
