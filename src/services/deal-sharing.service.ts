@@ -3,7 +3,7 @@ import { PermissionsAndroid, Platform, Alert, Linking } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Contacts from 'react-native-contacts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import SendSMS from 'react-native-sms';
+import { sendSMS, sendSMSWithShareMenu } from 'react-native-sms-share';
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
 import AppReturnUtils from '../libs/utils/appReturnUtils';
@@ -368,78 +368,69 @@ class DealSharingService {
   }
 
   /**
-   * Android: Send MMS using react-native-sms library
+   * Android: Send MMS using react-native-sms-share Turbo Module
    */
   private async sendMMS_Android(
     phoneNumbers: string[],
     message: string,
     imageUrl: string | null,
   ): Promise<boolean> {
-    return new Promise((resolve) => {
-      try {
-        let localImagePath: string | null = null;
+    try {
+      const imageUris: string[] = [];
 
-        const downloadAndSend = async () => {
-          if (imageUrl) {
-            try {
-              console.log('⬇️ [Android] Downloading image for MMS...');
-              const filename = `deal_image_${Date.now()}.jpg`;
-              const downloadPath = `${RNFS.CachesDirectoryPath}/${filename}`;
+      // Download image if available
+      if (imageUrl) {
+        try {
+          console.log('⬇️ [Android] Downloading image for MMS...');
+          const filename = `deal_image_${Date.now()}.jpg`;
+          const downloadPath = `${RNFS.CachesDirectoryPath}/${filename}`;
 
-              const downloadResult = await RNFS.downloadFile({
-                fromUrl: imageUrl,
-                toFile: downloadPath,
-              }).promise;
+          const downloadResult = await RNFS.downloadFile({
+            fromUrl: imageUrl,
+            toFile: downloadPath,
+          }).promise;
 
-              if (downloadResult.statusCode === 200) {
-                localImagePath = `file://${downloadPath}`;
-                console.log('✅ [Android] Image downloaded:', localImagePath);
-              }
-            } catch (downloadError) {
-              console.error('❌ [Android] Failed to download image:', downloadError);
-            }
+          if (downloadResult.statusCode === 200) {
+            imageUris.push(`file://${downloadPath}`);
+            console.log('✅ [Android] Image downloaded:', downloadPath);
           }
-
-          const smsOptions: any = {
-            body: message,
-            recipients: phoneNumbers,
-            allowAndroidSendWithoutReadPermission: true,
-          };
-
-          if (localImagePath) {
-            smsOptions.attachment = localImagePath;
-            smsOptions.attachmentType = 'image/jpeg';
-            console.log('📎 [Android] Attaching image');
-          }
-
-          console.log('📤 [Android] SendSMS.send');
-
-          SendSMS.send(smsOptions, (completed, cancelled, error) => {
-            console.log('📞 [Android] SMS callback - completed:', completed, 'cancelled:', cancelled, 'error:', error);
-            
-            if (localImagePath) {
-              try {
-                const cleanPath = localImagePath.replace('file://', '');
-                RNFS.unlink(cleanPath).catch(() => {});
-              } catch (e) {
-                // ignore
-              }
-            }
-
-            resolve(completed === true);
-          });
-        };
-
-        downloadAndSend().catch(err => {
-          console.error('❌ [Android] Download error:', err);
-          resolve(false);
-        });
-      } catch (error) {
-        console.error('❌ [Android] SendSMS error:', error);
-        Alert.alert('SMS Error', 'Could not send SMS. Please try again.', [{ text: 'OK' }]);
-        resolve(false);
+        } catch (downloadError) {
+          console.error('❌ [Android] Failed to download image:', downloadError);
+          // Continue without image
+        }
       }
-    });
+
+      console.log('📤 [Android] Calling sendSMS with Turbo Module');
+      console.log('📞 Phone numbers:', phoneNumbers);
+      console.log('📎 Image URIs:', imageUris);
+
+      // Use the Turbo Module to send SMS
+      const result = await sendSMS({
+        phoneNumbers: phoneNumbers.join(','),
+        message: message,
+        imageUris: imageUris.length > 0 ? imageUris : undefined,
+      });
+
+      console.log('✅ [Android] sendSMS result:', result);
+
+      // Clean up downloaded images
+      if (imageUris.length > 0) {
+        imageUris.forEach(uri => {
+          try {
+            const cleanPath = uri.replace('file://', '');
+            RNFS.unlink(cleanPath).catch(() => {});
+          } catch (e) {
+            // ignore cleanup errors
+          }
+        });
+      }
+
+      return result?.sent === true;
+    } catch (error) {
+      console.error('❌ [Android] sendSMS error:', error);
+      Alert.alert('SMS Error', 'Could not send SMS. Please try again.', [{ text: 'OK' }]);
+      return false;
+    }
   }
 
   private createShareMessage(dealInfo: any): string {
