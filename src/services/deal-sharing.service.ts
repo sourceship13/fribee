@@ -271,12 +271,16 @@ class DealSharingService {
       console.log('📞 Cleaned phone numbers:', cleanedNumbers);
       console.log('💬 Message:', message.substring(0, 100) + '...');
       console.log('🖼️ Deal image URL:', dealImageUrl);
-      
+
       // Send MMS with image attachment
       if (Platform.OS === 'ios') {
         return await this.sendMMS_iOS(cleanedNumbers, message, dealImageUrl);
       } else {
-        return await this.sendMMS_Android(cleanedNumbers, message, dealImageUrl);
+        return await this.sendMMS_Android(
+          cleanedNumbers,
+          message,
+          dealImageUrl,
+        );
       }
     } catch (error) {
       console.error('❌ SMS Method Error:', error);
@@ -291,7 +295,7 @@ class DealSharingService {
   ): Promise<boolean> {
     try {
       console.log('📱 iOS: Using native URL scheme for SMS');
-      
+
       // Try react-native-sms first
       return await this.sendMMS_iOS(phoneNumbers, message, imageUrl);
     } catch (error) {
@@ -307,7 +311,7 @@ class DealSharingService {
   ): Promise<boolean> {
     try {
       console.log('🤖 Android: Using SendSMS for MMS');
-      
+
       return await this.sendMMS_Android(phoneNumbers, message, imageUrl);
     } catch (error) {
       console.error('❌ Android SMS Error:', error);
@@ -328,16 +332,18 @@ class DealSharingService {
     try {
       // Log if image was available but can't be attached
       if (imageUrl) {
-        console.log('⚠️ [iOS] Image available but iOS SMS URL scheme does not support attachments');
+        console.log(
+          '⚠️ [iOS] Image available but iOS SMS URL scheme does not support attachments',
+        );
         console.log('📸 Image URL (not used):', imageUrl);
       }
 
       // Use native SMS URL scheme (most reliable on iOS)
       console.log('📱 [iOS] Opening native Messages app via sms: URL scheme');
-      
+
       const encodedMessage = encodeURIComponent(message);
       let smsUrl: string;
-      
+
       if (phoneNumbers.length === 1) {
         smsUrl = `sms:${phoneNumbers[0]}?body=${encodedMessage}`;
       } else {
@@ -346,23 +352,32 @@ class DealSharingService {
       }
 
       console.log('🔗 [iOS] SMS URL:', smsUrl.substring(0, 100) + '...');
-      
+
       const canOpen = await Linking.canOpenURL(smsUrl);
       console.log('✅ [iOS] Can open SMS URL:', canOpen);
-      
+
       if (canOpen) {
         await Linking.openURL(smsUrl);
         console.log('✅ [iOS] Opened native Messages app');
         return true;
       } else {
         console.warn('⚠️ [iOS] Cannot open SMS URL');
-        Alert.alert('SMS Error', 'Cannot open Messages app on this device.', [{ text: 'OK' }]);
+        Alert.alert('SMS Error', 'Cannot open Messages app on this device.', [
+          { text: 'OK' },
+        ]);
         return false;
       }
     } catch (error) {
       console.error('❌ [iOS] SendMMS_iOS error:', error);
-      console.error('❌ [iOS] Error details:', error instanceof Error ? error.message : String(error));
-      Alert.alert('SMS Error', 'Could not open Messages app. Please try again.', [{ text: 'OK' }]);
+      console.error(
+        '❌ [iOS] Error details:',
+        error instanceof Error ? error.message : String(error),
+      );
+      Alert.alert(
+        'SMS Error',
+        'Could not open Messages app. Please try again.',
+        [{ text: 'OK' }],
+      );
       return false;
     }
   }
@@ -395,7 +410,10 @@ class DealSharingService {
             console.log('✅ [Android] Image downloaded:', downloadPath);
           }
         } catch (downloadError) {
-          console.error('❌ [Android] Failed to download image:', downloadError);
+          console.error(
+            '❌ [Android] Failed to download image:',
+            downloadError,
+          );
           // Continue without image
         }
       }
@@ -428,7 +446,9 @@ class DealSharingService {
       return result?.sent === true;
     } catch (error) {
       console.error('❌ [Android] sendSMS error:', error);
-      Alert.alert('SMS Error', 'Could not send SMS. Please try again.', [{ text: 'OK' }]);
+      Alert.alert('SMS Error', 'Could not send SMS. Please try again.', [
+        { text: 'OK' },
+      ]);
       return false;
     }
   }

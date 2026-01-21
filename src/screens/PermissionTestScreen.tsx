@@ -7,19 +7,22 @@ import VersionFooter from '../components/VersionFooter';
 const PermissionTestScreen = () => {
   const checkContactsPermission = async () => {
     try {
-      const permission = Platform.OS === 'ios' 
-        ? PERMISSIONS.IOS.CONTACTS 
-        : PERMISSIONS.ANDROID.READ_CONTACTS;
-      
+      const permission =
+        Platform.OS === 'ios'
+          ? PERMISSIONS.IOS.CONTACTS
+          : PERMISSIONS.ANDROID.READ_CONTACTS;
+
       const result = await check(permission);
-      
+
       let message = '';
       switch (result) {
         case RESULTS.UNAVAILABLE:
-          message = 'This feature is not available (on this device / in this context)';
+          message =
+            'This feature is not available (on this device / in this context)';
           break;
         case RESULTS.DENIED:
-          message = 'The permission has not been requested / is denied but requestable';
+          message =
+            'The permission has not been requested / is denied but requestable';
           break;
         case RESULTS.LIMITED:
           message = 'The permission is limited: some actions are possible';
@@ -31,22 +34,27 @@ const PermissionTestScreen = () => {
           message = 'The permission is denied and not requestable anymore';
           break;
       }
-      
+
       Alert.alert('Contact Permission Status', message);
     } catch (error) {
       console.error('Permission check error:', error);
-      Alert.alert('Error', 'Failed to check permission: ' + (error as Error)?.message || 'Unknown error');
+      Alert.alert(
+        'Error',
+        'Failed to check permission: ' + (error as Error)?.message ||
+          'Unknown error',
+      );
     }
   };
 
   const requestContactsPermission = async () => {
     try {
-      const permission = Platform.OS === 'ios' 
-        ? PERMISSIONS.IOS.CONTACTS 
-        : PERMISSIONS.ANDROID.READ_CONTACTS;
-      
+      const permission =
+        Platform.OS === 'ios'
+          ? PERMISSIONS.IOS.CONTACTS
+          : PERMISSIONS.ANDROID.READ_CONTACTS;
+
       const result = await request(permission);
-      
+
       let message = '';
       switch (result) {
         case RESULTS.GRANTED:
@@ -61,11 +69,15 @@ const PermissionTestScreen = () => {
         default:
           message = `Permission result: ${result}`;
       }
-      
+
       Alert.alert('Permission Request Result', message);
     } catch (error) {
       console.error('Permission request error:', error);
-      Alert.alert('Error', 'Failed to request permission: ' + (error as Error)?.message || 'Unknown error');
+      Alert.alert(
+        'Error',
+        'Failed to request permission: ' + (error as Error)?.message ||
+          'Unknown error',
+      );
     }
   };
 
@@ -74,11 +86,18 @@ const PermissionTestScreen = () => {
       // Test if modules can be imported without errors
       const Contacts = require('react-native-contacts');
       const SMSShare = require('react-native-sms-share');
-      
-      Alert.alert('Success!', 'All modules imported successfully. The permissions system is working.');
+
+      Alert.alert(
+        'Success!',
+        'All modules imported successfully. The permissions system is working.',
+      );
     } catch (error) {
       console.error('Module import error:', error);
-      Alert.alert('Module Error', 'Failed to import modules: ' + (error as Error)?.message || 'Unknown error');
+      Alert.alert(
+        'Module Error',
+        'Failed to import modules: ' + (error as Error)?.message ||
+          'Unknown error',
+      );
     }
   };
 
@@ -86,21 +105,25 @@ const PermissionTestScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Permission Test Screen</Text>
       <Text style={styles.subtitle}>Test native module integration</Text>
-      
+
       <TouchableOpacity style={styles.button} onPress={testModuleImports}>
         <Text style={styles.buttonText}>Test Module Imports</Text>
       </TouchableOpacity>
-      
+
       <TouchableOpacity style={styles.button} onPress={checkContactsPermission}>
         <Text style={styles.buttonText}>Check Contacts Permission</Text>
       </TouchableOpacity>
-      
-      <TouchableOpacity style={styles.button} onPress={requestContactsPermission}>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={requestContactsPermission}
+      >
         <Text style={styles.buttonText}>Request Contacts Permission</Text>
       </TouchableOpacity>
-      
+
       <Text style={styles.info}>
-        Platform: {Platform.OS}{'\n'}
+        Platform: {Platform.OS}
+        {'\n'}
         This screen tests if react-native-permissions is properly linked.
       </Text>
       <VersionFooter />
