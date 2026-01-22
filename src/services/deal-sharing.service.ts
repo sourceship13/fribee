@@ -3,7 +3,7 @@ import { PermissionsAndroid, Platform, Alert, Linking } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Contacts from 'react-native-contacts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { sendSMS, sendSMSWithShareMenu } from 'react-native-sms-share';
+import { sendSMSWithShareMenu } from 'react-native-sms-share';
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
 import AppReturnUtils from '../libs/utils/appReturnUtils';
@@ -320,9 +320,8 @@ class DealSharingService {
   }
 
   /**
-   * iOS: Send SMS via native URL scheme
-   * Note: iOS doesn't support attaching images via SMS URL scheme.
-   * For MMS with images, would need native implementation.
+   * iOS: Send SMS via native share menu using Turbo Module
+   * Allows users to choose between Messages, Mail, iMessage, and other apps
    */
   private async sendMMS_iOS(
     phoneNumbers: string[],
@@ -330,52 +329,65 @@ class DealSharingService {
     imageUrl: string | null,
   ): Promise<boolean> {
     try {
-      // Log if image was available but can't be attached
+      const imageUris: string[] = [];
+
+      // Download image if available
       if (imageUrl) {
-        console.log(
-          '⚠️ [iOS] Image available but iOS SMS URL scheme does not support attachments',
-        );
-        console.log('📸 Image URL (not used):', imageUrl);
+        try {
+          console.log('⬇️ [iOS] Downloading image for share...');
+          const filename = `deal_image_${Date.now()}.jpg`;
+          const downloadPath = `${RNFS.CachesDirectoryPath}/${filename}`;
+
+          const downloadResult = await RNFS.downloadFile({
+            fromUrl: imageUrl,
+            toFile: downloadPath,
+          }).promise;
+
+          if (downloadResult.statusCode === 200) {
+            imageUris.push(`file://${downloadPath}`);
+            console.log('✅ [iOS] Image downloaded:', downloadPath);
+          }
+        } catch (downloadError) {
+          console.error('❌ [iOS] Failed to download image:', downloadError);
+          // Continue without image
+        }
       }
 
-      // Use native SMS URL scheme (most reliable on iOS)
-      console.log('📱 [iOS] Opening native Messages app via sms: URL scheme');
+      console.log('📤 [iOS] Calling sendSMSWithShareMenu with Turbo Module');
+      console.log('📞 Phone numbers:', phoneNumbers);
+      console.log('📎 Image URIs:', imageUris);
 
-      const encodedMessage = encodeURIComponent(message);
-      let smsUrl: string;
+      // Use the Turbo Module share menu to allow users to choose Messages, Mail, iMessage, etc.
+      const result = await sendSMSWithShareMenu({
+        phoneNumbers: phoneNumbers.join(','),
+        message: message,
+        imageUris: imageUris.length > 0 ? imageUris : undefined,
+      });
 
-      if (phoneNumbers.length === 1) {
-        smsUrl = `sms:${phoneNumbers[0]}?body=${encodedMessage}`;
-      } else {
-        const recipients = phoneNumbers.join(';');
-        smsUrl = `sms:${recipients}?body=${encodedMessage}`;
+      console.log('✅ [iOS] sendSMSWithShareMenu result:', result);
+
+      // Clean up downloaded images
+      if (imageUris.length > 0) {
+        imageUris.forEach(uri => {
+          try {
+            const cleanPath = uri.replace('file://', '');
+            RNFS.unlink(cleanPath).catch(() => {});
+          } catch (e) {
+            // ignore cleanup errors
+          }
+        });
       }
 
-      console.log('🔗 [iOS] SMS URL:', smsUrl.substring(0, 100) + '...');
-
-      const canOpen = await Linking.canOpenURL(smsUrl);
-      console.log('✅ [iOS] Can open SMS URL:', canOpen);
-
-      if (canOpen) {
-        await Linking.openURL(smsUrl);
-        console.log('✅ [iOS] Opened native Messages app');
-        return true;
-      } else {
-        console.warn('⚠️ [iOS] Cannot open SMS URL');
-        Alert.alert('SMS Error', 'Cannot open Messages app on this device.', [
-          { text: 'OK' },
-        ]);
-        return false;
-      }
+      return result?.sent === true;
     } catch (error) {
-      console.error('❌ [iOS] SendMMS_iOS error:', error);
+      console.error('❌ [iOS] sendSMSWithShareMenu error:', error);
       console.error(
         '❌ [iOS] Error details:',
         error instanceof Error ? error.message : String(error),
       );
       Alert.alert(
-        'SMS Error',
-        'Could not open Messages app. Please try again.',
+        'Sharing Error',
+        'Could not open share menu. Please try again.',
         [{ text: 'OK' }],
       );
       return false;
@@ -418,18 +430,18 @@ class DealSharingService {
         }
       }
 
-      console.log('📤 [Android] Calling sendSMS with Turbo Module');
+      console.log('📤 [Android] Calling sendSMSWithShareMenu with Turbo Module');
       console.log('📞 Phone numbers:', phoneNumbers);
       console.log('📎 Image URIs:', imageUris);
 
-      // Use the Turbo Module to send SMS
-      const result = await sendSMS({
+      // Use the Turbo Module share menu to allow users to choose SMS, email, iMessage, etc.
+      const result = await sendSMSWithShareMenu({
         phoneNumbers: phoneNumbers.join(','),
         message: message,
         imageUris: imageUris.length > 0 ? imageUris : undefined,
       });
 
-      console.log('✅ [Android] sendSMS result:', result);
+      console.log('✅ [Android] sendSMSWithShareMenu result:', result);
 
       // Clean up downloaded images
       if (imageUris.length > 0) {

@@ -16,7 +16,7 @@ setup_permissions([
   'LocationWhenInUse'
 ])
 
-platform :ios, min_ios_version_supported
+platform :ios, '15.1'
 prepare_react_native_project!
 
 # Keep New Architecture enabled (required by Reanimated)
