@@ -430,7 +430,9 @@ class DealSharingService {
         }
       }
 
-      console.log('📤 [Android] Calling sendSMSWithShareMenu with Turbo Module');
+      console.log(
+        '📤 [Android] Calling sendSMSWithShareMenu with Turbo Module',
+      );
       console.log('📞 Phone numbers:', phoneNumbers);
       console.log('📎 Image URIs:', imageUris);
 
