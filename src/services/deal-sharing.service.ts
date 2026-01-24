@@ -1,9 +1,9 @@
 import ApiService from './api.service';
-import { PermissionsAndroid, Platform, Alert, Linking } from 'react-native';
+import { PermissionsAndroid, Platform, Alert, Linking, NativeModules } from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Contacts from 'react-native-contacts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { sendSMSWithShareMenu } from 'react-native-sms-share';
+import { sendSMS, sendWithShareSMS } from 'react-native-share-sms';
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
 import AppReturnUtils from '../libs/utils/appReturnUtils';
@@ -329,7 +329,8 @@ class DealSharingService {
     imageUrl: string | null,
   ): Promise<boolean> {
     try {
-      const imageUris: string[] = [];
+      console.log('🔍 ShareSms module checking...');
+      const attachments: Array<{uri: string; mimeType: string; filename?: string}> = [];
 
       // Download image if available
       if (imageUrl) {
@@ -344,7 +345,11 @@ class DealSharingService {
           }).promise;
 
           if (downloadResult.statusCode === 200) {
-            imageUris.push(`file://${downloadPath}`);
+            attachments.push({
+              uri: `file://${downloadPath}`,
+              mimeType: 'image/jpeg',
+              filename: filename,
+            });
             console.log('✅ [iOS] Image downloaded:', downloadPath);
           }
         } catch (downloadError) {
@@ -353,24 +358,38 @@ class DealSharingService {
         }
       }
 
-      console.log('📤 [iOS] Calling sendSMSWithShareMenu with Turbo Module');
+      console.log('📤 [iOS] Calling sendWithShareSMS with Turbo Module');
       console.log('📞 Phone numbers:', phoneNumbers);
-      console.log('📎 Image URIs:', imageUris);
+      console.log('📎 Attachments:', attachments);
+      console.log('💬 Message body length:', message?.length);
 
       // Use the Turbo Module share menu to allow users to choose Messages, Mail, iMessage, etc.
-      const result = await sendSMSWithShareMenu({
-        phoneNumbers: phoneNumbers.join(','),
-        message: message,
-        imageUris: imageUris.length > 0 ? imageUris : undefined,
-      });
+      let result;
+      try {
+        console.log('🚀 [iOS] About to call sendWithShareSMS...');
+        result = await sendWithShareSMS({
+          body: message,
+          recipients: phoneNumbers,
+          attachments: attachments.length > 0 ? attachments : undefined,
+        });
+        console.log('✅ [iOS] sendWithShareSMS returned:', JSON.stringify(result));
+      } catch (nativeError) {
+        console.error('❌ [iOS] Native sendWithShareSMS threw error:', nativeError);
+        Alert.alert(
+          'Native Error',
+          `sendWithShareSMS failed: ${nativeError instanceof Error ? nativeError.message : String(nativeError)}`,
+          [{ text: 'OK' }],
+        );
+        return false;
+      }
 
-      console.log('✅ [iOS] sendSMSWithShareMenu result:', result);
+      console.log('✅ [iOS] sendWithShareSMS result:', result);
 
       // Clean up downloaded images
-      if (imageUris.length > 0) {
-        imageUris.forEach(uri => {
+      if (attachments.length > 0) {
+        attachments.forEach(attachment => {
           try {
-            const cleanPath = uri.replace('file://', '');
+            const cleanPath = attachment.uri.replace('file://', '');
             RNFS.unlink(cleanPath).catch(() => {});
           } catch (e) {
             // ignore cleanup errors
@@ -378,7 +397,7 @@ class DealSharingService {
         });
       }
 
-      return result?.sent === true;
+      return result?.success === true;
     } catch (error) {
       console.error('❌ [iOS] sendSMSWithShareMenu error:', error);
       console.error(
@@ -395,7 +414,7 @@ class DealSharingService {
   }
 
   /**
-   * Android: Send MMS using react-native-sms-share Turbo Module
+   * Android: Send MMS using react-native-share-sms Turbo Module
    */
   private async sendMMS_Android(
     phoneNumbers: string[],
@@ -403,7 +422,7 @@ class DealSharingService {
     imageUrl: string | null,
   ): Promise<boolean> {
     try {
-      const imageUris: string[] = [];
+      const attachments: Array<{uri: string; mimeType: string; filename?: string}> = [];
 
       // Download image if available
       if (imageUrl) {
@@ -418,7 +437,11 @@ class DealSharingService {
           }).promise;
 
           if (downloadResult.statusCode === 200) {
-            imageUris.push(`file://${downloadPath}`);
+            attachments.push({
+              uri: `file://${downloadPath}`,
+              mimeType: 'image/jpeg',
+              filename: filename,
+            });
             console.log('✅ [Android] Image downloaded:', downloadPath);
           }
         } catch (downloadError) {
@@ -431,25 +454,25 @@ class DealSharingService {
       }
 
       console.log(
-        '📤 [Android] Calling sendSMSWithShareMenu with Turbo Module',
+        '📤 [Android] Calling sendWithShareSMS with Turbo Module',
       );
       console.log('📞 Phone numbers:', phoneNumbers);
-      console.log('📎 Image URIs:', imageUris);
+      console.log('📎 Attachments:', attachments);
 
-      // Use the Turbo Module share menu to allow users to choose SMS, email, iMessage, etc.
-      const result = await sendSMSWithShareMenu({
-        phoneNumbers: phoneNumbers.join(','),
-        message: message,
-        imageUris: imageUris.length > 0 ? imageUris : undefined,
+      // Use the Turbo Module share menu to allow users to choose SMS, email, etc.
+      const result = await sendWithShareSMS({
+        body: message,
+        recipients: phoneNumbers,
+        attachments: attachments.length > 0 ? attachments : undefined,
       });
 
-      console.log('✅ [Android] sendSMSWithShareMenu result:', result);
+      console.log('✅ [Android] sendWithShareSMS result:', result);
 
       // Clean up downloaded images
-      if (imageUris.length > 0) {
-        imageUris.forEach(uri => {
+      if (attachments.length > 0) {
+        attachments.forEach(attachment => {
           try {
-            const cleanPath = uri.replace('file://', '');
+            const cleanPath = attachment.uri.replace('file://', '');
             RNFS.unlink(cleanPath).catch(() => {});
           } catch (e) {
             // ignore cleanup errors
@@ -457,7 +480,7 @@ class DealSharingService {
         });
       }
 
-      return result?.sent === true;
+      return result?.success === true;
     } catch (error) {
       console.error('❌ [Android] sendSMS error:', error);
       Alert.alert('SMS Error', 'Could not send SMS. Please try again.', [
@@ -545,6 +568,13 @@ class DealSharingService {
    * Extract the best available image URL from deal data
    */
   private getDealImageUrl(dealInfo: any): string | null {
+    console.log('🖼️ [getDealImageUrl] dealInfo keys:', Object.keys(dealInfo || {}));
+    console.log('🖼️ [getDealImageUrl] deal_images:', dealInfo?.deal_images);
+    console.log('🖼️ [getDealImageUrl] deal_image_url:', dealInfo?.deal_image_url);
+    console.log('🖼️ [getDealImageUrl] image_url:', dealInfo?.image_url);
+    console.log('🖼️ [getDealImageUrl] images:', dealInfo?.images);
+    console.log('🖼️ [getDealImageUrl] business_images:', dealInfo?.business_images);
+    
     // Try deal_images array first (preferred)
     if (
       dealInfo.deal_images &&
@@ -552,11 +582,13 @@ class DealSharingService {
       dealInfo.deal_images.length > 0
     ) {
       const firstImage = dealInfo.deal_images[0];
+      console.log('🖼️ [getDealImageUrl] Found deal_images, firstImage:', firstImage);
       if (
         firstImage &&
         typeof firstImage === 'object' &&
         firstImage.image_url
       ) {
+        console.log('🖼️ [getDealImageUrl] Returning deal_images[0].image_url:', firstImage.image_url);
         return firstImage.image_url;
       }
     }
@@ -566,10 +598,12 @@ class DealSharingService {
       dealInfo.deal_image_url &&
       typeof dealInfo.deal_image_url === 'string'
     ) {
+      console.log('🖼️ [getDealImageUrl] Returning deal_image_url:', dealInfo.deal_image_url);
       return dealInfo.deal_image_url;
     }
 
     if (dealInfo.image_url && typeof dealInfo.image_url === 'string') {
+      console.log('🖼️ [getDealImageUrl] Returning image_url:', dealInfo.image_url);
       return dealInfo.image_url;
     }
 
@@ -581,9 +615,11 @@ class DealSharingService {
     ) {
       const firstImage = dealInfo.images[0];
       if (typeof firstImage === 'string') {
+        console.log('🖼️ [getDealImageUrl] Returning images[0] string:', firstImage);
         return firstImage;
       }
       if (typeof firstImage === 'object' && firstImage.image_url) {
+        console.log('🖼️ [getDealImageUrl] Returning images[0].image_url:', firstImage.image_url);
         return firstImage.image_url;
       }
     }
@@ -600,10 +636,12 @@ class DealSharingService {
         typeof firstImage === 'object' &&
         firstImage.image_url
       ) {
+        console.log('🖼️ [getDealImageUrl] Returning business_images[0].image_url:', firstImage.image_url);
         return firstImage.image_url;
       }
     }
 
+    console.log('🖼️ [getDealImageUrl] No image found, returning null');
     return null;
   }
 

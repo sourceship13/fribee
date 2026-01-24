@@ -85,7 +85,7 @@ const PermissionTestScreen = () => {
     try {
       // Test if modules can be imported without errors
       const Contacts = require('react-native-contacts');
-      const SMSShare = require('react-native-sms-share');
+      const SMSShare = require('react-native-share-sms');
 
       Alert.alert(
         'Success!',
