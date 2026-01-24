@@ -9,7 +9,10 @@ import {
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Contacts from 'react-native-contacts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { sendSMS, sendWithShareSMS } from 'react-native-share-sms';
+import {
+  sendSMS,
+  sendWithShareSMS,
+} from '@sourceship13/react-native-share-sms';
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
 import AppReturnUtils from '../libs/utils/appReturnUtils';

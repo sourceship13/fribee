@@ -3260,7 +3260,7 @@ DEPENDENCIES:
   - RNShare (from `../node_modules/react-native-share`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNWorklets (from `../node_modules/react-native-worklets`)
-  - ShareSms (from `../node_modules/react-native-share-sms`)
+  - "ShareSms (from `../node_modules/@sourceship13/react-native-share-sms`)"
   - SocketRocket (~> 0.7.1)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -3474,7 +3474,7 @@ EXTERNAL SOURCES:
   RNWorklets:
     :path: "../node_modules/react-native-worklets"
   ShareSms:
-    :path: "../node_modules/react-native-share-sms"
+    :path: "../node_modules/@sourceship13/react-native-share-sms"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
