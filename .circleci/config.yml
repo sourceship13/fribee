@@ -196,6 +196,7 @@ jobs:
           name: Install CocoaPods
           command: |
             cd ios
+            bundle exec pod repo update
             bundle exec pod install
       - save_cache:
           key: v1-pods-{{ checksum "ios/Podfile.lock" }}
@@ -304,6 +305,7 @@ jobs:
           name: Install CocoaPods
           command: |
             cd ios
+            bundle exec pod repo update
             bundle exec pod install
       - save_cache:
           key: v1-pods-{{ checksum "ios/Podfile.lock" }}
