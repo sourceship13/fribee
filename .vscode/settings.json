@@ -1,5 +1,6 @@
 {
   "editor.formatOnSave": true,
+  "editor.folding": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
