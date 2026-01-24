@@ -420,7 +420,9 @@ workflows:
             - nolimitsera-context
           filters:
             branches:
-              only: main
+              only:
+                - main
+                - circle
               # Temporarily disabled develop branch builds
               # only:
               #   - main
@@ -432,7 +434,9 @@ workflows:
             - install_dependencies
           filters:
             branches:
-              only: main
+              only:
+                - main
+                - circle
       - build_ios_staging:
           context:
             - nolimitsera-context
@@ -440,7 +444,9 @@ workflows:
             - install_dependencies
           filters:
             branches:
-              only: main
+              only:
+                - main
+                - circle
 
   deploy_production:
     jobs:
@@ -449,7 +455,9 @@ workflows:
             - nolimitsera-context
           filters:
             branches:
-              only: main
+              only:
+                - main
+                - circle
             tags:
               only: /^v.*/
       - build_ios_production:
@@ -459,6 +467,8 @@ workflows:
             - install_dependencies
           filters:
             branches:
-              only: main
+              only:
+                - main
+                - circle
             tags:
               only: /^v.*/
