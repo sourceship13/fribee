@@ -30,6 +30,11 @@ jobs:
             - v1-npm-{{ arch }}-{{ .Branch }}
             - v1-npm-
       - run:
+          name: Configure npm authentication
+          command: |
+            echo "//registry.npmjs.org/:_authToken=${FRIBEE_NPM_TOKEN}" > ~/.npmrc
+            echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+      - run:
           name: Install Node.js dependencies
           command: npm ci
       - save_cache:
@@ -116,7 +121,7 @@ jobs:
 
             # Build Staging APK
             ./gradlew assembleStagingRelease --no-daemon --stacktrace
-            
+
             # Build Staging AAB
             ./gradlew bundleStagingRelease --no-daemon --stacktrace
       - run:
@@ -125,7 +130,7 @@ jobs:
             cd android
             # Build Production APK
             ./gradlew assembleProductionRelease --no-daemon --stacktrace
-            
+
             # Build Production AAB
             ./gradlew bundleProductionRelease --no-daemon --stacktrace
       - save_cache:
