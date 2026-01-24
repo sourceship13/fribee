@@ -245,6 +245,27 @@ jobs:
               find Pods -name "hermes.framework" -type d
             fi
       - run:
+          name: Clear Metro bundler cache
+          command: |
+            echo "Clearing Metro bundler cache..."
+            rm -rf $TMPDIR/metro-* $TMPDIR/haste-* $TMPDIR/react-* 2>/dev/null || true
+            rm -rf ~/.metro 2>/dev/null || true
+            echo "✅ Metro cache cleared"
+      - run:
+          name: Pre-bundle React Native code
+          command: |
+            echo "Pre-bundling React Native code to check for errors..."
+            export NODE_BINARY=node
+            export ENTRY_FILE=index.js
+            npx react-native bundle \
+              --platform ios \
+              --dev false \
+              --entry-file index.js \
+              --bundle-output /tmp/test-bundle.js \
+              --assets-dest /tmp/test-assets \
+              --reset-cache
+            echo "✅ Pre-bundle successful"
+      - run:
           name: Build and upload to TestFlight (Staging)
           command: |
             cd ios
@@ -353,6 +374,27 @@ jobs:
               echo "⚠️ Hermes framework not found at expected location"
               find Pods -name "hermes.framework" -type d
             fi
+      - run:
+          name: Clear Metro bundler cache
+          command: |
+            echo "Clearing Metro bundler cache..."
+            rm -rf $TMPDIR/metro-* $TMPDIR/haste-* $TMPDIR/react-* 2>/dev/null || true
+            rm -rf ~/.metro 2>/dev/null || true
+            echo "✅ Metro cache cleared"
+      - run:
+          name: Pre-bundle React Native code
+          command: |
+            echo "Pre-bundling React Native code to check for errors..."
+            export NODE_BINARY=node
+            export ENTRY_FILE=index.js
+            npx react-native bundle \
+              --platform ios \
+              --dev false \
+              --entry-file index.js \
+              --bundle-output /tmp/test-bundle.js \
+              --assets-dest /tmp/test-assets \
+              --reset-cache
+            echo "✅ Pre-bundle successful"
       - run:
           name: Build and upload to TestFlight (Production)
           command: |
