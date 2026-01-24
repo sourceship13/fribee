@@ -98,10 +98,36 @@ const SwipeScreen = ({ navigation }: any) => {
     setCurrentCardLoaded(false);
     setNextCardLoaded(false);
     setThirdCardLoaded(false);
-  }, [currentDealIndex]);
+
+    // Immediately mark cards without images as loaded
+    if (!getDealImageUrl(currentDeal)) {
+      setCurrentCardLoaded(true);
+    }
+    if (!nextDeal || !getDealImageUrl(nextDeal)) {
+      setNextCardLoaded(true);
+    }
+    if (!thirdDeal || !getDealImageUrl(thirdDeal)) {
+      setThirdCardLoaded(true);
+    }
+
+    // Safety timeout: if images don't load within 3 seconds, mark them as loaded anyway
+    const timeout = setTimeout(() => {
+      console.log('⏰ Image load timeout - forcing cards to show');
+      setCurrentCardLoaded(true);
+      setNextCardLoaded(true);
+      setThirdCardLoaded(true);
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, [currentDealIndex, currentDeal, nextDeal, thirdDeal]);
 
   // Determine if all visible cards are loaded
   const allCardsReady = () => {
+    // If there are no deals at all, cards are "ready" (show placeholder)
+    if (unheartedDeals.length === 0) {
+      return true;
+    }
+
     // If current deal has no image, consider it loaded
     const currentReady = !getDealImageUrl(currentDeal) || currentCardLoaded;
     // If next deal doesn't exist or has no image, consider it loaded
@@ -261,6 +287,10 @@ const SwipeScreen = ({ navigation }: any) => {
       style={styles.fullScreenImage}
       resizeMode="cover"
       onLoad={() => setCurrentCardLoaded(true)}
+      onError={() => {
+        console.warn('⚠️ Failed to load deal image:', item);
+        setCurrentCardLoaded(true); // Mark as loaded even on error to prevent stuck state
+      }}
     >
       <LinearGradient
         colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
@@ -320,6 +350,10 @@ const SwipeScreen = ({ navigation }: any) => {
                 style={styles.nextDealImage}
                 resizeMode="cover"
                 onLoad={() => setNextCardLoaded(true)}
+                onError={() => {
+                  console.warn('⚠️ Failed to load next deal image');
+                  setNextCardLoaded(true);
+                }}
               >
                 <LinearGradient
                   colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
@@ -359,6 +393,10 @@ const SwipeScreen = ({ navigation }: any) => {
                 style={styles.thirdDealImage}
                 resizeMode="cover"
                 onLoad={() => setThirdCardLoaded(true)}
+                onError={() => {
+                  console.warn('⚠️ Failed to load third deal image');
+                  setThirdCardLoaded(true);
+                }}
               >
                 <LinearGradient
                   colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
