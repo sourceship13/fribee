@@ -1,5 +1,11 @@
 import ApiService from './api.service';
-import { PermissionsAndroid, Platform, Alert, Linking, NativeModules } from 'react-native';
+import {
+  PermissionsAndroid,
+  Platform,
+  Alert,
+  Linking,
+  NativeModules,
+} from 'react-native';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import Contacts from 'react-native-contacts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -330,7 +336,11 @@ class DealSharingService {
   ): Promise<boolean> {
     try {
       console.log('🔍 ShareSms module checking...');
-      const attachments: Array<{uri: string; mimeType: string; filename?: string}> = [];
+      const attachments: Array<{
+        uri: string;
+        mimeType: string;
+        filename?: string;
+      }> = [];
 
       // Download image if available
       if (imageUrl) {
@@ -372,12 +382,22 @@ class DealSharingService {
           recipients: phoneNumbers,
           attachments: attachments.length > 0 ? attachments : undefined,
         });
-        console.log('✅ [iOS] sendWithShareSMS returned:', JSON.stringify(result));
+        console.log(
+          '✅ [iOS] sendWithShareSMS returned:',
+          JSON.stringify(result),
+        );
       } catch (nativeError) {
-        console.error('❌ [iOS] Native sendWithShareSMS threw error:', nativeError);
+        console.error(
+          '❌ [iOS] Native sendWithShareSMS threw error:',
+          nativeError,
+        );
         Alert.alert(
           'Native Error',
-          `sendWithShareSMS failed: ${nativeError instanceof Error ? nativeError.message : String(nativeError)}`,
+          `sendWithShareSMS failed: ${
+            nativeError instanceof Error
+              ? nativeError.message
+              : String(nativeError)
+          }`,
           [{ text: 'OK' }],
         );
         return false;
@@ -422,7 +442,11 @@ class DealSharingService {
     imageUrl: string | null,
   ): Promise<boolean> {
     try {
-      const attachments: Array<{uri: string; mimeType: string; filename?: string}> = [];
+      const attachments: Array<{
+        uri: string;
+        mimeType: string;
+        filename?: string;
+      }> = [];
 
       // Download image if available
       if (imageUrl) {
@@ -453,9 +477,7 @@ class DealSharingService {
         }
       }
 
-      console.log(
-        '📤 [Android] Calling sendWithShareSMS with Turbo Module',
-      );
+      console.log('📤 [Android] Calling sendWithShareSMS with Turbo Module');
       console.log('📞 Phone numbers:', phoneNumbers);
       console.log('📎 Attachments:', attachments);
 
@@ -568,13 +590,22 @@ class DealSharingService {
    * Extract the best available image URL from deal data
    */
   private getDealImageUrl(dealInfo: any): string | null {
-    console.log('🖼️ [getDealImageUrl] dealInfo keys:', Object.keys(dealInfo || {}));
+    console.log(
+      '🖼️ [getDealImageUrl] dealInfo keys:',
+      Object.keys(dealInfo || {}),
+    );
     console.log('🖼️ [getDealImageUrl] deal_images:', dealInfo?.deal_images);
-    console.log('🖼️ [getDealImageUrl] deal_image_url:', dealInfo?.deal_image_url);
+    console.log(
+      '🖼️ [getDealImageUrl] deal_image_url:',
+      dealInfo?.deal_image_url,
+    );
     console.log('🖼️ [getDealImageUrl] image_url:', dealInfo?.image_url);
     console.log('🖼️ [getDealImageUrl] images:', dealInfo?.images);
-    console.log('🖼️ [getDealImageUrl] business_images:', dealInfo?.business_images);
-    
+    console.log(
+      '🖼️ [getDealImageUrl] business_images:',
+      dealInfo?.business_images,
+    );
+
     // Try deal_images array first (preferred)
     if (
       dealInfo.deal_images &&
@@ -582,13 +613,19 @@ class DealSharingService {
       dealInfo.deal_images.length > 0
     ) {
       const firstImage = dealInfo.deal_images[0];
-      console.log('🖼️ [getDealImageUrl] Found deal_images, firstImage:', firstImage);
+      console.log(
+        '🖼️ [getDealImageUrl] Found deal_images, firstImage:',
+        firstImage,
+      );
       if (
         firstImage &&
         typeof firstImage === 'object' &&
         firstImage.image_url
       ) {
-        console.log('🖼️ [getDealImageUrl] Returning deal_images[0].image_url:', firstImage.image_url);
+        console.log(
+          '🖼️ [getDealImageUrl] Returning deal_images[0].image_url:',
+          firstImage.image_url,
+        );
         return firstImage.image_url;
       }
     }
@@ -598,12 +635,18 @@ class DealSharingService {
       dealInfo.deal_image_url &&
       typeof dealInfo.deal_image_url === 'string'
     ) {
-      console.log('🖼️ [getDealImageUrl] Returning deal_image_url:', dealInfo.deal_image_url);
+      console.log(
+        '🖼️ [getDealImageUrl] Returning deal_image_url:',
+        dealInfo.deal_image_url,
+      );
       return dealInfo.deal_image_url;
     }
 
     if (dealInfo.image_url && typeof dealInfo.image_url === 'string') {
-      console.log('🖼️ [getDealImageUrl] Returning image_url:', dealInfo.image_url);
+      console.log(
+        '🖼️ [getDealImageUrl] Returning image_url:',
+        dealInfo.image_url,
+      );
       return dealInfo.image_url;
     }
 
@@ -615,11 +658,17 @@ class DealSharingService {
     ) {
       const firstImage = dealInfo.images[0];
       if (typeof firstImage === 'string') {
-        console.log('🖼️ [getDealImageUrl] Returning images[0] string:', firstImage);
+        console.log(
+          '🖼️ [getDealImageUrl] Returning images[0] string:',
+          firstImage,
+        );
         return firstImage;
       }
       if (typeof firstImage === 'object' && firstImage.image_url) {
-        console.log('🖼️ [getDealImageUrl] Returning images[0].image_url:', firstImage.image_url);
+        console.log(
+          '🖼️ [getDealImageUrl] Returning images[0].image_url:',
+          firstImage.image_url,
+        );
         return firstImage.image_url;
       }
     }
@@ -636,7 +685,10 @@ class DealSharingService {
         typeof firstImage === 'object' &&
         firstImage.image_url
       ) {
-        console.log('🖼️ [getDealImageUrl] Returning business_images[0].image_url:', firstImage.image_url);
+        console.log(
+          '🖼️ [getDealImageUrl] Returning business_images[0].image_url:',
+          firstImage.image_url,
+        );
         return firstImage.image_url;
       }
     }
