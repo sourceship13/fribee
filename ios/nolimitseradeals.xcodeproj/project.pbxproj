@@ -1121,6 +1121,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.0.926;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1154,6 +1155,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.0.926;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1332,6 +1334,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.0.926;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1371,6 +1374,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.0.926;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

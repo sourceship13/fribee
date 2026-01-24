@@ -57,6 +57,26 @@ post_install do |installer|
     :mac_catalyst_enabled => false
   )
   
+  # Fix duplicate React-Core privacy bundle issue (React Native 0.81+)
+  installer.aggregate_targets.each do |aggregate_target|
+    aggregate_target.user_project.native_targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['ONLY_ACTIVE_ARCH'] = 'NO'
+      end
+    end
+    aggregate_target.user_project.save
+  end
+
+  # Remove duplicate privacy bundle targets
+  installer.pods_project.targets.each do |target|
+    if target.name.end_with?('-React-Core_privacy')
+      # Keep only one React-Core privacy target, remove duplicates
+      unless target.name == 'React-Core.common-React-Core_privacy'
+        target.remove_from_project
+      end
+    end
+  end
+  
   # Basic build settings only - removed aggressive target manipulation
   installer.pods_project.build_configurations.each do |config|
     config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
