@@ -66,20 +66,12 @@ post_install do |installer|
     end
     aggregate_target.user_project.save
   end
-
-  # Remove duplicate privacy bundle targets
-  installer.pods_project.targets.each do |target|
-    if target.name.end_with?('-React-Core_privacy')
-      # Keep only one React-Core privacy target, remove duplicates
-      unless target.name == 'React-Core.common-React-Core_privacy'
-        target.remove_from_project
-      end
-    end
-  end
   
   # Basic build settings only - removed aggressive target manipulation
   installer.pods_project.build_configurations.each do |config|
     config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+    # Allow duplicate outputs for React-Core privacy bundle targets
+    config.build_settings['DISABLE_MANUAL_TARGET_ORDER_BUILD_WARNING'] = 'YES'
   end
   
   installer.pods_project.targets.each do |target|
@@ -92,8 +84,13 @@ post_install do |installer|
         config.build_settings['CODE_SIGN_IDENTITY'] = ''
       end
       
+      # Fix duplicate React-Core privacy bundle outputs
       if target.name.include?('React-Core') && target.name.include?('privacy')
         config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
+        # Skip the duplicate .common target by excluding it from build
+        if target.name == 'React-Core.common-React-Core_privacy'
+          config.build_settings['EXCLUDED_ARCHS[sdk=*]'] = 'arm64 x86_64'
+        end
       end
     end
   end
