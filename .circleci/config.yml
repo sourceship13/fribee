@@ -153,7 +153,7 @@ jobs:
 
   build_ios_staging:
     macos:
-      xcode: "26.2.0"
+      xcode: "16.2.0"
     resource_class: macos.m1.medium.gen1
     working_directory: ~/repo
     environment:
@@ -283,7 +283,7 @@ jobs:
 
   build_ios_production:
     macos:
-      xcode: "26.2.0"
+      xcode: "16.2.0"
     resource_class: macos.m1.medium.gen1
     working_directory: ~/repo
     environment:
