@@ -2155,10 +2155,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@sourceship13/react-native-share-sms@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.npmjs.org/@sourceship13/react-native-share-sms/-/react-native-share-sms-0.1.3.tgz"
-  integrity sha512-Y6LGMYKciBnSkRtGEq9nJwvWte8rH53hluKy3o+EtnGxzvqnDmSNstlqOfz/cyP4jMML4mxh0a04W3XNZ5SoyQ==
+"@sourceship13/react-native-share-sms@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.npmjs.org/@sourceship13/react-native-share-sms/-/react-native-share-sms-0.1.4.tgz"
+  integrity sha512-9s/IM79yKovksTq4YyY9LlNV7iLFE6YhMcjGK5dbauTLspwS+LeXUK4VMRX44OQPncYaiiGf+yuDYN/bF/pw/g==
 
 "@svgr/babel-plugin-add-jsx-attribute@8.0.0":
   version "8.0.0"
