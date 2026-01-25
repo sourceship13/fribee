@@ -154,7 +154,7 @@ jobs:
   build_ios_staging:
     macos:
       xcode: "26.2.0"
-    resource_class: macos.m1.large.gen1
+    resource_class: m4pro.medium
     working_directory: ~/repo
     environment:
       FL_OUTPUT_DIR: output
@@ -284,7 +284,7 @@ jobs:
   build_ios_production:
     macos:
       xcode: "26.2.0"
-    resource_class: macos.m1.large.gen1
+    resource_class: m4pro.medium
     working_directory: ~/repo
     environment:
       FL_OUTPUT_DIR: output
