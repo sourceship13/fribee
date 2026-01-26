@@ -315,7 +315,9 @@ const SwipeScreen = ({ navigation }: any) => {
     <View style={[styles.fullScreenImage, { backgroundColor: colors.surface }]}>
       <View style={styles.placeholderContainer}>
         <MaterialIcons name="image" size={80} color={colors.text + '40'} />
-        <Text style={[styles.placeholderText, { color: colors.text }]}>No Image</Text>
+        <Text style={[styles.placeholderText, { color: colors.text }]}>
+          No Image
+        </Text>
       </View>
       <LinearGradient
         colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
@@ -394,7 +396,11 @@ const SwipeScreen = ({ navigation }: any) => {
                 ]}
               >
                 <View style={styles.nextDealPlaceholder}>
-                  <MaterialIcons name="image" size={40} color={colors.text + '30'} />
+                  <MaterialIcons
+                    name="image"
+                    size={40}
+                    color={colors.text + '30'}
+                  />
                 </View>
                 <LinearGradient
                   colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
@@ -438,7 +444,11 @@ const SwipeScreen = ({ navigation }: any) => {
                 ]}
               >
                 <View style={styles.thirdDealPlaceholder}>
-                  <MaterialIcons name="image" size={35} color={colors.text + '25'} />
+                  <MaterialIcons
+                    name="image"
+                    size={35}
+                    color={colors.text + '25'}
+                  />
                 </View>
                 <LinearGradient
                   colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
