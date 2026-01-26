@@ -311,6 +311,31 @@ const SwipeScreen = ({ navigation }: any) => {
     </ImageBackground>
   );
 
+  const renderPlaceholderImage = () => (
+    <View style={[styles.fullScreenImage, { backgroundColor: colors.surface }]}>
+      <View style={styles.placeholderContainer}>
+        <MaterialIcons name="image" size={80} color={colors.text + '40'} />
+        <Text style={[styles.placeholderText, { color: colors.text }]}>No Image</Text>
+      </View>
+      <LinearGradient
+        colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
+        locations={[0, 0.5, 1]}
+        style={styles.imageOverlay}
+      />
+      {/* Swipe feedback icons on top of placeholder */}
+      <View style={styles.imageIconsOverlay} pointerEvents="none">
+        <Animated.View style={[styles.imageLikeIcon, { opacity: likeOpacity }]}>
+          <Text style={styles.likeIconText}>♥</Text>
+        </Animated.View>
+        <Animated.View
+          style={[styles.imageDislikeIcon, { opacity: dislikeOpacity }]}
+        >
+          <Text style={styles.dislikeIconText}>✕</Text>
+        </Animated.View>
+      </View>
+    </View>
+  );
+
   return (
     <View
       style={[styles.screenContainer, { backgroundColor: colors.background }]}
@@ -365,11 +390,12 @@ const SwipeScreen = ({ navigation }: any) => {
               <View
                 style={[
                   styles.nextDealImage,
-                  {
-                    backgroundColor: nextDeal.backgroundColor || colors.primary,
-                  },
+                  { backgroundColor: colors.surface },
                 ]}
               >
+                <View style={styles.nextDealPlaceholder}>
+                  <MaterialIcons name="image" size={40} color={colors.text + '30'} />
+                </View>
                 <LinearGradient
                   colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
                   locations={[0, 0.5, 1]}
@@ -408,12 +434,12 @@ const SwipeScreen = ({ navigation }: any) => {
               <View
                 style={[
                   styles.thirdDealImage,
-                  {
-                    backgroundColor:
-                      thirdDeal.backgroundColor || colors.primary,
-                  },
+                  { backgroundColor: colors.surface },
                 ]}
               >
+                <View style={styles.thirdDealPlaceholder}>
+                  <MaterialIcons name="image" size={35} color={colors.text + '25'} />
+                </View>
                 <LinearGradient
                   colors={['transparent', 'transparent', 'rgba(0, 0, 0, 0.7)']}
                   locations={[0, 0.5, 1]}
@@ -531,49 +557,7 @@ const SwipeScreen = ({ navigation }: any) => {
                       />
                     );
                   } else {
-                    return (
-                      <View
-                        style={[
-                          styles.fullScreenImage,
-                          {
-                            backgroundColor:
-                              currentDeal.backgroundColor || colors.primary,
-                          },
-                        ]}
-                      >
-                        <LinearGradient
-                          colors={[
-                            'transparent',
-                            'transparent',
-                            'rgba(0, 0, 0, 0.7)',
-                          ]}
-                          locations={[0, 0.5, 1]}
-                          style={styles.imageOverlay}
-                        />
-                        {/* Swipe feedback icons on top of image */}
-                        <View
-                          style={styles.imageIconsOverlay}
-                          pointerEvents="none"
-                        >
-                          <Animated.View
-                            style={[
-                              styles.imageLikeIcon,
-                              { opacity: likeOpacity },
-                            ]}
-                          >
-                            <Text style={styles.likeIconText}>♥</Text>
-                          </Animated.View>
-                          <Animated.View
-                            style={[
-                              styles.imageDislikeIcon,
-                              { opacity: dislikeOpacity },
-                            ]}
-                          >
-                            <Text style={styles.dislikeIconText}>✕</Text>
-                          </Animated.View>
-                        </View>
-                      </View>
-                    );
+                    return renderPlaceholderImage();
                   }
                 })()}
 
@@ -1024,6 +1008,40 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     pointerEvents: 'none',
+  },
+  placeholderContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
+  },
+  placeholderText: {
+    marginTop: 12,
+    fontSize: 16,
+    fontWeight: '500',
+    opacity: 0.6,
+  },
+  nextDealPlaceholder: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  thirdDealPlaceholder: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imageLikeIcon: {
     position: 'absolute',

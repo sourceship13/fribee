@@ -425,6 +425,16 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
     );
   };
 
+  const renderPlaceholderImage = () => (
+    <View style={[styles.dealImage, { backgroundColor: colors.surface }]}>
+      <View style={styles.placeholderContainer}>
+        <MaterialIcons name="image" size={80} color={colors.text + '40'} />
+        <Text style={[styles.placeholderText, { color: colors.text }]}>No Image Available</Text>
+      </View>
+      <View style={styles.imageOverlay} />
+    </View>
+  );
+
   const handlePress = async () => {
     // If deal is already unlocked, don't open share modal
     if (canRedeem) {
@@ -622,12 +632,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
                 />
               </View>
             ) : (
-              <View
-                style={[styles.dealImage, { backgroundColor: colors.primary }]}
-              >
-                <View style={styles.imageOverlay} />
-                <Text style={styles.placeholderEmoji}>🛍️</Text>
-              </View>
+              renderPlaceholderImage()
             );
           })()}
         </View>
@@ -990,6 +995,22 @@ const styles = StyleSheet.create({
   imageOverlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  placeholderContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
+  },
+  placeholderText: {
+    marginTop: 12,
+    fontSize: 16,
+    fontWeight: '500',
+    opacity: 0.6,
   },
   placeholderEmoji: {
     fontSize: 48,

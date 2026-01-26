@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0308890021174377B5C623AB /* OpenSans_SemiCondensed-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A9846190B20B41D7BAA67CD7 /* OpenSans_SemiCondensed-LightItalic.ttf */; };
 		035992C62CF94835BA32732F /* Roboto_Condensed-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BAE08C3A0E804F6E9A5E9666 /* Roboto_Condensed-BlackItalic.ttf */; };
-		03680230B5B053EA3E1047AA /* libPods-nolimitseradeals-prod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B76B1CA101216D87EFDD6D85 /* libPods-nolimitseradeals-prod.a */; };
 		0566A6295465476CB3953986 /* OpenSans_SemiCondensed-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D4D573D077E4565A9E7300A /* OpenSans_SemiCondensed-ExtraBoldItalic.ttf */; };
 		077D4B974B0F4A02801005CA /* Barlow-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8F9BD48E78F74A04B272E496 /* Barlow-ExtraLight.ttf */; };
 		07ECE639663D4AAD83AA44C8 /* Roboto_SemiCondensed-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F368AB87B566471391FDB134 /* Roboto_SemiCondensed-SemiBold.ttf */; };
@@ -93,7 +92,6 @@
 		924DCD979F034DAFA70257BD /* Roboto_SemiCondensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D633224FFAB4E978F313E29 /* Roboto_SemiCondensed-Regular.ttf */; };
 		9290CF6858B2422A9107113E /* Montserrat-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2BB7D4B24E164244B00F6269 /* Montserrat-Thin.ttf */; };
 		929A88776F4F4B6FA27C2DCD /* Roboto_SemiCondensed-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9264B4F16B784CDD94BE10C1 /* Roboto_SemiCondensed-Thin.ttf */; };
-		97F7BE50964D21CAFF7D06F9 /* libPods-nolimitseradeals-staging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB41F66CC27D35DF8AAC5CED /* libPods-nolimitseradeals-staging.a */; };
 		986D13B4BFB84CAB9EC41A2F /* Roboto_Condensed-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 482F70A435244648975F536F /* Roboto_Condensed-SemiBold.ttf */; };
 		9B727C17AC4B4C2F95690AA2 /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 91781196A4614AA2A9FC1626 /* Roboto-MediumItalic.ttf */; };
 		9D17D995CF2145B9910762D6 /* Roboto_Condensed-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 469BC55793E24704B9FE77AD /* Roboto_Condensed-ExtraLightItalic.ttf */; };
@@ -121,10 +119,12 @@
 		C132F8AE5F20423498687D96 /* Roboto_Condensed-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D94A191C578547DDB9487DFA /* Roboto_Condensed-MediumItalic.ttf */; };
 		C2AF9276981545B19E664097 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A6ADB7F299C04086AC359812 /* Roboto-Medium.ttf */; };
 		C4DF68774E154FF9BA786096 /* Barlow-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3E8A051BE734114B77ACB3E /* Barlow-ExtraLightItalic.ttf */; };
+		C5887FA1A48FE8FE664F702E /* libPods-nolimitseradeals-staging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC66C16020C7571DAB3B2E6 /* libPods-nolimitseradeals-staging.a */; };
 		C6120DB8EC9C434DB16D0F37 /* Montserrat-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9266DEDD5A25448D890898B9 /* Montserrat-VariableFont_wght.ttf */; };
 		C6969FD132FD42B987F78263 /* decline-butt.svg in Resources */ = {isa = PBXBuildFile; fileRef = D29B66436A3B4AE7AF0FF7DA /* decline-butt.svg */; };
 		C6E2B368152E42F6BC93E51C /* Roboto_Condensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8D47F575E866411DAD02652F /* Roboto_Condensed-Light.ttf */; };
 		C7C229FA88034C0986F5B47E /* OpenSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 58B24F27B5F240058A96D4A4 /* OpenSans-MediumItalic.ttf */; };
+		C83915ACB3D66C0637F668BF /* libPods-nolimitseradeals-prod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0F1A1BC41EF727D256116B2 /* libPods-nolimitseradeals-prod.a */; };
 		C8C4C133AC7A426CA787EF42 /* Roboto_SemiCondensed-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 421AEADE61B74BFBA08547F8 /* Roboto_SemiCondensed-BoldItalic.ttf */; };
 		CAA123FCCA0C416E9D480BE2 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBE07BB9A2C2422C8480D4D2 /* BootSplash.storyboard */; };
 		CE17BC9D463343E486527AFE /* Roboto_Condensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 682C942878FF46A796128105 /* Roboto_Condensed-Regular.ttf */; };
@@ -188,21 +188,24 @@
 		07B152DBCBA345A7B25A71FC /* Barlow-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-SemiBold.ttf"; path = "../assets/fonts/Barlow/Barlow-SemiBold.ttf"; sourceTree = "<group>"; };
 		0806C57AFFC149228657E9A1 /* Montserrat-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraBold.ttf"; path = "../assets/fonts/Montserrat/static/Montserrat-ExtraBold.ttf"; sourceTree = "<group>"; };
 		09ADA8336D0D4C0FBEDE4673 /* Roboto_SemiCondensed-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_SemiCondensed-Medium.ttf"; path = "../assets/fonts/Roboto/static/Roboto_SemiCondensed-Medium.ttf"; sourceTree = "<group>"; };
+		0B4BDA190ABD7682AC932D96 /* Pods-nolimitseradeals-staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-staging.debug.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging.debug.xcconfig"; sourceTree = "<group>"; };
 		0CB5DBA16847491A8E92BBEF /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		0DBF0F25D83849B88ED4421D /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BlackItalic.ttf"; path = "../assets/fonts/Roboto/Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
 		0F892CEC48604874B20A3A45 /* Montserrat-Italic-VariableFont_wght.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Italic-VariableFont_wght.ttf"; path = "../assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf"; sourceTree = "<group>"; };
+		0FC66C16020C7571DAB3B2E6 /* libPods-nolimitseradeals-staging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nolimitseradeals-staging.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E148A441524C32BCBF84CB /* README.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = README.txt; path = ../assets/fonts/Roboto/README.txt; sourceTree = "<group>"; };
 		133C0A7F57ED435B9712B19F /* Roboto-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ExtraBold.ttf"; path = "../assets/fonts/Roboto/Roboto-ExtraBold.ttf"; sourceTree = "<group>"; };
+		133FB2E0B0E54A7A4876F5D8 /* Pods-nolimitseradeals-prod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-prod.debug.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* nolimitseradeals.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nolimitseradeals.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = nolimitseradeals/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = nolimitseradeals/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = nolimitseradeals/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		16637237347C4A548BF652BF /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		17CA059CB325BA4F21CC3C40 /* Pods-nolimitseradeals-prod.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-prod.release.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod.release.xcconfig"; sourceTree = "<group>"; };
+		17D87EA500866772ACB50663 /* Pods-nolimitseradeals-staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-staging.release.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging.release.xcconfig"; sourceTree = "<group>"; };
 		182C2E4E9C544E2EB5592D3D /* Barlow-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-MediumItalic.ttf"; path = "../assets/fonts/Barlow/Barlow-MediumItalic.ttf"; sourceTree = "<group>"; };
 		1B3D6824E47A4D3A88B34640 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
-		1D1FB8EB2286B295A95DE2E6 /* Pods-nolimitseradeals-staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-staging.release.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging.release.xcconfig"; sourceTree = "<group>"; };
 		1E77B8C0525340BC8A0C90F4 /* OpenSans_SemiCondensed-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-Italic.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-Italic.ttf"; sourceTree = "<group>"; };
+		20EF7EBE1786EA5F7213018F /* Pods-nolimitseradeals-prod.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-prod.release.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod.release.xcconfig"; sourceTree = "<group>"; };
 		2200829E73034E5FB786E1A5 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../assets/fonts/Roboto/static/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		2247E96FF1664F24A9413FB2 /* FontAwesome6_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome6_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome6_Regular.ttf"; sourceTree = "<group>"; };
 		2417E14B15DE46D2B2B322C3 /* OpenSans_SemiCondensed-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-Light.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-Light.ttf"; sourceTree = "<group>"; };
@@ -265,7 +268,6 @@
 		7B080F24D736409EA3750130 /* Montserrat-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLightItalic.ttf"; path = "../assets/fonts/Montserrat/static/Montserrat-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		7B426992F5EB43998885EFBA /* Barlow-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-Bold.ttf"; path = "../assets/fonts/Barlow/Barlow-Bold.ttf"; sourceTree = "<group>"; };
 		7BB25E040939498C822A97BE /* Roboto_Condensed-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_Condensed-BoldItalic.ttf"; path = "../assets/fonts/Roboto/static/Roboto_Condensed-BoldItalic.ttf"; sourceTree = "<group>"; };
-		7BBA66242606D14C7C84B11D /* Pods-nolimitseradeals-staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-staging.debug.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging.debug.xcconfig"; sourceTree = "<group>"; };
 		7C9E54B5CB3F450E91BCFEFE /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		7D633224FFAB4E978F313E29 /* Roboto_SemiCondensed-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_SemiCondensed-Regular.ttf"; path = "../assets/fonts/Roboto/Roboto_SemiCondensed-Regular.ttf"; sourceTree = "<group>"; };
 		7D7D36FF834E48119E23887C /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
@@ -312,7 +314,6 @@
 		A84332DC32CF44C393E85A2F /* Barlow-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-Italic.ttf"; path = "../assets/fonts/Barlow/Barlow-Italic.ttf"; sourceTree = "<group>"; };
 		A86238E7B61749B0BE862EE9 /* OFL.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = OFL.txt; path = ../assets/fonts/Open_Sans/OFL.txt; sourceTree = "<group>"; };
 		A9846190B20B41D7BAA67CD7 /* OpenSans_SemiCondensed-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-LightItalic.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-LightItalic.ttf"; sourceTree = "<group>"; };
-		AB884D6C9EB187314B756B23 /* Pods-nolimitseradeals-prod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-prod.debug.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod.debug.xcconfig"; sourceTree = "<group>"; };
 		AE64EFEB57214E5B86119CF3 /* Roboto_SemiCondensed-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_SemiCondensed-ExtraBold.ttf"; path = "../assets/fonts/Roboto/static/Roboto_SemiCondensed-ExtraBold.ttf"; sourceTree = "<group>"; };
 		AF2DA55659F04CE3A341B9CC /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		AF5D321A8D0A4BB9B0D49273 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
@@ -325,7 +326,6 @@
 		B5216995E0B04E678EDBECDE /* Barlow-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-ThinItalic.ttf"; path = "../assets/fonts/Barlow/Barlow-ThinItalic.ttf"; sourceTree = "<group>"; };
 		B749EEBE98F14B66B307CD9B /* Barlow-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-BlackItalic.ttf"; path = "../assets/fonts/Barlow/Barlow-BlackItalic.ttf"; sourceTree = "<group>"; };
 		B766287C18114E3382804F9C /* icon_logo.svg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = icon_logo.svg; path = ../assets/imgs/icon_logo.svg; sourceTree = "<group>"; };
-		B76B1CA101216D87EFDD6D85 /* libPods-nolimitseradeals-prod.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nolimitseradeals-prod.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7E4F40544EE4472A8C11893 /* OpenSans-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-ExtraBoldItalic.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		B94DA3ADF20D46AC894D2C0D /* OpenSans_Condensed-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_Condensed-MediumItalic.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_Condensed-MediumItalic.ttf"; sourceTree = "<group>"; };
 		BA5036E2CBC8477CBDEE98E4 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -341,6 +341,7 @@
 		C8354745181F46769FB8A27D /* OpenSans_SemiCondensed-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-Regular.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-Regular.ttf"; sourceTree = "<group>"; };
 		CBE07BB9A2C2422C8480D4D2 /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = nolimitseradeals/BootSplash.storyboard; sourceTree = "<group>"; };
 		CD9CFAC0541C46A5B6BCB1D8 /* OpenSans_SemiCondensed-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-SemiBoldItalic.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		D0F1A1BC41EF727D256116B2 /* libPods-nolimitseradeals-prod.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nolimitseradeals-prod.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1DBF42DE7444D30BEB4F348 /* Roboto_SemiCondensed-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_SemiCondensed-BlackItalic.ttf"; path = "../assets/fonts/Roboto/static/Roboto_SemiCondensed-BlackItalic.ttf"; sourceTree = "<group>"; };
 		D247F59B651C47EDAF00F695 /* Roboto-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-SemiBold.ttf"; path = "../assets/fonts/Roboto/Roboto-SemiBold.ttf"; sourceTree = "<group>"; };
 		D276AC6024084EBE98C7D9DF /* Roboto_SemiCondensed-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_SemiCondensed-Bold.ttf"; path = "../assets/fonts/Roboto/static/Roboto_SemiCondensed-Bold.ttf"; sourceTree = "<group>"; };
@@ -361,7 +362,6 @@
 		E7F227C04BD54F66AD1BE1BB /* redeem-bg.svg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "redeem-bg.svg"; path = "../assets/imgs/redeem-bg.svg"; sourceTree = "<group>"; };
 		E98E7380E6294FA789C79493 /* fribee-logo.svg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "fribee-logo.svg"; path = "../assets/imgs/fribee-logo.svg"; sourceTree = "<group>"; };
 		E992381052D149B3BFBF114F /* profile.svg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = profile.svg; path = ../assets/imgs/nav/profile.svg; sourceTree = "<group>"; };
-		EB41F66CC27D35DF8AAC5CED /* libPods-nolimitseradeals-staging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nolimitseradeals-staging.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE26FD54CE045C78A1FE40C /* swipe-card-3.svg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "swipe-card-3.svg"; path = "../assets/imgs/swipe-card-3.svg"; sourceTree = "<group>"; };
 		EC79FA5FA2594D0481D48A7B /* Roboto_Condensed-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_Condensed-ExtraBold.ttf"; path = "../assets/fonts/Roboto/static/Roboto_Condensed-ExtraBold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -388,7 +388,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE15BF702ECD9AC400704938 /* StoreKit.framework in Frameworks */,
-				97F7BE50964D21CAFF7D06F9 /* libPods-nolimitseradeals-staging.a in Frameworks */,
+				C5887FA1A48FE8FE664F702E /* libPods-nolimitseradeals-staging.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -397,7 +397,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DECAADB12ED9793300B64A25 /* StoreKit.framework in Frameworks */,
-				03680230B5B053EA3E1047AA /* libPods-nolimitseradeals-prod.a in Frameworks */,
+				C83915ACB3D66C0637F668BF /* libPods-nolimitseradeals-prod.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -611,8 +611,8 @@
 			children = (
 				DE15BF6F2ECD9AC400704938 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				B76B1CA101216D87EFDD6D85 /* libPods-nolimitseradeals-prod.a */,
-				EB41F66CC27D35DF8AAC5CED /* libPods-nolimitseradeals-staging.a */,
+				D0F1A1BC41EF727D256116B2 /* libPods-nolimitseradeals-prod.a */,
+				0FC66C16020C7571DAB3B2E6 /* libPods-nolimitseradeals-staging.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -652,10 +652,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				AB884D6C9EB187314B756B23 /* Pods-nolimitseradeals-prod.debug.xcconfig */,
-				17CA059CB325BA4F21CC3C40 /* Pods-nolimitseradeals-prod.release.xcconfig */,
-				7BBA66242606D14C7C84B11D /* Pods-nolimitseradeals-staging.debug.xcconfig */,
-				1D1FB8EB2286B295A95DE2E6 /* Pods-nolimitseradeals-staging.release.xcconfig */,
+				133FB2E0B0E54A7A4876F5D8 /* Pods-nolimitseradeals-prod.debug.xcconfig */,
+				20EF7EBE1786EA5F7213018F /* Pods-nolimitseradeals-prod.release.xcconfig */,
+				0B4BDA190ABD7682AC932D96 /* Pods-nolimitseradeals-staging.debug.xcconfig */,
+				17D87EA500866772ACB50663 /* Pods-nolimitseradeals-staging.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -667,14 +667,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "nolimitseradeals-staging" */;
 			buildPhases = (
-				9BEC67A41FC3B32CA38BC555 /* [CP] Check Pods Manifest.lock */,
+				ADC94C6BAE1FF3FBD7799120 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				1E786DC4EF364A3B8AB361F8 /* Upload Debug Symbols to Sentry */,
-				18C830EA2C2BEE175080A3C3 /* [CP] Embed Pods Frameworks */,
-				16F87309C930188CA9E62E86 /* [CP] Copy Pods Resources */,
+				7D0BDD87C571ECB844752989 /* [CP] Embed Pods Frameworks */,
+				9714CD6829FBB632F47BE918 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -689,13 +689,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DEE363122E98730100B65285 /* Build configuration list for PBXNativeTarget "nolimitseradeals-prod" */;
 			buildPhases = (
-				3606599096A62EA8E57DF10F /* [CP] Check Pods Manifest.lock */,
+				BA226E492F816AA0162C29EC /* [CP] Check Pods Manifest.lock */,
 				DEE363052E98730100B65285 /* Sources */,
 				DEE363072E98730100B65285 /* Frameworks */,
 				DEE363092E98730100B65285 /* Resources */,
 				DEE3630F2E98730100B65285 /* Bundle React Native code and images */,
-				19291E3EE54BF66D4CFC69CB /* [CP] Embed Pods Frameworks */,
-				7E148CA70480693F13B8A60E /* [CP] Copy Pods Resources */,
+				58197C5C9AB48974FD140FFC /* [CP] Embed Pods Frameworks */,
+				33E020A1873D6EC525CCCE49 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -937,57 +937,6 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nSENTRY_XCODE=\"$REACT_NATIVE_PATH/../@sentry/react-native/scripts/sentry-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $SENTRY_XCODE\"\n";
 		};
-		16F87309C930188CA9E62E86 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		18C830EA2C2BEE175080A3C3 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		19291E3EE54BF66D4CFC69CB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		1E786DC4EF364A3B8AB361F8 /* Upload Debug Symbols to Sentry */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1002,29 +951,7 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh ../node_modules/@sentry/react-native/scripts/sentry-xcode-debug-files.sh";
 		};
-		3606599096A62EA8E57DF10F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-nolimitseradeals-prod-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7E148CA70480693F13B8A60E /* [CP] Copy Pods Resources */ = {
+		33E020A1873D6EC525CCCE49 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1041,7 +968,58 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9BEC67A41FC3B32CA38BC555 /* [CP] Check Pods Manifest.lock */ = {
+		58197C5C9AB48974FD140FFC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7D0BDD87C571ECB844752989 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9714CD6829FBB632F47BE918 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ADC94C6BAE1FF3FBD7799120 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1057,6 +1035,28 @@
 			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-nolimitseradeals-staging-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BA226E492F816AA0162C29EC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-nolimitseradeals-prod-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1103,7 +1103,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7BBA66242606D14C7C84B11D /* Pods-nolimitseradeals-staging.debug.xcconfig */;
+			baseConfigurationReference = 0B4BDA190ABD7682AC932D96 /* Pods-nolimitseradeals-staging.debug.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = "FriBee Staging";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Staging";
@@ -1138,7 +1138,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1D1FB8EB2286B295A95DE2E6 /* Pods-nolimitseradeals-staging.release.xcconfig */;
+			baseConfigurationReference = 17D87EA500866772ACB50663 /* Pods-nolimitseradeals-staging.release.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = "FriBee Staging";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Staging";
@@ -1314,7 +1314,7 @@
 		};
 		DEE363132E98730100B65285 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AB884D6C9EB187314B756B23 /* Pods-nolimitseradeals-prod.debug.xcconfig */;
+			baseConfigurationReference = 133FB2E0B0E54A7A4876F5D8 /* Pods-nolimitseradeals-prod.debug.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = FriBee;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Prod";
@@ -1352,7 +1352,7 @@
 		};
 		DEE363142E98730100B65285 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 17CA059CB325BA4F21CC3C40 /* Pods-nolimitseradeals-prod.release.xcconfig */;
+			baseConfigurationReference = 20EF7EBE1786EA5F7213018F /* Pods-nolimitseradeals-prod.release.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = FriBee;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Prod";

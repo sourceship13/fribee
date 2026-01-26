@@ -167,9 +167,8 @@ const ExploreScreen = ({ navigation }: any) => {
                 { backgroundColor: colors.surface },
               ]}
             >
-              <Text style={styles.itemImage}>
-                {getCategoryEmoji(item.category_name)}
-              </Text>
+              <MaterialIcons name="image" size={48} color={colors.text + '30'} />
+              <Text style={[styles.placeholderText, { color: colors.text, marginTop: 8, fontSize: 12 }]}>No Image</Text>
             </View>
           )}
 
@@ -569,6 +568,12 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  placeholderText: {
+    fontSize: 12,
+    fontWeight: '500',
+    opacity: 0.5,
+    marginTop: 8,
   },
   itemImage: {
     fontSize: 48,
