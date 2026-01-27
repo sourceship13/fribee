@@ -14,10 +14,10 @@ import { Platform, NativeModules } from 'react-native';
  */
 
 // ========== CONFIGURATION FLAGS ==========
-const FORCE_LOCAL = false; // Set to true to use local server
+const FORCE_LOCAL = true; // Set to true to use local server
 
 // ========== API URLS ==========
-const LOCAL_URL = 'http://192.168.26.21:8080';
+const LOCAL_URL = 'http://192.168.26.5:8080';
 const STAGING_URL = 'https://staging.fribee.io';
 const PRODUCTION_URL = 'https://fribee.io';
 
