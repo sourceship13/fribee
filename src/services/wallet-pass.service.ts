@@ -298,6 +298,40 @@ class WalletPassService {
       return false;
     }
   }
+
+  /**
+   * Remove a pass from the wallet (iOS only, Android doesn't support programmatic removal)
+   * @param redemptionCode The serial number/redemption code of the pass to remove
+   */
+  async removePassFromWallet(redemptionCode: string): Promise<void> {
+    try {
+      if (Platform.OS !== 'ios') {
+        console.log('⚠️ Pass removal is only available on iOS');
+        return;
+      }
+
+      const passTypeIdentifier = 'pass.nolimitsera.deals';
+      console.log('🗑️ Attempting to remove pass:', {
+        passTypeIdentifier,
+        serialNumber: redemptionCode,
+      });
+
+      const removed = await RNWalletManager.removePass(
+        passTypeIdentifier,
+        redemptionCode,
+      );
+
+      if (removed) {
+        console.log('✅ Pass removed from Apple Wallet successfully');
+      } else {
+        console.log('⚠️ Pass not found in wallet or could not be removed');
+      }
+    } catch (error: any) {
+      console.error('❌ Error removing pass from wallet:', error);
+      // Don't throw - removal failure should not block redemption
+      console.log('⚠️ Continuing despite pass removal error');
+    }
+  }
 }
 
 export default WalletPassService.getInstance();

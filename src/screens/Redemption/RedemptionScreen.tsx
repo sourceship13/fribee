@@ -395,11 +395,40 @@ const RedemptionScreen = () => {
                       dealId: String(dealId),
                     };
                     try {
+                      // Mark deal as redeemed in backend
+                      console.log('🔄 Marking deal as redeemed...');
                       await ApiService.postDealRedemption(payload);
+                      console.log('✅ Deal marked as redeemed');
+
+                      // Remove pass from wallet
+                      console.log('🗑️ Attempting to remove pass from wallet...');
+                      try {
+                        await WalletPassService.removePassFromWallet(redemptionCode);
+                        console.log('✅ Pass removed from wallet');
+                      } catch (walletError: any) {
+                        console.warn('⚠️ Failed to remove pass from wallet (non-fatal):', walletError.message);
+                      }
+
+                      // Refresh deals and navigate back
                       await refreshDeals();
-                      navigation.goBack();
-                    } catch (err) {
+                      
+                      // Show success message
+                      Alert.alert(
+                        'Deal Redeemed!',
+                        'This deal has been marked as redeemed and removed from your wallet.',
+                        [
+                          {
+                            text: 'OK',
+                            onPress: () => navigation.goBack(),
+                          },
+                        ],
+                      );
+                    } catch (err: any) {
                       console.error('Deal redemption failed', err);
+                      Alert.alert(
+                        'Redemption Failed',
+                        err.message || 'Unable to mark deal as redeemed. Please try again.',
+                      );
                     }
                   }}
                 >
