@@ -442,11 +442,8 @@ workflows:
             branches:
               only:
                 - main
+                - develop
                 - circle
-              # Temporarily disabled develop branch builds
-              # only:
-              #   - main
-              #   - develop
       - build_android:
           context:
             - nolimitsera-context
@@ -456,6 +453,7 @@ workflows:
             branches:
               only:
                 - main
+                - develop
                 - circle
       - build_ios_staging:
           context:
@@ -466,6 +464,7 @@ workflows:
             branches:
               only:
                 - main
+                - develop
                 - circle
 
   deploy_production:
