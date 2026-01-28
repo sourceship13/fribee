@@ -52,10 +52,10 @@ const SwipeScreen = ({ navigation }: any) => {
   const heartedDealIds = new Set(
     (heartedDeals || []).map((d: any) => d.deal_id || d.id),
   );
-  
+
   // Local state to manage deal order (for moving disliked deals to end)
   const [localDealsOrder, setLocalDealsOrder] = useState<any[]>([]);
-  
+
   // Initialize local deals order when deals change
   useEffect(() => {
     const unheartedDeals = deals.filter(
@@ -64,7 +64,7 @@ const SwipeScreen = ({ navigation }: any) => {
     setLocalDealsOrder(unheartedDeals);
     setCurrentDealIndex(0);
   }, [deals, heartedDeals]);
-  
+
   const unheartedDeals = localDealsOrder;
 
   // Animated values for swipe gestures

@@ -60,11 +60,6 @@ const ExploreScreen = ({ navigation }: any) => {
   // Calculate deal counts for each category
   const getCategoryDealCount = (categoryName: string) => {
     return deals.filter(deal => {
-      // Skip hearted deals
-      if (heartedDealIds.has(deal.id || deal.deal_id)) {
-        return false;
-      }
-
       // Match category name (case insensitive)
       const dealCategory = (deal.category_name || '').toLowerCase();
       return dealCategory === categoryName.toLowerCase();
@@ -93,14 +88,9 @@ const ExploreScreen = ({ navigation }: any) => {
           );
         });
 
-  // Remove hearted deals from filtered list
-  const unheartedDeals = categoryFilteredDeals.filter(
-    deal => !heartedDealIds.has(deal.id || deal.deal_id),
-  );
-
-  // Then filter by selectedCategory if manually selected
+  // Filter by selectedCategory if manually selected
   const filteredDeals = selectedCategory
-    ? unheartedDeals.filter(deal => {
+    ? categoryFilteredDeals.filter(deal => {
         // Match against category_name since that's what's in your API response
         const dealCategory = (deal.category_name || '').toLowerCase();
         const selectedCat = availableCategories.find(
@@ -114,7 +104,7 @@ const ExploreScreen = ({ navigation }: any) => {
 
         return selectedCat && dealCategory === selectedCat.name.toLowerCase();
       })
-    : unheartedDeals;
+    : categoryFilteredDeals;
 
   // Sort deals: Premium first, then featured deals (priority_score > 0), then regular deals
   const sortedDeals = [...filteredDeals].sort((a, b) => {
