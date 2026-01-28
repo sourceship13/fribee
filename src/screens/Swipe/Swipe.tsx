@@ -38,7 +38,8 @@ const PLACEHOLDER_DEAL = {
 };
 
 const SwipeScreen = ({ navigation }: any) => {
-  const { isDarkMode, deals, dealsLoading, heartedDeals, redeemedDeals } = useAuth();
+  const { isDarkMode, deals, dealsLoading, heartedDeals, redeemedDeals } =
+    useAuth();
   const colors = getColors(isDarkMode);
   const [currentDealIndex, setCurrentDealIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +65,9 @@ const SwipeScreen = ({ navigation }: any) => {
   // Initialize local deals order when deals change
   useEffect(() => {
     const unheartedDeals = deals.filter(
-      (deal: any) => !heartedDealIds.has(deal.id || deal.deal_id) && !redeemedDealIds.has(deal.id || deal.deal_id),
+      (deal: any) =>
+        !heartedDealIds.has(deal.id || deal.deal_id) &&
+        !redeemedDealIds.has(deal.id || deal.deal_id),
     );
     setLocalDealsOrder(unheartedDeals);
     setCurrentDealIndex(0);
