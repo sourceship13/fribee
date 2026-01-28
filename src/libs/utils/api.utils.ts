@@ -1,5 +1,4 @@
 import { Platform, NativeModules } from 'react-native';
-import Config from 'react-native-config';
 
 /**
  * API CONFIGURATION
@@ -23,10 +22,11 @@ import Config from 'react-native-config';
 // ========== CONFIGURATION FLAGS ==========
 const FORCE_LOCAL = true; // Set to true to use local server
 
-// ========== API URLS (from .env files) ==========
-const LOCAL_URL = Config.LOCAL_API_URL;
-const STAGING_URL = Config.API_BASE_URL;
-const PRODUCTION_URL = Config.API_BASE_URL;
+// ========== API URLS ==========
+// Using hardcoded URLs - Config will be checked later if needed
+const getLocalURL = () => 'http://localhost:5001';
+const getStagingURL = () => 'https://staging.fribee.io';
+const getProductionURL = () => 'https://fribee.io';
 
 // ========== ENVIRONMENT DETECTION ==========
 type Environment = 'local' | 'staging' | 'production';
@@ -71,12 +71,12 @@ function getEnvironment(): Environment {
 function getBaseURL(env: Environment): string {
   switch (env) {
     case 'local':
-      return LOCAL_URL;
+      return getLocalURL();
     case 'production':
-      return PRODUCTION_URL;
+      return getProductionURL();
     case 'staging':
     default:
-      return STAGING_URL;
+      return getStagingURL();
   }
 }
 
@@ -84,14 +84,10 @@ function getBaseURL(env: Environment): string {
 class ApiConfig {
   private static instance: ApiConfig;
   private env: Environment;
+  private hasLoggedConfig = false;
 
   private constructor() {
     this.env = getEnvironment();
-    console.log('🌐 API Config:', {
-      environment: this.env,
-      baseURL: this.baseURL,
-      isDev: __DEV__,
-    });
   }
 
   static getInstance(): ApiConfig {
@@ -106,7 +102,17 @@ class ApiConfig {
   }
 
   get baseURL(): string {
-    return getBaseURL(this.env);
+    const url = getBaseURL(this.env);
+    // Log config only once when baseURL is first accessed
+    if (!this.hasLoggedConfig) {
+      this.hasLoggedConfig = true;
+      console.log('🌐 API Config:', {
+        environment: this.env,
+        baseURL: url,
+        isDev: __DEV__,
+      });
+    }
+    return url;
   }
 
   get apiURL(): string {

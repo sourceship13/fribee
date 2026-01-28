@@ -16,7 +16,6 @@
 
 import { authorize, AuthConfiguration } from 'react-native-app-auth';
 import { Platform } from 'react-native';
-import Config from 'react-native-config';
 
 interface InstagramUser {
   id: string;
@@ -30,24 +29,42 @@ interface InstagramAuthResponse {
   user: InstagramUser;
 }
 
+// Safely load Config value with fallback
+function getConfigValue(key: string, fallback: string): string {
+  try {
+    const Config = require('react-native-config').default;
+    const value = Config?.[key];
+    return value || fallback;
+  } catch (error) {
+    // Config not ready yet, use fallback
+    return fallback;
+  }
+}
+
 class InstagramAuthService {
   private static instance: InstagramAuthService;
+  private _config?: AuthConfiguration;
 
-  private config: AuthConfiguration = {
-    // Instagram uses Facebook's OAuth endpoints
-    issuer: 'https://api.instagram.com',
-    clientId: Config.INSTAGRAM_APP_ID || 'YOUR_INSTAGRAM_APP_ID',
-    clientSecret: Config.INSTAGRAM_APP_SECRET || 'YOUR_INSTAGRAM_APP_SECRET',
-    redirectUrl: Platform.select({
-      ios: 'com.nolimitseradeals://oauth',
-      android: 'com.nolimitseradeals://oauth',
-    }) as string,
-    scopes: ['user_profile', 'user_media'],
-    serviceConfiguration: {
-      authorizationEndpoint: 'https://api.instagram.com/oauth/authorize',
-      tokenEndpoint: 'https://api.instagram.com/oauth/access_token',
-    },
-  };
+  private getConfig(): AuthConfiguration {
+    if (!this._config) {
+      this._config = {
+        // Instagram uses Facebook's OAuth endpoints
+        issuer: 'https://api.instagram.com',
+        clientId: getConfigValue('INSTAGRAM_APP_ID', 'YOUR_INSTAGRAM_APP_ID'),
+        clientSecret: getConfigValue('INSTAGRAM_APP_SECRET', 'YOUR_INSTAGRAM_APP_SECRET'),
+        redirectUrl: Platform.select({
+          ios: 'com.nolimitseradeals://oauth',
+          android: 'com.nolimitseradeals://oauth',
+        }) as string,
+        scopes: ['user_profile', 'user_media'],
+        serviceConfiguration: {
+          authorizationEndpoint: 'https://api.instagram.com/oauth/authorize',
+          tokenEndpoint: 'https://api.instagram.com/oauth/access_token',
+        },
+      };
+    }
+    return this._config;
+  }
 
   static getInstance(): InstagramAuthService {
     if (!InstagramAuthService.instance) {
@@ -61,12 +78,13 @@ class InstagramAuthService {
    */
   async login(): Promise<InstagramAuthResponse> {
     try {
+      const config = this.getConfig();
       console.log('🔵 Starting Instagram OAuth flow...');
-      console.log('🔵 Client ID:', this.config.clientId);
-      console.log('🔵 Redirect URL:', this.config.redirectUrl);
+      console.log('🔵 Client ID:', config.clientId);
+      console.log('🔵 Redirect URL:', config.redirectUrl);
 
       // Start OAuth flow
-      const authState = await authorize(this.config);
+      const authState = await authorize(config);
       
       console.log('✅ Instagram OAuth successful');
       console.log('✅ Access token received:', authState.accessToken.substring(0, 20) + '...');
@@ -122,11 +140,12 @@ class InstagramAuthService {
    * Check if Instagram OAuth is configured
    */
   isConfigured(): boolean {
+    const config = this.getConfig();
     return (
-      this.config.clientId !== 'YOUR_INSTAGRAM_APP_ID' &&
-      this.config.clientId !== '' &&
-      this.config.clientSecret !== 'YOUR_INSTAGRAM_APP_SECRET' &&
-      this.config.clientSecret !== ''
+      config.clientId !== 'YOUR_INSTAGRAM_APP_ID' &&
+      config.clientId !== '' &&
+      config.clientSecret !== 'YOUR_INSTAGRAM_APP_SECRET' &&
+      config.clientSecret !== ''
     );
   }
 }
