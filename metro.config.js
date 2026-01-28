@@ -1,5 +1,5 @@
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
-
+const path = require('path');
 const { withSentryConfig } = require('@sentry/react-native/metro');
 
 /**
