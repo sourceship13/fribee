@@ -157,8 +157,19 @@ const ExploreScreen = ({ navigation }: any) => {
                 { backgroundColor: colors.surface },
               ]}
             >
-              <MaterialIcons name="image" size={48} color={colors.text + '30'} />
-              <Text style={[styles.placeholderText, { color: colors.text, marginTop: 8, fontSize: 12 }]}>No Image</Text>
+              <MaterialIcons
+                name="image"
+                size={48}
+                color={colors.text + '30'}
+              />
+              <Text
+                style={[
+                  styles.placeholderText,
+                  { color: colors.text, marginTop: 8, fontSize: 12 },
+                ]}
+              >
+                No Image
+              </Text>
             </View>
           )}
 
