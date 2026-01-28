@@ -38,7 +38,7 @@ const PLACEHOLDER_DEAL = {
 };
 
 const SwipeScreen = ({ navigation }: any) => {
-  const { isDarkMode, deals, dealsLoading, heartedDeals } = useAuth();
+  const { isDarkMode, deals, dealsLoading, heartedDeals, redeemedDeals } = useAuth();
   const colors = getColors(isDarkMode);
   const [currentDealIndex, setCurrentDealIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -53,17 +53,22 @@ const SwipeScreen = ({ navigation }: any) => {
     (heartedDeals || []).map((d: any) => d.deal_id || d.id),
   );
 
+  // Filter out redeemed deals
+  const redeemedDealIds = new Set(
+    (redeemedDeals || []).map((d: any) => d.deal_id || d.id),
+  );
+
   // Local state to manage deal order (for moving disliked deals to end)
   const [localDealsOrder, setLocalDealsOrder] = useState<any[]>([]);
 
   // Initialize local deals order when deals change
   useEffect(() => {
     const unheartedDeals = deals.filter(
-      (deal: any) => !heartedDealIds.has(deal.id || deal.deal_id),
+      (deal: any) => !heartedDealIds.has(deal.id || deal.deal_id) && !redeemedDealIds.has(deal.id || deal.deal_id),
     );
     setLocalDealsOrder(unheartedDeals);
     setCurrentDealIndex(0);
-  }, [deals, heartedDeals]);
+  }, [deals, heartedDeals, redeemedDeals]);
 
   const unheartedDeals = localDealsOrder;
 

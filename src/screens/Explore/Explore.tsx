@@ -30,6 +30,7 @@ const ExploreScreen = ({ navigation }: any) => {
     dealsLoading,
     refreshDeals,
     heartedDeals,
+    redeemedDeals,
     isDealHearted,
     toggleHeartDeal,
   } = useAuth();
@@ -57,9 +58,18 @@ const ExploreScreen = ({ navigation }: any) => {
     (heartedDeals || []).map((d: any) => d.deal_id || d.id),
   );
 
+  // Filter out redeemed deals
+  const redeemedDealIds = new Set(
+    (redeemedDeals || []).map((d: any) => d.deal_id || d.id),
+  );
+
   // Calculate deal counts for each category
   const getCategoryDealCount = (categoryName: string) => {
     return deals.filter(deal => {
+      // Skip redeemed deals
+      if (redeemedDealIds.has(deal.id || deal.deal_id)) {
+        return false;
+      }
       // Match category name (case insensitive)
       const dealCategory = (deal.category_name || '').toLowerCase();
       return dealCategory === categoryName.toLowerCase();
@@ -69,8 +79,13 @@ const ExploreScreen = ({ navigation }: any) => {
   // Filter deals by category settings (enabled/disabled switches from Settings)
   const categoryFilteredDeals =
     Object.keys(categories).length === 0
-      ? deals // If no category preferences set, show all deals
+      ? deals.filter(deal => !redeemedDealIds.has(deal.id || deal.deal_id)) // Filter out redeemed deals
       : deals.filter(deal => {
+          // Filter out redeemed deals
+          if (redeemedDealIds.has(deal.id || deal.deal_id)) {
+            return false;
+          }
+
           // If deal has no category, show it by default (uncategorized deals)
           if (!deal.category_name) {
             return true;
