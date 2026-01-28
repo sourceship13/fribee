@@ -52,9 +52,20 @@ const SwipeScreen = ({ navigation }: any) => {
   const heartedDealIds = new Set(
     (heartedDeals || []).map((d: any) => d.deal_id || d.id),
   );
-  const unheartedDeals = deals.filter(
-    (deal: any) => !heartedDealIds.has(deal.id || deal.deal_id),
-  );
+  
+  // Local state to manage deal order (for moving disliked deals to end)
+  const [localDealsOrder, setLocalDealsOrder] = useState<any[]>([]);
+  
+  // Initialize local deals order when deals change
+  useEffect(() => {
+    const unheartedDeals = deals.filter(
+      (deal: any) => !heartedDealIds.has(deal.id || deal.deal_id),
+    );
+    setLocalDealsOrder(unheartedDeals);
+    setCurrentDealIndex(0);
+  }, [deals, heartedDeals]);
+  
+  const unheartedDeals = localDealsOrder;
 
   // Animated values for swipe gestures
   const translateX = useRef(new Animated.Value(0)).current;
@@ -262,9 +273,21 @@ const SwipeScreen = ({ navigation }: any) => {
     if (direction === 'right') {
       navigation.navigate('DealDetail', { deal: currentDeal });
     } else {
-      setCurrentDealIndex(prev =>
-        unheartedDeals.length > 0 ? (prev + 1) % unheartedDeals.length : 0,
-      );
+      // Dislike: Move current deal to the end of the array
+      if (unheartedDeals.length > 0) {
+        const updatedDeals = [...localDealsOrder];
+        const dislikedDeal = updatedDeals[currentDealIndex];
+        // Remove from current position
+        updatedDeals.splice(currentDealIndex, 1);
+        // Add to end
+        updatedDeals.push(dislikedDeal);
+        setLocalDealsOrder(updatedDeals);
+        // Keep index the same (now showing the next deal that moved up)
+        // But if we're at the end, wrap to beginning
+        if (currentDealIndex >= updatedDeals.length) {
+          setCurrentDealIndex(0);
+        }
+      }
     }
   };
 
