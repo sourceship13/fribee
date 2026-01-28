@@ -219,7 +219,7 @@ const SignInScreen = ({ navigation, route }: any) => {
     console.log('Password length:', fields.password?.length);
     console.log('Confirm password:', confirmPassword);
     console.log('Passwords match:', fields.password === confirmPassword);
-    
+
     if (!fields.password) {
       console.log('ERROR: Password is empty');
       newErrors.password = 'Password is required';
