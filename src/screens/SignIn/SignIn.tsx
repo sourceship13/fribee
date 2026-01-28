@@ -214,23 +214,37 @@ const SignInScreen = ({ navigation, route }: any) => {
     }
 
     // Password validation
+    console.log('=== PASSWORD VALIDATION DEBUG ===');
+    console.log('Password value:', fields.password);
+    console.log('Password length:', fields.password?.length);
+    console.log('Confirm password:', confirmPassword);
+    console.log('Passwords match:', fields.password === confirmPassword);
+    
     if (!fields.password) {
+      console.log('ERROR: Password is empty');
       newErrors.password = 'Password is required';
     } else if (fields.password.length < 8) {
+      console.log('ERROR: Password too short');
       newErrors.password = 'Password must be at least 8 characters';
-    } else if (
-      !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(fields.password)
-    ) {
-      newErrors.password =
-        'Must include uppercase, lowercase, number & special char';
+    } else {
+      console.log('SUCCESS: Password validation passed');
     }
+    // Simplified validation - only require 8+ characters to support all password managers
 
     // Confirm password
     if (!confirmPassword) {
+      console.log('ERROR: Confirm password is empty');
       newErrors.confirmPassword = 'Please confirm your password';
     } else if (fields.password !== confirmPassword) {
+      console.log('ERROR: Passwords do not match');
       newErrors.confirmPassword = 'Passwords do not match';
+    } else {
+      console.log('SUCCESS: Confirm password matches');
     }
+
+    console.log('=== VALIDATION COMPLETE ===');
+    console.log('Total errors:', Object.keys(newErrors).length);
+    console.log('Errors:', newErrors);
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

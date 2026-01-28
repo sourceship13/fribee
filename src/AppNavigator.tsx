@@ -9,7 +9,7 @@ import ExploreIcon from '../assets/imgs/nav/explore.svg';
 import SavedIcon from '../assets/imgs/nav/saved.svg';
 import ProfileIcon from '../assets/imgs/nav/profile.svg';
 import SignInScreen from './screens/SignIn/SignIn';
-import SignUpScreen from './screens/SignUp/SignUp';
+
 import SwipeScreen from './screens/Swipe/Swipe';
 import ExploreScreen from './screens/Explore/Explore';
 import DealDetailScreen from './screens/DealDetail/DealDetail';
@@ -34,7 +34,7 @@ import BusinessCreationScreen4 from './screens/Business/BusinessCreation/Busines
 import { Colors } from './libs/colors';
 import BusinessProfile from './screens/Profile/BusinessProfile';
 import BusinessDeals from './screens/Business/BusinessDeals';
-import CreateDeal from './screens/Business/CreateDeal'; 
+import CreateDeal from './screens/Business/CreateDeal';
 import AboutBusiness from './screens/Business/AboutBusiness';
 import DealPostPurchaseScreen from './screens/Business/DealPostPurchaseScreen';
 import FontDebug from './screens/FontDebug/FontDebug';
@@ -46,16 +46,19 @@ const Tab = createBottomTabNavigator();
 // Dynamic Profile Screen wrapper that reacts to account_type changes
 const DynamicProfileScreen = ({ navigation, route }: any) => {
   const { user } = useAuth();
-  
-  console.log('🔄 DynamicProfileScreen rendering - account_type:', user?.account_type);
-  
+
+  console.log(
+    '🔄 DynamicProfileScreen rendering - account_type:',
+    user?.account_type,
+  );
+
   // This will re-render whenever user changes
   // Pass navigation and route props to the child components
   if (user?.account_type === 'business') {
     console.log('✅ Loading BusinessProfile');
     return <BusinessProfile navigation={navigation} route={route} />;
   }
-  
+
   console.log('✅ Loading ProfileScreen');
   return <ProfileScreen navigation={navigation} route={route} />;
 };
@@ -70,24 +73,50 @@ const MainTabNavigator = () => {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
-          const iconColor = focused 
-            ? (isDarkMode ? '#FFFFFF' : colors.selectedNavButton) 
-            : (isDarkMode ? '#8E8E93' : colors.subText);
+          const iconColor = focused
+            ? isDarkMode
+              ? '#FFFFFF'
+              : colors.selectedNavButton
+            : isDarkMode
+            ? '#8E8E93'
+            : colors.subText;
           const iconSize = 24;
 
           if (route.name === 'SwipeTab') {
-            return <DiscoverIcon width={iconSize} height={iconSize} color={iconColor} />;
+            return (
+              <DiscoverIcon
+                width={iconSize}
+                height={iconSize}
+                color={iconColor}
+              />
+            );
           } else if (route.name === 'ExploreTab') {
-            return <ExploreIcon width={iconSize} height={iconSize} color={iconColor} />;
+            return (
+              <ExploreIcon
+                width={iconSize}
+                height={iconSize}
+                color={iconColor}
+              />
+            );
           } else if (route.name === 'SavedTab') {
-            return <SavedIcon width={iconSize} height={iconSize} color={iconColor} />;
+            return (
+              <SavedIcon width={iconSize} height={iconSize} color={iconColor} />
+            );
           } else if (route.name === 'ProfileTab') {
-            return <ProfileIcon width={iconSize} height={iconSize} color={iconColor} />;
+            return (
+              <ProfileIcon
+                width={iconSize}
+                height={iconSize}
+                color={iconColor}
+              />
+            );
           }
 
           return null;
         },
-        tabBarActiveTintColor: isDarkMode ? '#FFFFFF' : colors.selectedNavButton,
+        tabBarActiveTintColor: isDarkMode
+          ? '#FFFFFF'
+          : colors.selectedNavButton,
         tabBarInactiveTintColor: isDarkMode ? '#8E8E93' : colors.subText,
         tabBarStyle: {
           backgroundColor: colors.background,
@@ -116,47 +145,55 @@ const MainTabNavigator = () => {
         },
       })}
     >
-      <Tab.Screen 
-        name="SwipeTab" 
+      <Tab.Screen
+        name="SwipeTab"
         component={SwipeScreen}
         options={{ tabBarLabel: 'DISCOVER' }}
         listeners={{
           tabPress: () => {
             console.log('🔄 Refreshing deals from Swipe tab');
-            refreshDeals().catch(err => console.warn('Tab refresh failed:', err));
+            refreshDeals().catch(err =>
+              console.warn('Tab refresh failed:', err),
+            );
           },
         }}
       />
-      <Tab.Screen 
-        name="ExploreTab" 
+      <Tab.Screen
+        name="ExploreTab"
         component={ExploreScreen}
         options={{ tabBarLabel: 'EXPLORE' }}
         listeners={{
           tabPress: () => {
             console.log('🔄 Refreshing deals from Explore tab');
-            refreshDeals().catch(err => console.warn('Tab refresh failed:', err));
+            refreshDeals().catch(err =>
+              console.warn('Tab refresh failed:', err),
+            );
           },
         }}
       />
-      <Tab.Screen 
-        name="SavedTab" 
+      <Tab.Screen
+        name="SavedTab"
         component={SavedDealsScreen}
         options={{ tabBarLabel: 'SAVED' }}
         listeners={{
           tabPress: () => {
             console.log('🔄 Refreshing deals from Saved tab');
-            refreshDeals().catch(err => console.warn('Tab refresh failed:', err));
+            refreshDeals().catch(err =>
+              console.warn('Tab refresh failed:', err),
+            );
           },
         }}
       />
-      <Tab.Screen 
-        name="ProfileTab" 
+      <Tab.Screen
+        name="ProfileTab"
         component={DynamicProfileScreen}
         options={{ tabBarLabel: 'PROFILE' }}
         listeners={{
           tabPress: () => {
             console.log('🔄 Refreshing deals from Profile tab');
-            refreshDeals().catch(err => console.warn('Tab refresh failed:', err));
+            refreshDeals().catch(err =>
+              console.warn('Tab refresh failed:', err),
+            );
           },
         }}
       />
@@ -182,10 +219,10 @@ const AppNavigator = () => {
     screens: {
       // Auth screens
       SignIn: 'signin',
-      SignUp: 'signup',
+
       Verification: 'verification',
       Onboarding: 'onboarding',
-      
+
       // Main authenticated screens
       MainTabs: {
         screens: {
@@ -195,14 +232,14 @@ const AppNavigator = () => {
           ProfileTab: 'profile',
         },
       },
-      
+
       // Modal/Detail screens - supports both full and shortened URLs
       DealDetail: {
         path: 'deal/:dealId',
       },
       Settings: 'settings',
       Redemption: 'redemption/:dealId',
-      
+
       // Business screens
       BusinessProfile: 'business/profile',
       BusinessCreationScreen1: 'business/create/step1',
@@ -214,7 +251,7 @@ const AppNavigator = () => {
       DealPostPurchase: 'business/deal/post-purchase',
       CreateDeal: 'business/deal/create',
       AboutBusiness: 'business/about',
-      
+
       // Debug screens
       Debug: 'debug',
       FontDebug: 'font-debug',
@@ -229,7 +266,13 @@ const AppNavigator = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
-        initialRouteName={!hasSeenOnboarding ? "Onboarding" : isAuthenticated ? "MainTabs" : "Welcome"}
+        initialRouteName={
+          !hasSeenOnboarding
+            ? 'Onboarding'
+            : isAuthenticated
+            ? 'MainTabs'
+            : 'Welcome'
+        }
         screenOptions={{
           headerShown: false,
           gestureEnabled: true,
@@ -239,23 +282,23 @@ const AppNavigator = () => {
         {!hasSeenOnboarding ? (
           // First-time user flow - show onboarding
           <>
-            <Stack.Screen 
-              name="Onboarding" 
+            <Stack.Screen
+              name="Onboarding"
               component={OnboardingScreen}
-              options={{ 
+              options={{
                 gestureEnabled: false, // Prevent swipe back to previous screen
               }}
             />
             <Stack.Screen name="SignIn" component={SignInScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
+
             <Stack.Screen name="Verification" component={VerificationScreen} />
             <Stack.Screen name="Debug" component={DebugScreen} />
             <Stack.Screen name="NetworkDebug" component={NetworkDebugScreen} />
             {/* Guest Deal View - allows viewing deals from deep links without auth */}
-            <Stack.Screen 
-              name="DealDetail" 
+            <Stack.Screen
+              name="DealDetail"
               component={DealDetailScreen}
-              options={{ 
+              options={{
                 presentation: 'modal',
                 gestureEnabled: true,
               }}
@@ -266,15 +309,15 @@ const AppNavigator = () => {
           <>
             <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
+
             <Stack.Screen name="Verification" component={VerificationScreen} />
             <Stack.Screen name="Debug" component={DebugScreen} />
             <Stack.Screen name="NetworkDebug" component={NetworkDebugScreen} />
             {/* Guest Deal View - allows viewing deals from deep links without auth */}
-            <Stack.Screen 
-              name="DealDetail" 
+            <Stack.Screen
+              name="DealDetail"
               component={DealDetailScreen}
-              options={{ 
+              options={{
                 presentation: 'modal',
                 gestureEnabled: true,
               }}
@@ -285,32 +328,35 @@ const AppNavigator = () => {
           <>
             {/* Main Tab Navigator */}
             <Stack.Screen name="MainTabs" component={MainTabNavigator} />
-            
+
             {/* Modal/Detail screens that should overlay the tabs */}
-            <Stack.Screen 
-              name="DealDetail" 
+            <Stack.Screen
+              name="DealDetail"
               component={DealDetailScreen}
-              options={{ 
+              options={{
                 presentation: 'modal',
                 gestureEnabled: true,
               }}
             />
-            <Stack.Screen 
-              name="Settings" 
+            <Stack.Screen
+              name="Settings"
               component={SettingsScreen}
-              options={{ 
+              options={{
                 presentation: 'modal',
                 gestureEnabled: true,
               }}
             />
-            
+
             {/* Debug screens */}
             <Stack.Screen name="Debug" component={DebugScreen} />
             <Stack.Screen name="FontDebug" component={FontDebug} />
-            <Stack.Screen name="PermissionTest" component={PermissionTestScreen} />
+            <Stack.Screen
+              name="PermissionTest"
+              component={PermissionTestScreen}
+            />
             <Stack.Screen name="NetworkDebug" component={NetworkDebugScreen} />
-            <Stack.Screen 
-              name="Redemption" 
+            <Stack.Screen
+              name="Redemption"
               component={RedemptionScreen}
               options={{
                 presentation: 'transparentModal',
@@ -320,22 +366,40 @@ const AppNavigator = () => {
                 cardOverlayEnabled: true,
               }}
             />
-            
+
             {/* Business screens */}
             <Stack.Screen name="BusinessProfile" component={BusinessProfile} />
-            <Stack.Screen name="BusinessCreationScreen1" component={BusinessCreationScreen1} />
-            <Stack.Screen name="BusinessCreationScreen2" component={BusinessCreationScreen2} />
-            <Stack.Screen name="BusinessCreationScreen3" component={BusinessCreationScreen3} />
-            <Stack.Screen name="BusinessSubscriptionScreen" component={BusinessSubscriptionScreen} />
-            <Stack.Screen name="BusinessCreationScreen4" component={BusinessCreationScreen4} />
+            <Stack.Screen
+              name="BusinessCreationScreen1"
+              component={BusinessCreationScreen1}
+            />
+            <Stack.Screen
+              name="BusinessCreationScreen2"
+              component={BusinessCreationScreen2}
+            />
+            <Stack.Screen
+              name="BusinessCreationScreen3"
+              component={BusinessCreationScreen3}
+            />
+            <Stack.Screen
+              name="BusinessSubscriptionScreen"
+              component={BusinessSubscriptionScreen}
+            />
+            <Stack.Screen
+              name="BusinessCreationScreen4"
+              component={BusinessCreationScreen4}
+            />
             <Stack.Screen name="BusinessDeals" component={BusinessDeals} />
-            <Stack.Screen name="DealPostPurchase" component={DealPostPurchaseScreen} />
+            <Stack.Screen
+              name="DealPostPurchase"
+              component={DealPostPurchaseScreen}
+            />
             <Stack.Screen name="CreateDeal" component={CreateDeal} />
             <Stack.Screen name="AboutBusiness" component={AboutBusiness} />
           </>
         )}
       </Stack.Navigator>
-      
+
       {/* Global Version Footer - appears on all screens */}
       <VersionFooter />
     </NavigationContainer>
