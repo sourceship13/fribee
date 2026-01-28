@@ -38,8 +38,14 @@ const PLACEHOLDER_DEAL = {
 };
 
 const SwipeScreen = ({ navigation }: any) => {
-  const { isDarkMode, deals, dealsLoading, heartedDeals, redeemedDeals, heartDeal } =
-    useAuth();
+  const {
+    isDarkMode,
+    deals,
+    dealsLoading,
+    heartedDeals,
+    redeemedDeals,
+    heartDeal,
+  } = useAuth();
   const colors = getColors(isDarkMode);
   const [currentDealIndex, setCurrentDealIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
