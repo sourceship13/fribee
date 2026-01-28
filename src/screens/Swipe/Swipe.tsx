@@ -38,7 +38,7 @@ const PLACEHOLDER_DEAL = {
 };
 
 const SwipeScreen = ({ navigation }: any) => {
-  const { isDarkMode, deals, dealsLoading, heartedDeals, redeemedDeals } =
+  const { isDarkMode, deals, dealsLoading, heartedDeals, redeemedDeals, heartDeal } =
     useAuth();
   const colors = getColors(isDarkMode);
   const [currentDealIndex, setCurrentDealIndex] = useState(0);
@@ -266,7 +266,7 @@ const SwipeScreen = ({ navigation }: any) => {
     }
   };
 
-  const handleSwipe = (direction: 'left' | 'right') => {
+  const handleSwipe = async (direction: 'left' | 'right') => {
     // Track analytics for the swipe
     const dealId =
       currentDeal?.id?.toString() || currentDeal?.deal_id?.toString();
@@ -279,6 +279,10 @@ const SwipeScreen = ({ navigation }: any) => {
     }
 
     if (direction === 'right') {
+      // Automatically heart/like the deal when swiping right
+      if (dealId && currentDeal.id !== 0) {
+        await heartDeal(dealId, currentDeal);
+      }
       navigation.navigate('DealDetail', { deal: currentDeal });
     } else {
       // Dislike: Move current deal to the end of the array
