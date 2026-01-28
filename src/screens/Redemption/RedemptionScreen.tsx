@@ -34,11 +34,12 @@ import {
   StyleSheet,
   Dimensions,
   ImageBackground,
+  Alert,
+  Platform,
 } from 'react-native';
 import SlideToUnlock from '../../components/SlideToUnlock';
 import ApiService from '../../services/api.service';
-import { color } from '../../../node_modules_old/ansi-fragments/build';
-import render from '../../../node_modules_old/dom-serializer/lib';
+import WalletPassService from '../../services/wallet-pass.service';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 const MODAL_HEIGHT = screenHeight * 0.8; // 65% of screen height
@@ -117,7 +118,7 @@ const RedemptionScreen = () => {
     ) {
       finalImages = [deal_image_url];
     }
-    // Generic image URL
+    // Generic image_url
     else if (
       image_url &&
       typeof image_url === 'string' &&
@@ -125,28 +126,28 @@ const RedemptionScreen = () => {
     ) {
       finalImages = [image_url];
     }
-    // Generic images array (could be strings or objects)
+    // Generic images array
     else if (images && Array.isArray(images) && images.length > 0) {
       finalImages = images
-        .map(img => {
-          // Handle both string URLs and objects with image_url property
-          if (typeof img === 'string') return img;
-          if (typeof img === 'object' && img.image_url) return img.image_url;
-          return null;
-        })
-        .filter(url => url && typeof url === 'string' && url.trim().length > 0);
+        .filter(img => img && typeof img === 'string' && img.trim().length > 0)
+        .map(img => img);
     }
-    // Business images as fallback (objects with image_url property)
+    // Business images (fallback)
     else if (
       business_images &&
       Array.isArray(business_images) &&
       business_images.length > 0
     ) {
       finalImages = business_images
-        .filter(img => img && typeof img === 'object' && img.image_url)
-        .map(img => img.image_url)
-        .filter(url => url && typeof url === 'string' && url.trim().length > 0);
+        .filter(img => img && typeof img === 'string' && img.trim().length > 0)
+        .map(img => img);
     }
+
+    // Return an empty array if no images found
+    if (!finalImages || finalImages.length === 0) {
+      finalImages = ['https://via.placeholder.com/150'];
+    }
+
     return (
       <ImageBackground
         source={{ uri: finalImages[0] || '' }}
@@ -154,6 +155,48 @@ const RedemptionScreen = () => {
         resizeMode="cover"
       />
     );
+  };
+
+  const handleSaveToWallet = async () => {
+    try {
+      console.log('🎫 Starting wallet pass save...');
+      
+      const canAddPasses = await WalletPassService.canAddPasses();
+      if (!canAddPasses) {
+        Alert.alert(
+          'Not Supported',
+          'Wallet passes are not supported on this device.',
+        );
+        return;
+      }
+
+      console.log('🎫 Device supports passes, calling service...');
+      
+      await WalletPassService.addPassToWallet({
+        redemptionCode,
+        businessName: deal.business_name || 'NoLimit Sera',
+        description: deal.description || deal.descrption || 'Exclusive Deal',
+        expiryDate: deal.expires || deal.expiry,
+        dealImage: deal.deal_image_url || deal.image_url,
+      });
+
+      console.log('✅ Pass added successfully!');
+      
+      Alert.alert(
+        'Success',
+        'Deal has been added to your wallet! Open the Wallet app to see it.',
+      );
+    } catch (error: any) {
+      console.error('❌ Failed to save to wallet:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+      });
+      Alert.alert(
+        'Unable to Add Pass',
+        error.message || 'Please try again later. Check console logs for details.',
+      );
+    }
   };
 
   return (
@@ -304,6 +347,22 @@ const RedemptionScreen = () => {
                     style={{ width: 200, height: 60 }}
                   />
                 </View>
+                
+                {/* Save to Wallet Button */}
+                <TouchableOpacity
+                  style={[styles.walletButton, { borderColor: colors.border }]}
+                  onPress={handleSaveToWallet}
+                  activeOpacity={0.7}
+                >
+                  <MaterialIcons
+                    name="account-balance-wallet"
+                    size={20}
+                    color="#FF9500"
+                  />
+                  <Text style={[styles.walletButtonText, { color: colors.text }]}>
+                    Save to {Platform.OS === 'ios' ? 'Apple Wallet' : 'Google Pay'}
+                  </Text>
+                </TouchableOpacity>
               </View>
 
               {/* Divider and Button */}
@@ -444,6 +503,21 @@ const styles = StyleSheet.create({
   barcodeContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  walletButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 16,
+    gap: 8,
+  },
+  walletButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
   },
   redeemSection: {},
   redeemDivider: {

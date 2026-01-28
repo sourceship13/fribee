@@ -6757,6 +6757,11 @@ react-native-typography@^1.4.1:
   resolved "https://registry.npmjs.org/react-native-typography/-/react-native-typography-1.4.1.tgz"
   integrity sha512-dc9Zfs4jUdq4ygx4/KwO6jKTERBu6cRrfPJGntw/pA+D6BMjlWfMNuhZ/69vf4Zpsnt9s4AGe+Z/V1QFYaCXAA==
 
+react-native-wallet-manager@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.npmjs.org/react-native-wallet-manager/-/react-native-wallet-manager-2.0.1.tgz"
+  integrity sha512-TQgN9YqK0KporYoWDhEwXk+KFioiwjoMxvFsuac6OytYfXIW0dlq3JnzGB06KZ4MD/QvuPnJtfluEM4zvT2YGw==
+
 react-native-worklets@^0.7.2, react-native-worklets@>=0.7.0:
   version "0.7.2"
   resolved "https://registry.npmjs.org/react-native-worklets/-/react-native-worklets-0.7.2.tgz"

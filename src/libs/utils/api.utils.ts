@@ -1,4 +1,5 @@
 import { Platform, NativeModules } from 'react-native';
+import Config from 'react-native-config';
 
 /**
  * API CONFIGURATION
@@ -9,6 +10,12 @@ import { Platform, NativeModules } from 'react-native';
  * - Production bundle: org.sera.dev.nolimitsera → fribee.io
  * - Development builds (__DEV__ = true) → staging.fribee.io
  *
+ * Environment Variables:
+ * - Uses react-native-config to read from .env files
+ * - .env.staging for staging builds
+ * - .env.production for production builds
+ * - .env for development
+ *
  * Override Flags (for local development only):
  * - FORCE_LOCAL: Set to true to use local development server
  */
@@ -16,10 +23,10 @@ import { Platform, NativeModules } from 'react-native';
 // ========== CONFIGURATION FLAGS ==========
 const FORCE_LOCAL = true; // Set to true to use local server
 
-// ========== API URLS ==========
-const LOCAL_URL = 'http://192.168.26.5:8080';
-const STAGING_URL = 'https://staging.fribee.io';
-const PRODUCTION_URL = 'https://fribee.io';
+// ========== API URLS (from .env files) ==========
+const LOCAL_URL = Config.LOCAL_API_URL;
+const STAGING_URL = Config.API_BASE_URL;
+const PRODUCTION_URL = Config.API_BASE_URL;
 
 // ========== ENVIRONMENT DETECTION ==========
 type Environment = 'local' | 'staging' | 'production';

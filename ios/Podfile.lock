@@ -2093,6 +2093,34 @@ PODS:
   - react-native-vector-icons-fontawesome5 (12.3.0)
   - react-native-vector-icons-ionicons (12.3.0)
   - react-native-vector-icons-material-icons (12.4.0)
+  - react-native-wallet-manager (2.0.1):
+    - boost
+    - DoubleConversion
+    - fast_float
+    - fmt
+    - glog
+    - hermes-engine
+    - RCT-Folly
+    - RCT-Folly/Fabric
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - SocketRocket
+    - Yoga
   - React-NativeModulesApple (0.81.1):
     - boost
     - DoubleConversion
@@ -3215,6 +3243,7 @@ DEPENDENCIES:
   - "react-native-vector-icons-fontawesome5 (from `../node_modules/@react-native-vector-icons/fontawesome5`)"
   - "react-native-vector-icons-ionicons (from `../node_modules/@react-native-vector-icons/ionicons`)"
   - "react-native-vector-icons-material-icons (from `../node_modules/@react-native-vector-icons/material-icons`)"
+  - react-native-wallet-manager (from `../node_modules/react-native-wallet-manager`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-oscompat (from `../node_modules/react-native/ReactCommon/oscompat`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -3383,6 +3412,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-vector-icons/ionicons"
   react-native-vector-icons-material-icons:
     :path: "../node_modules/@react-native-vector-icons/material-icons"
+  react-native-wallet-manager:
+    :path: "../node_modules/react-native-wallet-manager"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-oscompat:
@@ -3537,6 +3568,7 @@ SPEC CHECKSUMS:
   react-native-vector-icons-fontawesome5: 271d813e27a86d30bb8cf1fc2f12dae74b74b69b
   react-native-vector-icons-ionicons: ad07e944a092a5cf71b8b569d8f5ce2bf674c415
   react-native-vector-icons-material-icons: d67e485a05560416ff6b5977d5fa7e0eb6af6870
+  react-native-wallet-manager: d43ab40cec428b3d1c5b6bb9f87e6afbb127e741
   React-NativeModulesApple: eff2eba56030eb0d107b1642b8f853bc36a833ac
   React-oscompat: b12c633e9c00f1f99467b1e0e0b8038895dae436
   React-perflogger: 58d12c4e5df1403030c97b9c621375c312cca454
@@ -3587,6 +3619,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 11c9686a21e2cd82a094a723649d9f4507200fb0
 
-PODFILE CHECKSUM: 3e1a8652a55479812081cabf3b66ee43c66ec76e
+PODFILE CHECKSUM: 63e83632223c2a4721588112826abf7b512899c3
 
 COCOAPODS: 1.16.2

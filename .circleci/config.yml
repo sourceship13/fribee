@@ -103,6 +103,9 @@ jobs:
       - run:
           name: Build Android Staging (APK & AAB)
           command: |
+            # Use staging environment variables
+            cp .env.staging .env
+
             cd android
             # Clean everything including Gradle cache
             rm -rf .gradle app/.cxx app/build ~/.gradle/caches
@@ -112,6 +115,9 @@ jobs:
 
             # Disable Sentry uploads
             export SENTRY_DISABLE_AUTO_UPLOAD=true
+
+            # Set ENVFILE for react-native-config
+            export ENVFILE=.env.staging
 
             # Generate all codegen artifacts first
             ./gradlew generateCodegenArtifactsFromSchema --no-daemon
@@ -127,7 +133,13 @@ jobs:
       - run:
           name: Build Android Production (APK & AAB)
           command: |
+            # Use production environment variables
+            cp .env.production .env
+
             cd android
+            # Set ENVFILE for react-native-config
+            export ENVFILE=.env.production
+
             # Build Production APK
             ./gradlew assembleProductionRelease --no-daemon --stacktrace
 
@@ -268,6 +280,10 @@ jobs:
       - run:
           name: Build and upload to TestFlight (Staging)
           command: |
+            # Use staging environment variables
+            cp .env.staging .env
+            export ENVFILE=.env.staging
+
             cd ios
             bundle exec fastlane staging
       - run:
@@ -398,6 +414,10 @@ jobs:
       - run:
           name: Build and upload to TestFlight (Production)
           command: |
+            # Use production environment variables
+            cp .env.production .env
+            export ENVFILE=.env.production
+
             cd ios
             bundle exec fastlane production
       - run:
