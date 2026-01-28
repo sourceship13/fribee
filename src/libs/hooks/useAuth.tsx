@@ -457,6 +457,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // Load saved preferences
       await loadPreferences();
 
+      // Check for refresh token first - if not present, redirect to sign in
+      const refreshToken = await AuthService.getRefreshToken();
+      if (!refreshToken) {
+        console.log('❌ No refresh token found - redirecting to sign in');
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
       // Check authentication status
       const isAuth = await AuthService.isAuthenticated();
       console.log('Authentication check result:', isAuth);
