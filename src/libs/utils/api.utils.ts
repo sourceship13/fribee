@@ -46,7 +46,10 @@ function getConfigValue(key: string, fallback: string): string {
 // Lazy load environment URLs from Config with fallbacks and caching
 const getLocalURL = () => {
   if (cachedLocalURL === null) {
-    cachedLocalURL = getConfigValue('LOCAL_API_URL', 'http://192.168.26.5:8080');
+    cachedLocalURL = getConfigValue(
+      'LOCAL_API_URL',
+      'http://192.168.26.5:8080',
+    );
   }
   return cachedLocalURL;
 };
