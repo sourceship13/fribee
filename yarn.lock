@@ -2156,7 +2156,7 @@
     "@sinonjs/commons" "^3.0.0"
 
 "@sourceship13/react-native-share-sms@file:../react-native-share-sms":
-  version "0.1.0"
+  version "0.1.5"
   resolved "file:../react-native-share-sms"
 
 "@svgr/babel-plugin-add-jsx-attribute@8.0.0":
