@@ -22,11 +22,48 @@ import { Platform, NativeModules } from 'react-native';
 // ========== CONFIGURATION FLAGS ==========
 const FORCE_LOCAL = true; // Set to true to use local server
 
+// Safely load Config value with fallback - handles Android null Config
+// Cache values to avoid repeated Config access
+let cachedLocalURL: string | null = null;
+let cachedStagingURL: string | null = null;
+let cachedProductionURL: string | null = null;
+
+function getConfigValue(key: string, fallback: string): string {
+  try {
+    const ConfigModule = require('react-native-config');
+    if (!ConfigModule || !ConfigModule.default) {
+      return fallback;
+    }
+    const value = ConfigModule.default[key];
+    return value || fallback;
+  } catch (error) {
+    // Config not ready yet, use fallback
+    return fallback;
+  }
+}
+
 // ========== API URLS ==========
-// Using hardcoded URLs - Config will be checked later if needed
-const getLocalURL = () => 'http://localhost:5001';
-const getStagingURL = () => 'https://staging.fribee.io';
-const getProductionURL = () => 'https://fribee.io';
+// Lazy load environment URLs from Config with fallbacks and caching
+const getLocalURL = () => {
+  if (cachedLocalURL === null) {
+    cachedLocalURL = getConfigValue('LOCAL_API_URL', 'http://localhost:5001');
+  }
+  return cachedLocalURL;
+};
+
+const getStagingURL = () => {
+  if (cachedStagingURL === null) {
+    cachedStagingURL = getConfigValue('STAGING_API_URL', 'https://staging.fribee.io');
+  }
+  return cachedStagingURL;
+};
+
+const getProductionURL = () => {
+  if (cachedProductionURL === null) {
+    cachedProductionURL = getConfigValue('PRODUCTION_API_URL', 'https://fribee.io');
+  }
+  return cachedProductionURL;
+};
 
 // ========== ENVIRONMENT DETECTION ==========
 type Environment = 'local' | 'staging' | 'production';

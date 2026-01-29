@@ -1,6 +1,6 @@
 /**
  * Instagram OAuth Authentication Service
- * 
+ *
  * SETUP REQUIRED:
  * 1. Go to https://developers.facebook.com/apps
  * 2. Create a new app or use existing
@@ -29,11 +29,14 @@ interface InstagramAuthResponse {
   user: InstagramUser;
 }
 
-// Safely load Config value with fallback
+// Safely load Config value with fallback - handles Android null Config
 function getConfigValue(key: string, fallback: string): string {
   try {
-    const Config = require('react-native-config').default;
-    const value = Config?.[key];
+    const ConfigModule = require('react-native-config');
+    if (!ConfigModule || !ConfigModule.default) {
+      return fallback;
+    }
+    const value = ConfigModule.default[key];
     return value || fallback;
   } catch (error) {
     // Config not ready yet, use fallback
@@ -51,7 +54,10 @@ class InstagramAuthService {
         // Instagram uses Facebook's OAuth endpoints
         issuer: 'https://api.instagram.com',
         clientId: getConfigValue('INSTAGRAM_APP_ID', 'YOUR_INSTAGRAM_APP_ID'),
-        clientSecret: getConfigValue('INSTAGRAM_APP_SECRET', 'YOUR_INSTAGRAM_APP_SECRET'),
+        clientSecret: getConfigValue(
+          'INSTAGRAM_APP_SECRET',
+          'YOUR_INSTAGRAM_APP_SECRET',
+        ),
         redirectUrl: Platform.select({
           ios: 'com.nolimitseradeals://oauth',
           android: 'com.nolimitseradeals://oauth',
@@ -85,9 +91,12 @@ class InstagramAuthService {
 
       // Start OAuth flow
       const authState = await authorize(config);
-      
+
       console.log('✅ Instagram OAuth successful');
-      console.log('✅ Access token received:', authState.accessToken.substring(0, 20) + '...');
+      console.log(
+        '✅ Access token received:',
+        authState.accessToken.substring(0, 20) + '...',
+      );
 
       // Get user profile with the access token
       const user = await this.getUserProfile(authState.accessToken);
@@ -108,7 +117,7 @@ class InstagramAuthService {
   private async getUserProfile(accessToken: string): Promise<InstagramUser> {
     try {
       const response = await fetch(
-        `https://graph.instagram.com/me?fields=id,username,account_type,media_count&access_token=${accessToken}`
+        `https://graph.instagram.com/me?fields=id,username,account_type,media_count&access_token=${accessToken}`,
       );
 
       if (!response.ok) {

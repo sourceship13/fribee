@@ -6,6 +6,7 @@
     "android": "react-native run-android --mode=StagingDebug --appId=com.nolimitseradeals.staging",
     "android:staging": "react-native run-android --mode=StagingDebug --appId=com.nolimitseradeals.staging",
     "android:prod": "react-native run-android --mode=ProductionDebug --appId=com.nolimitseradeals",
+    "android:physical": "react-native run-android --mode=StagingDebug --appId=com.nolimitseradeals.staging --deviceId='adb-00169156F000109-Rr8oCY._adb-tls-connect._tcp'",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
