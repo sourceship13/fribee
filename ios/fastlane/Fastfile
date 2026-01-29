@@ -46,6 +46,9 @@ platform :ios do
       build_configurations: ["Release"]
     )
     
+    # Set ENVFILE for React Native bundler
+    ENV['ENVFILE'] = '.env.staging'
+    
     # Build the STAGING app
     build_app(
       workspace: "nolimitseradeals.xcworkspace",
@@ -133,6 +136,9 @@ platform :ios do
       profile_name: profile_name,
       build_configurations: ["Release"]
     )
+    
+    # Set ENVFILE for React Native bundler
+    ENV['ENVFILE'] = '.env.production'
     
     # Build the PRODUCTION app
     build_app(
