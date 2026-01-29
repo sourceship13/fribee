@@ -46,21 +46,27 @@ function getConfigValue(key: string, fallback: string): string {
 // Lazy load environment URLs from Config with fallbacks and caching
 const getLocalURL = () => {
   if (cachedLocalURL === null) {
-    cachedLocalURL = getConfigValue('LOCAL_API_URL', 'http://localhost:5001');
+    cachedLocalURL = getConfigValue('LOCAL_API_URL', 'http://192.168.26.5:8080');
   }
   return cachedLocalURL;
 };
 
 const getStagingURL = () => {
   if (cachedStagingURL === null) {
-    cachedStagingURL = getConfigValue('STAGING_API_URL', 'https://staging.fribee.io');
+    cachedStagingURL = getConfigValue(
+      'STAGING_API_URL',
+      'https://staging.fribee.io',
+    );
   }
   return cachedStagingURL;
 };
 
 const getProductionURL = () => {
   if (cachedProductionURL === null) {
-    cachedProductionURL = getConfigValue('PRODUCTION_API_URL', 'https://fribee.io');
+    cachedProductionURL = getConfigValue(
+      'PRODUCTION_API_URL',
+      'https://fribee.io',
+    );
   }
   return cachedProductionURL;
 };
