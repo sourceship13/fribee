@@ -101,6 +101,18 @@ jobs:
               exit 1
             fi
       - run:
+          name: Decode .env.staging file
+          command: |
+            # Decode the base64 .env.staging from environment variable
+            if [ -n "$ENV_STAGING_BASE64" ]; then
+              echo "$ENV_STAGING_BASE64" | base64 --decode > .env.staging
+              echo "✅ .env.staging decoded successfully"
+            else
+              echo "⚠️  ENV_STAGING_BASE64 not found - builds will fail"
+              echo "Add the .env.staging file as a base64 environment variable in CircleCI"
+              exit 1
+            fi
+      - run:
           name: Build Android Staging (APK & AAB)
           command: |
             # Use staging environment variables
@@ -277,6 +289,18 @@ jobs:
               --assets-dest /tmp/test-assets \
               --reset-cache
             echo "✅ Pre-bundle successful"
+      - run:
+          name: Decode .env.staging file
+          command: |
+            # Decode the base64 .env.staging from environment variable
+            if [ -n "$ENV_STAGING_BASE64" ]; then
+              echo "$ENV_STAGING_BASE64" | base64 --decode > .env.staging
+              echo "✅ .env.staging decoded successfully"
+            else
+              echo "⚠️  ENV_STAGING_BASE64 not found - builds will fail"
+              echo "Add the .env.staging file as a base64 environment variable in CircleCI"
+              exit 1
+            fi
       - run:
           name: Build and upload to TestFlight (Staging)
           command: |
