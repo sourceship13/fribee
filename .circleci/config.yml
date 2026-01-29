@@ -323,7 +323,7 @@ jobs:
 
   build_ios_production:
     macos:
-      xcode: "26.2.0"
+      xcode: "16.2.0"  # Fixed: was incorrectly 26.2.0
     resource_class: m4pro.medium
     working_directory: ~/repo
     environment:
@@ -435,6 +435,18 @@ jobs:
               --assets-dest /tmp/test-assets \
               --reset-cache
             echo "✅ Pre-bundle successful"
+      - run:
+          name: Decode .env.production file
+          command: |
+            # Decode the base64 .env.production from environment variable
+            if [ -n "$ENV_PRODUCTION_BASE64" ]; then
+              echo "$ENV_PRODUCTION_BASE64" | base64 --decode > .env.production
+              echo "✅ .env.production decoded successfully"
+            else
+              echo "⚠️  ENV_PRODUCTION_BASE64 not found - builds will fail"
+              echo "Add the .env.production file as a base64 environment variable in CircleCI"
+              exit 1
+            fi
       - run:
           name: Build and upload to TestFlight (Production)
           command: |
