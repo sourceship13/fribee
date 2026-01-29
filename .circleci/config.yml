@@ -422,20 +422,6 @@ jobs:
             rm -rf ~/.metro 2>/dev/null || true
             echo "✅ Metro cache cleared"
       - run:
-          name: Pre-bundle React Native code
-          command: |
-            echo "Pre-bundling React Native code to check for errors..."
-            export NODE_BINARY=node
-            export ENTRY_FILE=index.js
-            npx react-native bundle \
-              --platform ios \
-              --dev false \
-              --entry-file index.js \
-              --bundle-output /tmp/test-bundle.js \
-              --assets-dest /tmp/test-assets \
-              --reset-cache
-            echo "✅ Pre-bundle successful"
-      - run:
           name: Decode .env.production file
           command: |
             # Decode the base64 .env.production from environment variable
@@ -447,6 +433,23 @@ jobs:
               echo "Add the .env.production file as a base64 environment variable in CircleCI"
               exit 1
             fi
+      - run:
+          name: Pre-bundle React Native code
+          command: |
+            echo "Pre-bundling React Native code to check for errors..."
+            # Set production env for pre-bundle
+            cp .env.production .env
+            export ENVFILE=.env.production
+            export NODE_BINARY=node
+            export ENTRY_FILE=index.js
+            npx react-native bundle \
+              --platform ios \
+              --dev false \
+              --entry-file index.js \
+              --bundle-output /tmp/test-bundle.js \
+              --assets-dest /tmp/test-assets \
+              --reset-cache
+            echo "✅ Pre-bundle successful"
       - run:
           name: Build and upload to TestFlight (Production)
           command: |
