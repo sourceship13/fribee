@@ -289,6 +289,7 @@ const AppNavigator = () => {
                 gestureEnabled: false, // Prevent swipe back to previous screen
               }}
             />
+            <Stack.Screen name="Welcome" component={WelcomeScreen} />
             <Stack.Screen name="SignIn" component={SignInScreen} />
 
             <Stack.Screen name="Verification" component={VerificationScreen} />
