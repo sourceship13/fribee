@@ -483,6 +483,7 @@ class DealSharingService {
       console.log('📤 [Android] Calling sendWithShareSMS with Turbo Module');
       console.log('📞 Phone numbers:', phoneNumbers);
       console.log('📎 Attachments:', attachments);
+      console.log('📝 Message:', message);
 
       // Use the Turbo Module share menu to allow users to choose SMS, email, etc.
       const result = await sendWithShareSMS({
