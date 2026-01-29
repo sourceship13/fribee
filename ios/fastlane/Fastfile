@@ -56,6 +56,7 @@ platform :ios do
       output_directory: "./build",
       output_name: "nolimitseradeals-staging.ipa",
       codesigning_identity: "Apple Distribution",
+      xcargs: "ENVFILE=.env.staging",
       export_options: {
         method: "app-store",
         uploadBitcode: false,
@@ -143,6 +144,7 @@ platform :ios do
       output_directory: "./build",
       output_name: "nolimitseradeals.ipa",
       codesigning_identity: "Apple Distribution",
+      xcargs: "ENVFILE=.env.production",
       export_options: {
         method: "app-store",
         uploadBitcode: false,
