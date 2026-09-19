@@ -1,4 +1,4 @@
-git_url("git@github.com-fastlane-match:ajp-sourceship/fribee_fastlane_match.git")
+git_url("git@github.com-fastlane-match:sourceship13/fribee_fastlane_match.git")
 storage_mode("git")
 type("appstore")
 app_identifier(["com.sera.fribee"])

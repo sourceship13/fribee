@@ -3,18 +3,26 @@ default_platform(:ios)
 platform :ios do
   desc "Build and upload STAGING to TestFlight"
   lane :staging do
-    # Use keychain created by CircleCI
+    # Use keychain created by the CI workflow
     keychain_name = "fastlane.keychain-db"
     keychain_password = "temp_password"
-    
+
+    # Authenticate via App Store Connect API key to avoid Apple ID/spaceship login issues
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY_CONTENT"])
+    )
+
     # Setup certificates with Match for STAGING
     match(
       type: "appstore",
       readonly: true,
+      api_key: api_key,
       app_identifier: "com.sera.fribee.staging",
       keychain_name: keychain_name,
       keychain_password: keychain_password,
-      git_url: "git@github.com-fastlane-match:ajp-sourceship/fribee_fastlane_match.git"
+      git_url: "git@github.com-fastlane-match:sourceship13/fribee_fastlane_match.git"
     )
     
     profile_name = ENV["sigh_com.sera.fribee.staging_appstore_profile-name"]
@@ -28,7 +36,7 @@ platform :ios do
     # Increment build number for staging target
     increment_build_number(
       xcodeproj: "fribee.xcodeproj",
-      build_number: ENV["CIRCLE_BUILD_NUM"] || Time.now.to_i.to_s
+      build_number: ENV["GITHUB_RUN_NUMBER"] || Time.now.to_i.to_s
     )
     
     # Remove problematic Hermes file
@@ -74,13 +82,6 @@ platform :ios do
       }
     )
     
-    # Create API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY_CONTENT"])
-    )
-    
     # Upload to TestFlight (staging app)
     upload_to_testflight(
       api_key: api_key,
@@ -94,18 +95,26 @@ platform :ios do
 
   desc "Build and upload PRODUCTION to TestFlight"
   lane :production do
-    # Use keychain created by CircleCI
+    # Use keychain created by the CI workflow
     keychain_name = "fastlane.keychain-db"
     keychain_password = "temp_password"
-    
+
+    # Authenticate via App Store Connect API key to avoid Apple ID/spaceship login issues
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY_CONTENT"])
+    )
+
     # Setup certificates with Match for PRODUCTION
     match(
       type: "appstore",
       readonly: true,
+      api_key: api_key,
       app_identifier: "com.sera.fribee",
       keychain_name: keychain_name,
       keychain_password: keychain_password,
-      git_url: "git@github.com-fastlane-match:ajp-sourceship/fribee_fastlane_match.git"
+      git_url: "git@github.com-fastlane-match:sourceship13/fribee_fastlane_match.git"
     )
     
     profile_name = ENV["sigh_com.sera.fribee_appstore_profile-name"]
@@ -119,7 +128,7 @@ platform :ios do
     # Increment build number for production target
     increment_build_number(
       xcodeproj: "fribee.xcodeproj",
-      build_number: ENV["CIRCLE_BUILD_NUM"] || Time.now.to_i.to_s
+      build_number: ENV["GITHUB_RUN_NUMBER"] || Time.now.to_i.to_s
     )
     
     # Remove problematic Hermes file
@@ -163,13 +172,6 @@ platform :ios do
         stripSwiftSymbols: true,
         manageAppVersionAndBuildNumber: false
       }
-    )
-    
-    # Create API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
-      key_content: Base64.decode64(ENV["APP_STORE_CONNECT_API_KEY_CONTENT"])
     )
     
     # Upload to TestFlight (production app)
