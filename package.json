@@ -6,7 +6,7 @@
     "android": "react-native run-android --mode=StagingDebug --appId=com.sera.fribee.staging",
     "android:staging": "react-native run-android --mode=StagingDebug --appId=com.sera.fribee.staging",
     "android:prod": "react-native run-android --mode=ProductionDebug --appId=com.sera.fribee",
-    "android:physical": "react-native run-android --mode=StagingDebug --appId=com.sera.fribee.staging --device='192.168.26.21:5555'",
+    "android:physical": "react-native run-android --mode=StagingDebug --appId=com.sera.fribee.staging --deviceId='adb-00169156F000109-Rr8oCY._adb-tls-connect._tcp'",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",

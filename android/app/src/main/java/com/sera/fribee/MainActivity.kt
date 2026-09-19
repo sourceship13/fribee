@@ -20,6 +20,11 @@ class MainActivity : ReactActivity() {
     super.onCreate(savedInstanceState)
   }
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    RNBootSplash.init(this, R.style.BootTheme)
+    super.onCreate(savedInstanceState)
+  }
+
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
    * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]

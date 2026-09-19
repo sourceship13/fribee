@@ -31,7 +31,7 @@ Set `FORCE_DEV_MODE = false` and `USE_SANDBOX = true`:
 ### Step 1: Create Subscription Product
 
 1. Go to [App Store Connect](https://appstoreconnect.apple.com)
-2. Select your app (Fribee Deals)
+2. Select your app (NoLimit Sera Deals)
 3. Navigate to **Features** → **In-App Purchases**
 4. Click **+ (Create)** → **Auto-Renewable Subscription**
 
