@@ -11,13 +11,13 @@ platform :ios do
     match(
       type: "appstore",
       readonly: true,
-      app_identifier: "org.sera.dev.nolimitsera.staging",
+      app_identifier: "com.sera.fribee.staging",
       keychain_name: keychain_name,
       keychain_password: keychain_password,
-      git_url: "git@github.com-fastlane-match:ajp-sourceship/nolimitseradeals_fastlane_match.git"
+      git_url: "git@github.com-fastlane-match:ajp-sourceship/fribee_fastlane_match.git"
     )
     
-    profile_name = ENV["sigh_org.sera.dev.nolimitsera.staging_appstore_profile-name"]
+    profile_name = ENV["sigh_com.sera.fribee.staging_appstore_profile-name"]
     
     # Set partition list for codesign access
     sh("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k #{keychain_password} ~/Library/Keychains/#{keychain_name} || true")
@@ -27,7 +27,7 @@ platform :ios do
     
     # Increment build number for staging target
     increment_build_number(
-      xcodeproj: "nolimitseradeals.xcodeproj",
+      xcodeproj: "fribee.xcodeproj",
       build_number: ENV["CIRCLE_BUILD_NUM"] || Time.now.to_i.to_s
     )
     
@@ -37,11 +37,11 @@ platform :ios do
     # Update code signing settings for STAGING
     update_code_signing_settings(
       use_automatic_signing: false,
-      path: "nolimitseradeals.xcodeproj",
-      targets: ["nolimitseradeals-staging"],
+      path: "fribee.xcodeproj",
+      targets: ["fribee-staging"],
       team_id: "CM52HNMXXW",
       code_sign_identity: "Apple Distribution",
-      bundle_identifier: "org.sera.dev.nolimitsera.staging",
+      bundle_identifier: "com.sera.fribee.staging",
       profile_name: profile_name,
       build_configurations: ["Release"]
     )
@@ -51,13 +51,13 @@ platform :ios do
     
     # Build the STAGING app
     build_app(
-      workspace: "nolimitseradeals.xcworkspace",
-      scheme: "nolimitseradeals-staging",
+      workspace: "fribee.xcworkspace",
+      scheme: "fribee-staging",
       clean: true,
       export_method: "app-store",
       configuration: "Release",
       output_directory: "./build",
-      output_name: "nolimitseradeals-staging.ipa",
+      output_name: "fribee-staging.ipa",
       codesigning_identity: "Apple Distribution",
       xcargs: "ENVFILE=.env.staging",
       export_options: {
@@ -66,7 +66,7 @@ platform :ios do
         uploadSymbols: true,
         compileBitcode: false,
         provisioningProfiles: {
-          "org.sera.dev.nolimitsera.staging" => profile_name
+          "com.sera.fribee.staging" => profile_name
         },
         signingStyle: "manual",
         stripSwiftSymbols: true,
@@ -86,7 +86,7 @@ platform :ios do
       api_key: api_key,
       skip_waiting_for_build_processing: true,
       skip_submission: true,
-      ipa: "./build/nolimitseradeals-staging.ipa"
+      ipa: "./build/fribee-staging.ipa"
     )
     
     UI.success("✅ Staging build uploaded to TestFlight!")
@@ -102,13 +102,13 @@ platform :ios do
     match(
       type: "appstore",
       readonly: true,
-      app_identifier: "org.sera.dev.nolimitsera",
+      app_identifier: "com.sera.fribee",
       keychain_name: keychain_name,
       keychain_password: keychain_password,
-      git_url: "git@github.com-fastlane-match:ajp-sourceship/nolimitseradeals_fastlane_match.git"
+      git_url: "git@github.com-fastlane-match:ajp-sourceship/fribee_fastlane_match.git"
     )
     
-    profile_name = ENV["sigh_org.sera.dev.nolimitsera_appstore_profile-name"]
+    profile_name = ENV["sigh_com.sera.fribee_appstore_profile-name"]
     
     # Set partition list for codesign access
     sh("security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k #{keychain_password} ~/Library/Keychains/#{keychain_name} || true")
@@ -118,7 +118,7 @@ platform :ios do
     
     # Increment build number for production target
     increment_build_number(
-      xcodeproj: "nolimitseradeals.xcodeproj",
+      xcodeproj: "fribee.xcodeproj",
       build_number: ENV["CIRCLE_BUILD_NUM"] || Time.now.to_i.to_s
     )
     
@@ -128,11 +128,11 @@ platform :ios do
     # Update code signing settings for PRODUCTION
     update_code_signing_settings(
       use_automatic_signing: false,
-      path: "nolimitseradeals.xcodeproj",
-      targets: ["nolimitseradeals-prod"],
+      path: "fribee.xcodeproj",
+      targets: ["fribee-prod"],
       team_id: "CM52HNMXXW",
       code_sign_identity: "Apple Distribution",
-      bundle_identifier: "org.sera.dev.nolimitsera",
+      bundle_identifier: "com.sera.fribee",
       profile_name: profile_name,
       build_configurations: ["Release"]
     )
@@ -142,13 +142,13 @@ platform :ios do
     
     # Build the PRODUCTION app
     build_app(
-      workspace: "nolimitseradeals.xcworkspace",
-      scheme: "nolimitseradeals-prod",
+      workspace: "fribee.xcworkspace",
+      scheme: "fribee-prod",
       clean: true,
       export_method: "app-store",
       configuration: "Release",
       output_directory: "./build",
-      output_name: "nolimitseradeals.ipa",
+      output_name: "fribee.ipa",
       codesigning_identity: "Apple Distribution",
       xcargs: "ENVFILE=.env.production",
       export_options: {
@@ -157,7 +157,7 @@ platform :ios do
         uploadSymbols: true,
         compileBitcode: false,
         provisioningProfiles: {
-          "org.sera.dev.nolimitsera" => profile_name
+          "com.sera.fribee" => profile_name
         },
         signingStyle: "manual",
         stripSwiftSymbols: true,
@@ -177,7 +177,7 @@ platform :ios do
       api_key: api_key,
       skip_waiting_for_build_processing: true,
       skip_submission: true,
-      ipa: "./build/nolimitseradeals.ipa"
+      ipa: "./build/fribee.ipa"
     )
     
     UI.success("✅ Production build uploaded to TestFlight!")

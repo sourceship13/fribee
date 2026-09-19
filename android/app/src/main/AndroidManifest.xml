@@ -43,7 +43,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:scheme="com.nolimitseradeals"
+                    android:scheme="com.sera.fribee"
                     android:host="oauth" />
             </intent-filter>
 
@@ -53,7 +53,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:scheme="nolimitseradeals"
+                    android:scheme="fribee"
                     android:host="deal" />
             </intent-filter>
 

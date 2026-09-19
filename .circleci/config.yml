@@ -93,7 +93,7 @@ jobs:
           command: |
             # Decode the base64 keystore from environment variable
             if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
-              echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/nolimitsera-release.keystore
+              echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/fribee-release.keystore
               echo "✅ Keystore decoded successfully"
             else
               echo "⚠️  ANDROID_KEYSTORE_BASE64 not found - builds will fail at signing step"
@@ -313,8 +313,8 @@ jobs:
       - run:
           name: Display App Version and Build Number
           command: |
-            APP_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" ios/nolimitseradeals/Info.plist)
-            BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" ios/nolimitseradeals/Info.plist)
+            APP_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" ios/fribee/Info.plist)
+            BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" ios/fribee/Info.plist)
             echo "Staging App Version: $APP_VERSION"
             echo "Staging Build Number: $BUILD_NUMBER"
       - store_artifacts:
@@ -462,8 +462,8 @@ jobs:
       - run:
           name: Display App Version and Build Number
           command: |
-            APP_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" ios/nolimitseradeals/Info.plist)
-            BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" ios/nolimitseradeals/Info.plist)
+            APP_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" ios/fribee/Info.plist)
+            BUILD_NUMBER=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" ios/fribee/Info.plist)
             echo "Production App Version: $APP_VERSION"
             echo "Production Build Number: $BUILD_NUMBER"
       - store_artifacts:
@@ -476,7 +476,7 @@ workflows:
     jobs:
       - install_dependencies:
           context:
-            - nolimitsera-context
+            - fribee-context
           filters:
             branches:
               only:
@@ -485,7 +485,7 @@ workflows:
                 - circle
       - build_android:
           context:
-            - nolimitsera-context
+            - fribee-context
           requires:
             - install_dependencies
           filters:
@@ -496,7 +496,7 @@ workflows:
                 - circle
       - build_ios_staging:
           context:
-            - nolimitsera-context
+            - fribee-context
           requires:
             - install_dependencies
           filters:
@@ -510,7 +510,7 @@ workflows:
     jobs:
       - install_dependencies:
           context:
-            - nolimitsera-context
+            - fribee-context
           filters:
             branches:
               only:
@@ -520,7 +520,7 @@ workflows:
               only: /^v.*/
       - build_ios_production:
           context:
-            - nolimitsera-context
+            - fribee-context
           requires:
             - install_dependencies
           filters:

@@ -5,10 +5,10 @@ This app supports deep linking to allow users to open specific deals directly fr
 
 ## Deep Link Format
 ```
-nolimitseradeals://deal/{dealId}
+fribee://deal/{dealId}
 ```
 
-Example: `nolimitseradeals://deal/12345`
+Example: `fribee://deal/12345`
 
 ## Universal Links (iOS)
 Domain: `https://fribee.io/deal/{dealId}`
@@ -22,7 +22,7 @@ Domain: `https://fribee.io/deal/{dealId}`
 
 #### a. Update Info.plist
 The Info.plist has been updated with:
-- URL Types for custom scheme `nolimitseradeals://`
+- URL Types for custom scheme `fribee://`
 - Associated Domains for Universal Links `applinks:fribee.io`
 
 #### b. Configure Apple App Site Association (AASA)
@@ -34,7 +34,7 @@ Host this file at `https://fribee.io/.well-known/apple-app-site-association`:
     "apps": [],
     "details": [
       {
-        "appID": "TEAM_ID.org.sera.dev.nolimitsera",
+        "appID": "TEAM_ID.com.sera.fribee",
         "paths": ["/deal/*"]
       }
     ]
@@ -48,7 +48,7 @@ Replace `TEAM_ID` with your Apple Team ID.
 
 #### a. AndroidManifest.xml
 The AndroidManifest.xml has been updated with intent filters for:
-- Custom scheme: `nolimitseradeals://deal/*`
+- Custom scheme: `fribee://deal/*`
 - App Links: `https://fribee.io/deal/*`
 
 #### b. Configure Digital Asset Links
@@ -59,7 +59,7 @@ Host this file at `https://fribee.io/.well-known/assetlinks.json`:
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "org.sera.dev.nolimitsera",
+    "package_name": "com.sera.fribee",
     "sha256_cert_fingerprints": [
       "YOUR_SHA256_FINGERPRINT_HERE"
     ]
@@ -92,7 +92,7 @@ Example HTML:
   <p>If the app doesn't open, <a href="APP_STORE_LINK">download it here</a>.</p>
   <script>
     const dealId = window.location.pathname.split('/deal/')[1];
-    const deepLink = `nolimitseradeals://deal/${dealId}`;
+    const deepLink = `fribee://deal/${dealId}`;
     
     // Try to open app
     window.location.href = deepLink;
@@ -102,7 +102,7 @@ Example HTML:
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       const storeUrl = isIOS 
         ? 'https://apps.apple.com/app/YOUR_APP_ID'
-        : 'https://play.google.com/store/apps/details?id=org.sera.dev.nolimitsera';
+        : 'https://play.google.com/store/apps/details?id=com.sera.fribee';
       window.location.href = storeUrl;
     }, 2000);
   </script>
@@ -114,12 +114,12 @@ Example HTML:
 
 #### iOS Simulator:
 ```bash
-xcrun simctl openurl booted "nolimitseradeals://deal/12345"
+xcrun simctl openurl booted "fribee://deal/12345"
 ```
 
 #### Android Emulator/Device:
 ```bash
-adb shell am start -W -a android.intent.action.VIEW -d "nolimitseradeals://deal/12345" org.sera.dev.nolimitsera
+adb shell am start -W -a android.intent.action.VIEW -d "fribee://deal/12345" com.sera.fribee
 ```
 
 #### Test Universal/App Links:

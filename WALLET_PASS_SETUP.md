@@ -8,7 +8,7 @@
 > - App builds successfully with Wallet support
 > - **Backend implementation still required** (see Backend Implementation section)
 
-This guide explains how to complete the setup for Apple Wallet (iOS) and Google Pay (Android) wallet pass integration in the NoLimit Sera Deals app.
+This guide explains how to complete the setup for Apple Wallet (iOS) and Google Pay (Android) wallet pass integration in the Fribee Deals app.
 
 ## Overview
 
@@ -40,8 +40,8 @@ The wallet pass feature allows users to save their redeemed deals as passes in A
 1. Go to [Apple Developer Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/identifiers/list)
 2. Click the **+** button to create a new identifier
 3. Select **Pass Type IDs** and click **Continue**
-4. Enter a description: `NoLimit Sera Deals Pass`
-5. Set the identifier: `pass.com.nolimitsera.deals`
+4. Enter a description: `Fribee Deals Pass`
+5. Set the identifier: `pass.com.sera.fribee.deals`
 6. Click **Register**
 
 #### b. Create Pass Type Certificate
@@ -67,10 +67,10 @@ The wallet pass feature allows users to save their redeemed deals as passes in A
 
 ```bash
 # Enable Wallet for staging
-fastlane produce enable_services --app-identifier org.sera.dev.nolimitsera.staging --wallet --username aj@sera.dev
+fastlane produce enable_services --app-identifier com.sera.fribee.staging --wallet --username aj@sera.dev
 
 # Enable Wallet for production
-fastlane produce enable_services --app-identifier org.sera.dev.nolimitsera --wallet --username aj@sera.dev
+fastlane produce enable_services --app-identifier com.sera.fribee --wallet --username aj@sera.dev
 ```
 
 ### 3. Enable Wallet Capability in Entitlements
@@ -84,10 +84,10 @@ fastlane produce enable_services --app-identifier org.sera.dev.nolimitsera --wal
 
 The Wallet capability is configured via entitlements files. When using fastlane match:
 
-1. **Entitlements are already configured** with Pass Type ID: `pass.nolimitsera.deals`
+1. **Entitlements are already configured** with Pass Type ID: `pass.fribee.deals`
 
-   - Staging: `ios/nolimitseradeals/nolimitseradeals-staging.entitlements`
-   - Production: `ios/nolimitseradeals/nolimitseradeals-prod.entitlements`
+   - Staging: `ios/fribee/fribee-staging.entitlements`
+   - Production: `ios/fribee/fribee-prod.entitlements`
 
 2. **Regenerate ALL provisioning profiles** to include Wallet capability:
 
@@ -98,12 +98,12 @@ The Wallet capability is configured via entitlements files. When using fastlane 
    fastlane match nuke distribution
 
    # Regenerate DEVELOPMENT profiles (for Debug builds)
-   fastlane match development --app_identifier org.sera.dev.nolimitsera.staging
-   fastlane match development --app_identifier org.sera.dev.nolimitsera
+   fastlane match development --app_identifier com.sera.fribee.staging
+   fastlane match development --app_identifier com.sera.fribee
 
    # Regenerate DISTRIBUTION profiles (for Release/TestFlight builds)
-   fastlane match appstore --app_identifier org.sera.dev.nolimitsera.staging
-   fastlane match appstore --app_identifier org.sera.dev.nolimitsera
+   fastlane match appstore --app_identifier com.sera.fribee.staging
+   fastlane match appstore --app_identifier com.sera.fribee
    ```
 
 3. **Verify build configuration** (already configured):
@@ -143,7 +143,7 @@ app.post('/api/wallet/apple/generate-pass', async (req, res) => {
       certificates,
       {
         serialNumber: redemptionCode,
-        description: 'NoLimit Sera Deal',
+        description: 'Fribee Deal',
       },
     );
 
@@ -246,7 +246,7 @@ private async addAppleWalletPass(passData: WalletPassData): Promise<void> {
 4. Create a Service Account:
    - Go to **IAM & Admin > Service Accounts**
    - Click **Create Service Account**
-   - Name: `nolimitsera-wallet-service`
+   - Name: `fribee-wallet-service`
    - Grant role: **Wallet Objects Admin**
    - Click **Create**
 5. Create a Key:
@@ -261,9 +261,9 @@ private async addAppleWalletPass(passData: WalletPassData): Promise<void> {
 1. Go to [Google Pay & Wallet Console](https://pay.google.com/business/console)
 2. Select your project
 3. Create a **Generic Pass Class**:
-   - Class ID: `com.nolimitsera.deals.deal`
-   - Class name: `NoLimit Sera Deal`
-   - Issuer name: `NoLimit Sera`
+   - Class ID: `com.sera.fribee.deals.deal`
+   - Class name: `Fribee Deal`
+   - Issuer name: `Fribee`
    - Configure logo, colors, etc.
 
 ### 2. Backend Implementation (Google Pay)
@@ -292,7 +292,7 @@ app.post('/api/wallet/google/generate-pass', async (req, res) => {
 
     const genericObject = {
       id: objectId,
-      classId: 'com.nolimitsera.deals.deal',
+      classId: 'com.sera.fribee.deals.deal',
       genericType: 'GENERIC_TYPE_UNSPECIFIED',
       hexBackgroundColor: '#FF9500',
       logo: {
@@ -309,7 +309,7 @@ app.post('/api/wallet/google/generate-pass', async (req, res) => {
       header: {
         defaultValue: {
           language: 'en',
-          value: 'NoLimit Sera Deal',
+          value: 'Fribee Deal',
         },
       },
       subheader: {
@@ -407,14 +407,14 @@ Add these to your `.env` file:
 
 ```bash
 # Apple Wallet
-APPLE_PASS_TYPE_ID=pass.com.nolimitsera.deals
+APPLE_PASS_TYPE_ID=pass.com.sera.fribee.deals
 APPLE_TEAM_ID=YOUR_TEAM_ID
 APPLE_PASS_CERTIFICATE_PASSWORD=your_p12_password
 
 # Google Pay
-GOOGLE_SERVICE_ACCOUNT_EMAIL=nolimitsera-wallet-service@your-project.iam.gserviceaccount.com
+GOOGLE_SERVICE_ACCOUNT_EMAIL=fribee-wallet-service@your-project.iam.gserviceaccount.com
 GOOGLE_WALLET_ISSUER_ID=your_issuer_id
-GOOGLE_WALLET_CLASS_ID=com.nolimitsera.deals.deal
+GOOGLE_WALLET_CLASS_ID=com.sera.fribee.deals.deal
 ```
 
 ## Backend Dependencies

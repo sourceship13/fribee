@@ -1,4 +1,4 @@
-package com.nolimitseradeals
+package com.sera.fribee
 
 import android.app.Application
 import com.facebook.react.PackageList

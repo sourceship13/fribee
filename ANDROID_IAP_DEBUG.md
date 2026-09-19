@@ -13,7 +13,7 @@ When a subscription purchase is made, the app logs detailed information. Look fo
 ```
 **Check:**
 - `purchaseToken` exists and is a long string
-- `productId` matches your expected SKU (e.g., `nolimitsera.subscription.premium.staging`)
+- `productId` matches your expected SKU (e.g., `fribee.subscription.premium.staging`)
 - `transactionId` is present
 
 ### 2. Verification Data Sent to Backend
@@ -25,7 +25,7 @@ When a subscription purchase is made, the app logs detailed information. Look fo
 - `platform`: Should be `"android"`
 - `productId`: Should match the purchased SKU
 - `purchaseToken`: Should be present (long string from Google Play)
-- `GOOGLE_PACKAGE_NAME`: Should be `"com.nolimitseradeals.staging"`
+- `GOOGLE_PACKAGE_NAME`: Should be `"com.sera.fribee.staging"`
 - `transactionReceipt`: Should contain full purchase object as JSON string
 
 ### 3. Backend Response
@@ -59,7 +59,7 @@ When a subscription purchase is made, the app logs detailed information. Look fo
 ### Issue 2: Backend returns "Invalid package name"
 **Symptom:** `GOOGLE_PACKAGE_NAME` mismatch
 **Solution:**
-- Backend expects: `com.nolimitseradeals.staging`
+- Backend expects: `com.sera.fribee.staging`
 - Check backend configuration for correct package name
 - Verify app is sending `GOOGLE_PACKAGE_NAME` in request
 
@@ -93,8 +93,8 @@ When a subscription purchase is made, the app logs detailed information. Look fo
    {
      "platform": "android",
      "purchaseToken": "...",
-     "productId": "nolimitsera.subscription.premium.staging",
-     "GOOGLE_PACKAGE_NAME": "com.nolimitseradeals.staging",
+     "productId": "fribee.subscription.premium.staging",
+     "GOOGLE_PACKAGE_NAME": "com.sera.fribee.staging",
      "transactionReceipt": "{...}"
    }
    ↓
@@ -115,8 +115,8 @@ When a subscription purchase is made, the app logs detailed information. Look fo
 {
   "platform": "android",
   "purchaseToken": "long_token_from_google_play",
-  "productId": "nolimitsera.subscription.premium.staging",
-  "GOOGLE_PACKAGE_NAME": "com.nolimitseradeals.staging",
+  "productId": "fribee.subscription.premium.staging",
+  "GOOGLE_PACKAGE_NAME": "com.sera.fribee.staging",
   "transactionReceipt": "{\"productId\":\"...\",\"purchaseToken\":\"...\",...}"
 }
 ```

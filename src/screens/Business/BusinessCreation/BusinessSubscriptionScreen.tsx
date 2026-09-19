@@ -22,8 +22,8 @@
  *    - Only for production builds
  *
  * PRODUCT IDs:
- * - iOS: com.nolimitsera.monthly.subscription.premium.staging
- * - Android: com.nolimitsera.monthly.subscription.premium.staging
+ * - iOS: com.sera.fribee.monthly.subscription.premium.staging
+ * - Android: com.sera.fribee.monthly.subscription.premium.staging
  *
  * For detailed sandbox setup instructions, see: /SANDBOX_SETUP.md
  */
@@ -69,23 +69,23 @@ const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
 const STAGING_SKUS = {
   premium:
     Platform.OS === 'android'
-      ? 'nolimitsera.subscription.premium.staging'
-      : 'com.nolimitsera.monthly.subscription.premium.staging',
+      ? 'fribee.subscription.premium.staging'
+      : 'com.sera.fribee.monthly.subscription.premium.staging',
   regular:
     Platform.OS === 'android'
-      ? 'nolimitsera.subscription.regular.staging'
-      : 'com.nolimitsera.monthly.subscription.regular.staging',
+      ? 'fribee.subscription.regular.staging'
+      : 'com.sera.fribee.monthly.subscription.regular.staging',
 };
 
 const PRODUCTION_SKUS = {
   premium:
     Platform.OS === 'android'
-      ? 'nolimitsera.subscription.premium.prod'
-      : 'com.nolimitsera.monthly.subscription.premium.prod',
+      ? 'fribee.subscription.premium.prod'
+      : 'com.sera.fribee.monthly.subscription.premium.prod',
   regular:
     Platform.OS === 'android'
-      ? 'nolimitsera.subscription.regular.prod'
-      : 'com.nolimitsera.monthly.subscription.regular.prod',
+      ? 'fribee.subscription.regular.prod'
+      : 'com.sera.fribee.monthly.subscription.regular.prod',
 };
 
 const ACTIVE_SKUS = IS_PRODUCTION ? PRODUCTION_SKUS : STAGING_SKUS;
@@ -223,7 +223,7 @@ const BusinessSubscriptionScreen = ({ navigation, route }: any) => {
           if (Platform.OS === 'android') {
             // Add package name for Google Play verification
             verificationData.GOOGLE_PACKAGE_NAME =
-              'com.nolimitseradeals.staging';
+              'com.sera.fribee.staging';
             // Android backend needs the full transaction receipt for verification with Google Play
             verificationData.transactionReceipt = JSON.stringify(purchase);
             console.log(
@@ -523,7 +523,7 @@ Error: ${error?.message || 'Unknown error'}
 Platform: ${Platform.OS}
 Product ID: ${purchase.productId}
 Purchase Token: ${purchase.purchaseToken ? 'Present' : 'Missing'}
-${Platform.OS === 'android' ? `Package Name: com.nolimitseradeals.staging` : ''}
+${Platform.OS === 'android' ? `Package Name: com.sera.fribee.staging` : ''}
 
 Please share this information with support.
           `.trim();
@@ -716,7 +716,7 @@ Please share this information with support.
           purchaseTime: Date.now(),
           purchaseState: 'purchased',
           developerPayload: '',
-          packageName: 'com.nolimitseradeals.staging',
+          packageName: 'com.sera.fribee.staging',
           orderId: `GPA.${Math.random().toString(36).substring(2, 15)}`,
           acknowledged: false,
         });
@@ -730,7 +730,7 @@ Please share this information with support.
           platform: Platform.OS,
           purchaseToken: mockPurchaseToken,
           productId: planId,
-          GOOGLE_PACKAGE_NAME: 'com.nolimitseradeals.staging',
+          GOOGLE_PACKAGE_NAME: 'com.sera.fribee.staging',
           transactionReceipt: mockTransactionReceipt,
         };
         console.log(

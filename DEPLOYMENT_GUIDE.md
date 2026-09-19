@@ -1,12 +1,12 @@
 # Deep Linking Deployment Guide
 
-This guide covers the complete deployment process for deep linking with NoLimit Sera Deals.
+This guide covers the complete deployment process for deep linking with Fribee Deals.
 
 ## Overview
 
 Deep linking allows users to open specific deals in your app by clicking on links shared via SMS or other channels. The system supports:
 
-- **Custom URL Scheme**: `nolimitseradeals://deal/{dealId}` (always works, no verification needed)
+- **Custom URL Scheme**: `fribee://deal/{dealId}` (always works, no verification needed)
 - **Universal Links (iOS)**: `https://deals.sera.dev/deal/{dealId}` (seamless, no browser prompt)
 - **App Links (Android)**: `https://deals.sera.dev/deal/{dealId}` (seamless, no browser prompt)
 
@@ -46,7 +46,7 @@ deals.sera.dev/
        "apps": [],
        "details": [
          {
-           "appID": "YOUR_TEAM_ID.com.nolimitseradeals",
+           "appID": "YOUR_TEAM_ID.com.sera.fribee",
            "paths": ["/deal/*"]
          }
        ]
@@ -79,7 +79,7 @@ deals.sera.dev/
        "relation": ["delegate_permission/common.handle_all_urls"],
        "target": {
          "namespace": "android_app",
-         "package_name": "com.nolimitseradeals",
+         "package_name": "com.sera.fribee",
          "sha256_cert_fingerprints": [
            "XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX"
          ]
@@ -98,9 +98,9 @@ Update the App Store and Google Play URLs in `index.html`:
 
 ```javascript
 if (isAndroid) {
-    downloadBtn.href = 'https://play.google.com/store/apps/details?id=com.nolimitseradeals';
+    downloadBtn.href = 'https://play.google.com/store/apps/details?id=com.sera.fribee';
 } else {
-    downloadBtn.href = 'https://apps.apple.com/app/nolimit-sera-deals/idYOUR_APP_ID';
+    downloadBtn.href = 'https://apps.apple.com/app/fribee/idYOUR_APP_ID';
 }
 ```
 
@@ -108,14 +108,14 @@ if (isAndroid) {
 
 The iOS configuration is already complete in the project:
 
-✅ `ios/nolimitseradeals/Info.plist`:
-- URL scheme: `nolimitseradeals`
+✅ `ios/fribee/Info.plist`:
+- URL scheme: `fribee`
 - Associated Domains: `applinks:deals.sera.dev`
 
 **Additional Steps:**
 
 1. In Xcode, verify Associated Domains capability:
-   - Open `nolimitseradeals.xcworkspace`
+   - Open `fribee.xcworkspace`
    - Select project → Target → Signing & Capabilities
    - Ensure "Associated Domains" capability is enabled
    - Verify domain: `applinks:deals.sera.dev`
@@ -129,7 +129,7 @@ The iOS configuration is already complete in the project:
 The Android configuration is already complete in the project:
 
 ✅ `android/app/src/main/AndroidManifest.xml`:
-- Custom scheme: `nolimitseradeals://deal/*`
+- Custom scheme: `fribee://deal/*`
 - App Links: `https://deals.sera.dev/deal/*` with `autoVerify="true"`
 
 **No additional steps required.**
@@ -150,10 +150,10 @@ The app navigation is already configured:
 
 ```bash
 # iOS Simulator
-xcrun simctl openurl booted "nolimitseradeals://deal/123"
+xcrun simctl openurl booted "fribee://deal/123"
 
 # Android Emulator
-adb shell am start -W -a android.intent.action.VIEW -d "nolimitseradeals://deal/123" com.nolimitseradeals
+adb shell am start -W -a android.intent.action.VIEW -d "fribee://deal/123" com.sera.fribee
 ```
 
 #### Test Universal Links (iOS) - Requires web server setup
@@ -190,16 +190,16 @@ adb shell am start -W -a android.intent.action.VIEW -d "nolimitseradeals://deal/
 
 2. Test on device:
    ```bash
-   adb shell am start -W -a android.intent.action.VIEW -d "https://deals.sera.dev/deal/123" com.nolimitseradeals
+   adb shell am start -W -a android.intent.action.VIEW -d "https://deals.sera.dev/deal/123" com.sera.fribee
    ```
 
 3. Debug App Links:
    ```bash
    # Check verified domains
-   adb shell pm get-app-links com.nolimitseradeals
+   adb shell pm get-app-links com.sera.fribee
    
    # Force reverification
-   adb shell pm verify-app-links --re-verify com.nolimitseradeals
+   adb shell pm verify-app-links --re-verify com.sera.fribee
    ```
 
 ### 6. Testing SMS Flow
@@ -251,7 +251,7 @@ Before going live:
 4. **Test with Safari:**
    - Open `https://deals.sera.dev/deal/123` in Safari
    - Long press the link
-   - Should show "Open in NoLimit Sera Deals"
+   - Should show "Open in Fribee Deals"
 
 ### Android App Links Not Working
 
@@ -265,13 +265,13 @@ Before going live:
 
 2. **Verify domain:**
    ```bash
-   adb shell pm get-app-links com.nolimitseradeals
+   adb shell pm get-app-links com.sera.fribee
    ```
    - Should show `deals.sera.dev` as verified
 
 3. **Re-verify domain:**
    ```bash
-   adb shell pm verify-app-links --re-verify com.nolimitseradeals
+   adb shell pm verify-app-links --re-verify com.sera.fribee
    ```
 
 4. **Check certificate:**
@@ -299,7 +299,7 @@ Before going live:
 3. **Test with known deal ID:**
    ```bash
    # Replace 123 with actual deal ID from your database
-   nolimitseradeals://deal/123
+   fribee://deal/123
    ```
 
 ## Server Configuration Examples

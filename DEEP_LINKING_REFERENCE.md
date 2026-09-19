@@ -4,7 +4,7 @@
 
 ### Custom Scheme (Always Works)
 ```
-nolimitseradeals://deal/{dealId}
+fribee://deal/{dealId}
 ```
 
 https://fribee.io/deal/{dealId}
@@ -17,7 +17,7 @@ https://deals.sera.dev/deal/{dealId}
 ### iOS Simulator
 ```bash
 # Custom scheme
-xcrun simctl openurl booted "nolimitseradeals://deal/123"
+xcrun simctl openurl booted "fribee://deal/123"
 
 # Universal Links (device only - simulator doesn't support)
 # Open in Safari or Messages app
@@ -26,16 +26,16 @@ xcrun simctl openurl booted "nolimitseradeals://deal/123"
 ### Android Emulator/Device
 ```bash
 # Custom scheme
-adb shell am start -W -a android.intent.action.VIEW -d "nolimitseradeals://deal/123" com.nolimitseradeals
-adb shell am start -W -a android.intent.action.VIEW -d "https://fribee.io/deal/123" com.nolimitseradeals
+adb shell am start -W -a android.intent.action.VIEW -d "fribee://deal/123" com.sera.fribee
+adb shell am start -W -a android.intent.action.VIEW -d "https://fribee.io/deal/123" com.sera.fribee
 # App Links
-adb shell am start -W -a android.intent.action.VIEW -d "https://deals.sera.dev/deal/123" com.nolimitseradeals
+adb shell am start -W -a android.intent.action.VIEW -d "https://deals.sera.dev/deal/123" com.sera.fribee
 
 # Verify App Links status
-adb shell pm get-app-links com.nolimitseradeals
+adb shell pm get-app-links com.sera.fribee
 
 # Re-verify domain
-adb shell pm verify-app-links --re-verify com.nolimitseradeals
+adb shell pm verify-app-links --re-verify com.sera.fribee
 ```
 
 ## SMS Message Format
@@ -53,7 +53,7 @@ View this deal: https://deals.sera.dev/deal/123
 ## File Locations
 ### iOS Configuration
 Associated Domains: `applinks:fribee.io`
-  - URL Scheme: `nolimitseradeals`
+  - URL Scheme: `fribee`
   - Associated Domains: `applinks:deals.sera.dev`
 ### Android Configuration
 - **Manifest**: `android/app/src/main/AndroidManifest.xml`
@@ -72,7 +72,7 @@ Associated Domains: `applinks:fribee.io`
 DealDetail: 'deal/:dealId'
 ```
 
-When a user taps `nolimitseradeals://deal/123`, the app:
+When a user taps `fribee://deal/123`, the app:
 1. Opens to MainTabs (if authenticated) or SignIn (if not)
 2. Navigates to DealDetail screen
 3. Passes `dealId: '123'` as route param
@@ -82,7 +82,7 @@ When a user taps `nolimitseradeals://deal/123`, the app:
 ### 1. Local Testing (No Server Required)
 Use custom URL scheme:
 ```bash
-nolimitseradeals://deal/123
+fribee://deal/123
 ```
 
 ### 2. Production Testing (Requires Server)
@@ -105,7 +105,7 @@ nolimitseradeals://deal/123
 **Solution:**
 Use custom URL scheme for immediate testing:
 ```
-nolimitseradeals://deal/123
+fribee://deal/123
 ```
 
 ### Deal Not Loading

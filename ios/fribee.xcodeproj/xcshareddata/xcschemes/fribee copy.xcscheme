@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "DEE363032E98730100B65285"
-               BuildableName = "nolimitseradeals-prod.app"
-               BlueprintName = "nolimitseradeals-prod"
-               ReferencedContainer = "container:nolimitseradeals.xcodeproj">
+               BuildableName = "fribee-prod.app"
+               BlueprintName = "fribee-prod"
+               ReferencedContainer = "container:fribee.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DEE363032E98730100B65285"
-            BuildableName = "nolimitseradeals-prod.app"
-            BlueprintName = "nolimitseradeals-prod"
-            ReferencedContainer = "container:nolimitseradeals.xcodeproj">
+            BuildableName = "fribee-prod.app"
+            BlueprintName = "fribee-prod"
+            ReferencedContainer = "container:fribee.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DEE363032E98730100B65285"
-            BuildableName = "nolimitseradeals-prod.app"
-            BlueprintName = "nolimitseradeals-prod"
-            ReferencedContainer = "container:nolimitseradeals.xcodeproj">
+            BuildableName = "fribee-prod.app"
+            BlueprintName = "fribee-prod"
+            ReferencedContainer = "container:fribee.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

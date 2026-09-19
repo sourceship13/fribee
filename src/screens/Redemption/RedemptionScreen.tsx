@@ -174,7 +174,7 @@ const RedemptionScreen = () => {
       
       await WalletPassService.addPassToWallet({
         redemptionCode,
-        businessName: deal.business_name || 'NoLimit Sera',
+        businessName: deal.business_name || 'Fribee',
         description: deal.description || deal.descrption || 'Exclusive Deal',
         expiryDate: deal.expires || deal.expiry,
         dealImage: deal.deal_image_url || deal.image_url,

@@ -92,7 +92,7 @@ In `web-redirect/index.html`, update the backend URL:
 const backendUrl = 'https://your-api-domain.com/api/deeplink/track';
 
 // With your actual backend URL
-const backendUrl = 'https://api.nolimitseradeals.com/api/deeplink/track';
+const backendUrl = 'https://api.fribee.com/api/deeplink/track';
 ```
 
 ## Flow Diagram

@@ -817,7 +817,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
                   // Store the pending deep link so user is redirected back after login
                   if (deepLinkDealId) {
                     await storePendingDeepLink(
-                      `nolimitseradeals://deal/${deepLinkDealId}`,
+                      `fribee://deal/${deepLinkDealId}`,
                     );
                   }
                   navigation.navigate('SignIn');
@@ -841,7 +841,7 @@ export const DealDetailScreen: React.FC<DealDetailProps> = props => {
                   // Store the pending deep link so user is redirected back after signup
                   if (deepLinkDealId) {
                     await storePendingDeepLink(
-                      `nolimitseradeals://deal/${deepLinkDealId}`,
+                      `fribee://deal/${deepLinkDealId}`,
                     );
                   }
                   navigation.navigate('SignUp');

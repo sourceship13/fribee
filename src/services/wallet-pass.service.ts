@@ -10,7 +10,7 @@ import apiConfig from '../libs/utils/api.utils';
  *
  * For Apple Wallet:
  * - Apple Pass Type ID certificate (.p12 file)
- * - Pass Type Identifier (e.g., pass.nolimitsera.deals)
+ * - Pass Type Identifier (e.g., pass.fribee.deals)
  * - Team ID (from Apple Developer account)
  * - Backend endpoint: POST /api/wallet/apple/generate-pass
  *
@@ -310,7 +310,7 @@ class WalletPassService {
         return;
       }
 
-      const passTypeIdentifier = 'pass.nolimitsera.deals';
+      const passTypeIdentifier = 'pass.fribee.deals';
       console.log('🗑️ Attempting to remove pass:', {
         passTypeIdentifier,
         serialNumber: redemptionCode,

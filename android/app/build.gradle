@@ -111,9 +111,9 @@ android {
     ndkVersion rootProject.ext.ndkVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.nolimitseradeals"
+    namespace "com.sera.fribee"
     defaultConfig {
-        applicationId "com.nolimitseradeals"
+        applicationId "com.sera.fribee"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 21
@@ -121,7 +121,7 @@ android {
         
         // Manifest placeholders for react-native-app-auth
         manifestPlaceholders = [
-            appAuthRedirectScheme: 'com.nolimitseradeals'
+            appAuthRedirectScheme: 'com.sera.fribee'
         ]
     }
     signingConfigs {
@@ -132,11 +132,11 @@ android {
             keyPassword 'android'
         }
         release {
-            if (project.hasProperty('NOLIMITSERA_RELEASE_STORE_FILE')) {
-                storeFile file(NOLIMITSERA_RELEASE_STORE_FILE)
-                storePassword NOLIMITSERA_RELEASE_STORE_PASSWORD
-                keyAlias NOLIMITSERA_RELEASE_KEY_ALIAS
-                keyPassword NOLIMITSERA_RELEASE_KEY_PASSWORD
+            if (project.hasProperty('FRIBEE_RELEASE_STORE_FILE')) {
+                storeFile file(FRIBEE_RELEASE_STORE_FILE)
+                storePassword FRIBEE_RELEASE_STORE_PASSWORD
+                keyAlias FRIBEE_RELEASE_KEY_ALIAS
+                keyPassword FRIBEE_RELEASE_KEY_PASSWORD
             }
         }
     }

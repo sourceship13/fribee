@@ -25,7 +25,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.nolimitsera.staging.deal.post",
+      "productID" : "com.sera.fribee.staging.deal.post",
       "referenceName" : "Deal Post (Consumable - Staging)",
       "type" : "Consumable"
     },
@@ -40,7 +40,7 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.nolimitsera.prod.deal.post",
+      "productID" : "com.sera.fribee.prod.deal.post",
       "referenceName" : "Deal Post (Consumable - Production)",
       "type" : "Consumable"
     }
@@ -86,7 +86,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.nolimitsera.monthly.subscription.regular.staging",
+          "productID" : "com.sera.fribee.monthly.subscription.regular.staging",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Regular Business Monthly Subscription",
           "subscriptionGroupID" : "0FB71169",
@@ -114,7 +114,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.nolimitsera.monthly.subscription.premium.staging",
+          "productID" : "com.sera.fribee.monthly.subscription.premium.staging",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Premium Business Monthly Subscription",
           "subscriptionGroupID" : "0FB71169",
@@ -142,7 +142,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.nolimitsera.monthly.subscription.regular.prod",
+          "productID" : "com.sera.fribee.monthly.subscription.regular.prod",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Regular Business Monthly Subscription (Prod)",
           "subscriptionGroupID" : "0FB71169",
@@ -170,7 +170,7 @@
               "locale" : "en_US"
             }
           ],
-          "productID" : "com.nolimitsera.monthly.subscription.premium.prod",
+          "productID" : "com.sera.fribee.monthly.subscription.premium.prod",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Premium Business Monthly Subscription (Prod)",
           "subscriptionGroupID" : "0FB71169",

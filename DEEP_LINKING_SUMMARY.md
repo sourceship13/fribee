@@ -7,7 +7,7 @@ Deep linking system that allows users to share deals via SMS with tappable links
 ## Features Implemented
 
 ### 1. Custom URL Scheme (Works Immediately)
-- **Format**: `nolimitseradeals://deal/{dealId}`
+- **Format**: `fribee://deal/{dealId}`
 - **Platforms**: iOS & Android
 - **Status**: ✅ Ready to use (no server setup required)
 
@@ -32,8 +32,8 @@ Deep linking system that allows users to share deals via SMS with tappable links
 ## Files Modified
 
 ### iOS Configuration
-- **`ios/nolimitseradeals/Info.plist`**
-  - Added URL scheme: `nolimitseradeals`
+- **`ios/fribee/Info.plist`**
+  - Added URL scheme: `fribee`
   - Added Associated Domains: `applinks:fribee.io`
 
 ### Android Configuration
@@ -112,7 +112,7 @@ Web deployment instructions with:
 - Android configuration in Manifest
 - React Navigation linking setup
 - SMS message with deep link
-- Custom URL scheme (`nolimitseradeals://`)
+- Custom URL scheme (`fribee://`)
 - Web redirect page and verification files
 - Complete documentation
 
@@ -149,13 +149,13 @@ You can test the deep linking immediately using custom URL schemes:
 
 ### iOS Simulator
 ```bash
-xcrun simctl openurl booted "nolimitseradeals://deal/123"
+xcrun simctl openurl booted "fribee://deal/123"
 ```
 
 ### Android Emulator
 ```bash
 adb shell am start -W -a android.intent.action.VIEW \
-  -d "nolimitseradeals://deal/123" com.nolimitseradeals
+  -d "fribee://deal/123" com.sera.fribee
 ```
 
 This will:
@@ -219,8 +219,8 @@ For questions or issues:
 ## Files Structure
 
 ```
-nolimitseradeals/
-├── ios/nolimitseradeals/
+fribee/
+├── ios/fribee/
 │   └── Info.plist                      ✅ Updated
 ├── android/app/src/main/
 │   └── AndroidManifest.xml             ✅ Updated
@@ -245,7 +245,7 @@ nolimitseradeals/
 ### Linking Configuration
 ```typescript
 {
-  prefixes: ['nolimitseradeals://', 'https://fribee.io'],
+  prefixes: ['fribee://', 'https://fribee.io'],
   config: {
     screens: {
       DealDetail: 'deal/:dealId',
@@ -265,7 +265,7 @@ View this deal: https://deals.sera.dev/deal/{dealId}
 ```
 
 ### URL Examples
-- Custom: `nolimitseradeals://deal/123`
+- Custom: `fribee://deal/123`
 - Universal/App Link: `https://deals.sera.dev/deal/123`
 - Web fallback: `https://deals.sera.dev/deal/123` (in browser)
 

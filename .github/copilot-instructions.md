@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is **NoLimit Sera Deals**, a React Native mobile app for discovering and sharing local deals. The app uses a swipe-based interface for deal discovery and includes a unique contact-based sharing system to unlock premium deals.
+This is **Fribee Deals**, a React Native mobile app for discovering and sharing local deals. The app uses a swipe-based interface for deal discovery and includes a unique contact-based sharing system to unlock premium deals.
 
 ## Architecture & Key Patterns
 

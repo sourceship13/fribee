@@ -24,7 +24,7 @@ yarn add react-native-iap
 cd ios && pod install && cd ..
 ```
 
-Add to `ios/nolimitseradeals/Info.plist`:
+Add to `ios/fribee/Info.plist`:
 ```xml
 <key>SKAdNetworkItems</key>
 <array>
@@ -46,7 +46,7 @@ No additional setup required for Android.
 3. Click "+" to create new subscription
 4. Select "Auto-Renewable Subscription"
 5. Configure:
-   - **Product ID**: `com.nolimitsera.monthly.subscription`
+   - **Product ID**: `com.sera.fribee.monthly.subscription`
    - **Reference Name**: Monthly Business Subscription
    - **Subscription Group**: Business Plans
    - **Price**: $29.99/month
@@ -56,7 +56,7 @@ No additional setup required for Android.
 1. Go to Google Play Console > [Your App] > Monetize
 2. Click "Subscriptions" > "Create subscription"
 3. Configure:
-   - **Product ID**: `com.nolimitsera.monthly.subscription`
+   - **Product ID**: `com.sera.fribee.monthly.subscription`
    - **Name**: Monthly Business Subscription
    - **Description**: Access all business features
    - **Price**: $29.99/month

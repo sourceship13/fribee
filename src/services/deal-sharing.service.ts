@@ -530,7 +530,7 @@ class DealSharingService {
       `🌐 Using base URL: ${webBaseUrl} (environment: ${apiConfig.environment})`,
     );
 
-    const appLink = `nolimitseradeals://deal/${shortId}`;
+    const appLink = `fribee://deal/${shortId}`;
     const webLink = `${webBaseUrl}/deal/${shortId}`;
 
     // Extract deal image URL from multiple possible sources
@@ -583,7 +583,7 @@ class DealSharingService {
 
     // Fribee branding footer - professional
     message += `━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-    message += `🐝 NoLimit Sera Deals\n`;
+    message += `🐝 Fribee Deals\n`;
     message += `Share deals. Unlock savings.\n`;
     message += `Join millions discovering local deals!`;
 

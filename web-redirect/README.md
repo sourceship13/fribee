@@ -18,9 +18,9 @@ The main redirect page that users see when clicking a deal link without the app 
 Update the App Store and Google Play URLs (lines 121-125):
 ```javascript
 if (isAndroid) {
-    downloadBtn.href = 'https://play.google.com/store/apps/details?id=com.nolimitseradeals';
+    downloadBtn.href = 'https://play.google.com/store/apps/details?id=com.sera.fribee';
 } else {
-    downloadBtn.href = 'https://apps.apple.com/app/nolimit-sera-deals/idYOUR_APP_ID';
+    downloadBtn.href = 'https://apps.apple.com/app/fribee/idYOUR_APP_ID';
 }
 ```
 
@@ -34,7 +34,7 @@ Replace `TEAMID` with your actual Apple Team ID (found at developer.apple.com):
   "applinks": {
     "details": [
       {
-        "appID": "YOUR_TEAM_ID.com.nolimitseradeals",
+        "appID": "YOUR_TEAM_ID.com.sera.fribee",
         ...
       }
     ]
@@ -136,7 +136,7 @@ Enter: `deals.sera.dev`
 
 ### Test Android App Links
 ```bash
-adb shell pm get-app-links com.nolimitseradeals
+adb shell pm get-app-links com.sera.fribee
 ```
 
 ## Troubleshooting
@@ -157,7 +157,7 @@ adb shell pm get-app-links com.nolimitseradeals
 
 ### Domain Not Verified (Android)
 - Check SHA256 fingerprint matches release keystore
-- Run: `adb shell pm verify-app-links --re-verify com.nolimitseradeals`
+- Run: `adb shell pm verify-app-links --re-verify com.sera.fribee`
 - Ensure `autoVerify="true"` in AndroidManifest.xml
 
 ## Resources

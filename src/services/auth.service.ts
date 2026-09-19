@@ -103,7 +103,7 @@ class AuthService {
       // Try to store refresh token in Keychain (more secure, but can fail)
       try {
         await Keychain.setInternetCredentials(
-          'org.sera.dev.nolimitsera',
+          'com.sera.fribee',
           'refreshToken',
           tokens.refreshToken
         );
@@ -189,7 +189,7 @@ class AuthService {
     for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
       try {
         console.log(`🔑 Attempting to get refresh token from Keychain (attempt ${attempt}/${MAX_RETRIES})...`);
-        const credentials = await Keychain.getInternetCredentials('org.sera.dev.nolimitsera');
+        const credentials = await Keychain.getInternetCredentials('com.sera.fribee');
         
         if (credentials && credentials.password) {
           console.log('✅ Refresh token retrieved from Keychain');
@@ -245,7 +245,7 @@ class AuthService {
       
       // Clear Keychain
       try {
-        await Keychain.resetInternetCredentials('org.sera.dev.nolimitsera');
+        await Keychain.resetInternetCredentials('com.sera.fribee');
         console.log('✅ Keychain tokens cleared');
       } catch (keychainError) {
         console.warn('⚠️ Could not clear Keychain (may not exist):', keychainError);
@@ -281,7 +281,7 @@ class AuthService {
     console.log('  - Refresh token in AsyncStorage:', !!refreshToken);
     
     try {
-      const keychainCreds = await Keychain.getInternetCredentials('org.sera.dev.nolimitsera');
+      const keychainCreds = await Keychain.getInternetCredentials('com.sera.fribee');
       console.log('  - Refresh token in Keychain:', !!(keychainCreds && keychainCreds.password));
     } catch (error) {
       console.log('  - Keychain check failed:', error);

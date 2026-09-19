@@ -4,7 +4,7 @@ Use this checklist to track the implementation status of deep linking.
 
 ## ✅ Phase 1: App Configuration (Complete)
 
-- [x] iOS Info.plist updated with URL scheme (`nolimitseradeals`)
+- [x] iOS Info.plist updated with URL scheme (`fribee`)
  - [x] iOS Info.plist updated with Associated Domains (`applinks:fribee.io`)
 - [x] Android Manifest updated with custom scheme intent filter
 - [x] Android Manifest updated with App Links intent filter
@@ -61,7 +61,7 @@ Use this checklist to track the implementation status of deep linking.
 
 - [ ] **Test Custom URL Scheme - iOS**
   ```bash
-  xcrun simctl openurl booted "nolimitseradeals://deal/123"
+  xcrun simctl openurl booted "fribee://deal/123"
   ```
   - [ ] App opens
   - [ ] Navigates to DealDetail screen
@@ -70,7 +70,7 @@ Use this checklist to track the implementation status of deep linking.
 - [ ] **Test Custom URL Scheme - Android**
   ```bash
   adb shell am start -W -a android.intent.action.VIEW \
-    -d "nolimitseradeals://deal/123" com.nolimitseradeals
+    -d "fribee://deal/123" com.sera.fribee
   ```
   - [ ] App opens
   - [ ] Navigates to DealDetail screen
@@ -92,16 +92,16 @@ Use this checklist to track the implementation status of deep linking.
 
  - [ ] **Verify App Links - Android**
    ```bash
-   adb shell pm get-app-links com.nolimitseradeals
+   adb shell pm get-app-links com.sera.fribee
    # Should show fribee.io as verified
    ```
   - [ ] Domain shows as verified
-  - [ ] If not, run: `adb shell pm verify-app-links --re-verify com.nolimitseradeals`
+  - [ ] If not, run: `adb shell pm verify-app-links --re-verify com.sera.fribee`
 
  - [ ] **Test App Links - Android**
    ```bash
    adb shell am start -W -a android.intent.action.VIEW \
-     -d "https://fribee.io/deal/123" com.nolimitseradeals
+     -d "https://fribee.io/deal/123" com.sera.fribee
    ```
   - [ ] App opens automatically
   - [ ] Navigates to correct deal

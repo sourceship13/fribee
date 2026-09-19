@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NoLimit Sera Deals</title>
+    <title>Fribee Deals</title>
     <style>
         * {
             margin: 0;
@@ -119,11 +119,11 @@
     <div class="container">
         <div class="logo">🎉</div>
         <h1>Amazing Deal Waiting!</h1>
-        <p>Someone shared an exclusive deal with you on NoLimit Sera Deals. Open the app to view this deal and discover more amazing offers in your area.</p>
+        <p>Someone shared an exclusive deal with you on Fribee Deals. Open the app to view this deal and discover more amazing offers in your area.</p>
         
         <div class="buttons">
             <button id="openApp" class="btn btn-primary">Open in App</button>
-            <a href="https://apps.apple.com/app/nolimit-sera-deals/id123456789" class="btn btn-secondary" id="downloadApp">Download App</a>
+            <a href="https://apps.apple.com/app/fribee/id123456789" class="btn btn-secondary" id="downloadApp">Download App</a>
         </div>
         
         <div class="countdown" id="countdown">Redirecting in <span id="timer">3</span> seconds...</div>
@@ -192,15 +192,15 @@
         // Update download link based on platform
         const downloadBtn = document.getElementById('downloadApp');
         if (isAndroid) {
-            downloadBtn.href = 'https://play.google.com/store/apps/details?id=com.nolimitseradeals';
+            downloadBtn.href = 'https://play.google.com/store/apps/details?id=com.sera.fribee';
             downloadBtn.textContent = 'Get on Google Play';
         } else {
-            downloadBtn.href = 'https://apps.apple.com/app/nolimit-sera-deals/id123456789';
+            downloadBtn.href = 'https://apps.apple.com/app/fribee/id123456789';
             downloadBtn.textContent = 'Get on App Store';
         }
 
         // Build deep link URL using custom scheme
-        const deepLink = `nolimitseradeals://deal/${dealId}`;
+        const deepLink = `fribee://deal/${dealId}`;
         
         // Store deep link in localStorage so app can retrieve it
         localStorage.setItem('pendingDeepLink', deepLink);

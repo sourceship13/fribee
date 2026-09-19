@@ -6,8 +6,8 @@
  * 2. Create a new app or use existing
  * 3. Add "Instagram Basic Display" product
  * 4. Configure OAuth Redirect URIs:
- *    - iOS: com.nolimitseradeals://oauth
- *    - Android: com.nolimitseradeals://oauth
+ *    - iOS: com.sera.fribee://oauth
+ *    - Android: com.sera.fribee://oauth
  * 5. Get your Instagram App ID and App Secret
  * 6. Add to your .env file:
  *    INSTAGRAM_APP_ID=your_app_id
@@ -59,8 +59,8 @@ class InstagramAuthService {
           'YOUR_INSTAGRAM_APP_SECRET',
         ),
         redirectUrl: Platform.select({
-          ios: 'com.nolimitseradeals://oauth',
-          android: 'com.nolimitseradeals://oauth',
+          ios: 'com.sera.fribee://oauth',
+          android: 'com.sera.fribee://oauth',
         }) as string,
         scopes: ['user_profile', 'user_media'],
         serviceConfiguration: {

@@ -55,7 +55,7 @@ See [WALLET_PASS_SETUP.md](WALLET_PASS_SETUP.md) for complete setup instructions
 
 #### Apple Wallet (iOS)
 - Apple Developer account required
-- Create Pass Type ID: `pass.com.nolimitsera.deals`
+- Create Pass Type ID: `pass.com.sera.fribee.deals`
 - Generate Pass Type Certificate
 - Backend endpoint to sign and generate `.pkpass` files
 - Update Xcode project with Wallet capability
@@ -119,12 +119,12 @@ No environment variables needed for client-side implementation. Backend will req
 
 ```bash
 # .env (Backend)
-APPLE_PASS_TYPE_ID=pass.com.nolimitsera.deals
+APPLE_PASS_TYPE_ID=pass.com.sera.fribee.deals
 APPLE_TEAM_ID=YOUR_TEAM_ID
 APPLE_PASS_CERTIFICATE_PASSWORD=your_password
 
 GOOGLE_SERVICE_ACCOUNT_EMAIL=your-service-account@project.iam.gserviceaccount.com
-GOOGLE_WALLET_CLASS_ID=com.nolimitsera.deals.deal
+GOOGLE_WALLET_CLASS_ID=com.sera.fribee.deals.deal
 ```
 
 ## Dependencies Installed

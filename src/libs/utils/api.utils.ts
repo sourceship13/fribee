@@ -5,8 +5,8 @@ import { Platform, NativeModules } from 'react-native';
  *
  * Automatic Environment Detection:
  * - Checks bundle identifier to determine staging vs production
- * - Staging bundle: org.sera.dev.nolimitsera.staging → staging.fribee.io
- * - Production bundle: org.sera.dev.nolimitsera → fribee.io
+ * - Staging bundle: com.sera.fribee.staging → staging.fribee.io
+ * - Production bundle: com.sera.fribee → fribee.io
  * - Development builds (__DEV__ = true) → staging.fribee.io
  *
  * Environment Variables:
@@ -83,11 +83,11 @@ function getBundleId(): string {
     return (
       NativeModules.RNDeviceInfo?.bundleId ||
       NativeModules.PlatformConstants?.bundleIdentifier ||
-      'org.sera.dev.nolimitsera'
+      'com.sera.fribee'
     ); // fallback
   }
   // Android
-  return NativeModules.RNDeviceInfo?.bundleId || 'org.sera.dev.nolimitsera'; // fallback
+  return NativeModules.RNDeviceInfo?.bundleId || 'com.sera.fribee'; // fallback
 }
 
 function getEnvironment(): Environment {

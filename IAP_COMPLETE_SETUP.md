@@ -6,9 +6,9 @@
 ✅ **BusinessSubscriptionScreen** implemented with IAP code  
 ✅ **Backend verification** integrated  
 ✅ Product IDs defined:
-  - iOS: `com.nolimitsera.monthly.subscription.premium.staging`
-  - iOS: `com.nolimitsera.monthly.subscription.regular.staging`
-  - Android: `com.nolimitsera.monthly.subscription.premium.staging`
+  - iOS: `com.sera.fribee.monthly.subscription.premium.staging`
+  - iOS: `com.sera.fribee.monthly.subscription.regular.staging`
+  - Android: `com.sera.fribee.monthly.subscription.premium.staging`
 
 ---
 
@@ -18,7 +18,7 @@
 
 #### Step 1: Add StoreKit Configuration to Info.plist
 
-Add this to `/ios/nolimitseradeals/Info.plist` before the closing `</dict>` tag:
+Add this to `/ios/fribee/Info.plist` before the closing `</dict>` tag:
 
 ```xml
 <key>SKAdNetworkItems</key>
@@ -33,7 +33,7 @@ Add this to `/ios/nolimitseradeals/Info.plist` before the closing `</dict>` tag:
 #### Step 2: Create Subscription Products in App Store Connect
 
 1. **Go to App Store Connect**: https://appstoreconnect.apple.com
-2. **Select Your App**: "NoLimitSera" or your app name
+2. **Select Your App**: "Fribee" or your app name
 3. **Navigate to**: Features → In-App Purchases (or Subscriptions)
 4. **Create Subscription Group** (if not exists):
    - Click "+" next to Subscription Groups
@@ -43,7 +43,7 @@ Add this to `/ios/nolimitseradeals/Info.plist` before the closing `</dict>` tag:
 5. **Create First Subscription** (Premium):
    - Click "+" in your subscription group
    - **Reference Name**: "Premium Business Monthly"
-   - **Product ID**: `com.nolimitsera.monthly.subscription.premium.staging`
+   - **Product ID**: `com.sera.fribee.monthly.subscription.premium.staging`
    - **Subscription Duration**: 1 month
    - Click "Create"
    
@@ -65,7 +65,7 @@ Add this to `/ios/nolimitseradeals/Info.plist` before the closing `</dict>` tag:
    - Save
 
 8. **Repeat for Regular Subscription**:
-   - Product ID: `com.nolimitsera.monthly.subscription.regular.staging`
+   - Product ID: `com.sera.fribee.monthly.subscription.regular.staging`
    - Price: $0.99 (testing) or your chosen price
    - Display Name: "Regular Business"
    - Description: "Up to 4 deals per month, basic analytics"
@@ -105,7 +105,7 @@ Android billing is automatically configured when you install `react-native-iap`.
 4. **Click "Create subscription"**
 
 5. **Configure Premium Subscription**:
-   - **Product ID**: `com.nolimitsera.monthly.subscription.premium.staging`
+   - **Product ID**: `com.sera.fribee.monthly.subscription.premium.staging`
    - **Name**: Premium Business Monthly
    - **Description**: Unlimited deals, advanced analytics, and priority support
    - **Billing period**: 1 month (recurring every month)
@@ -214,7 +214,7 @@ console.log('Available products:', products);
 ```javascript
 [
   {
-    productId: "com.nolimitsera.monthly.subscription.premium.staging",
+    productId: "com.sera.fribee.monthly.subscription.premium.staging",
     title: "Premium Business Monthly",
     description: "Unlimited deals...",
     price: "$0.99",
@@ -327,7 +327,7 @@ cd android && ./gradlew assembleRelease
 
 ## File Locations Reference
 
-- **iOS Info.plist**: `/ios/nolimitseradeals/Info.plist`
+- **iOS Info.plist**: `/ios/fribee/Info.plist`
 - **Android build.gradle**: `/android/app/build.gradle`
 - **Subscription Screen**: `/src/screens/Business/BusinessCreation/BusinessSubscriptionScreen.tsx`
 - **API Service**: `/src/services/api.service.ts`

@@ -8,7 +8,7 @@ echo ""
 echo "Copy the following base64 string and add it to CircleCI:"
 echo "Environment Variable Name: ANDROID_KEYSTORE_BASE64"
 echo ""
-base64 -i app/nolimitsera-release.keystore
+base64 -i app/fribee-release.keystore
 echo ""
 echo "=== Done ==="
 echo ""

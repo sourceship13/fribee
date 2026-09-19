@@ -7,8 +7,8 @@ This guide explains how to test In-App Purchases using App Store Connect sandbox
 The app is configured with:
 - **FORCE_DEV_MODE**: `false` (real IAP enabled)
 - **USE_SANDBOX**: `true` (sandbox mode active)
-- **iOS Product ID**: `com.nolimitsera.monthly.subscription.premium`
-- **Android Product ID**: `com.nolimitsera.monthly.subscription`
+- **iOS Product ID**: `com.sera.fribee.monthly.subscription.premium`
+- **Android Product ID**: `com.sera.fribee.monthly.subscription`
 
 ## Testing Modes
 
@@ -31,13 +31,13 @@ Set `FORCE_DEV_MODE = false` and `USE_SANDBOX = true`:
 ### Step 1: Create Subscription Product
 
 1. Go to [App Store Connect](https://appstoreconnect.apple.com)
-2. Select your app (NoLimit Sera Deals)
+2. Select your app (Fribee Deals)
 3. Navigate to **Features** → **In-App Purchases**
 4. Click **+ (Create)** → **Auto-Renewable Subscription**
 
 **Product Details:**
 - Reference Name: `Monthly Premium Subscription`
-- Product ID: `com.nolimitsera.monthly.subscription.premium`
+- Product ID: `com.sera.fribee.monthly.subscription.premium`
 - Subscription Group: Create new group called "Premium Subscriptions"
 
 **Pricing:**
@@ -65,7 +65,7 @@ Set `FORCE_DEV_MODE = false` and `USE_SANDBOX = true`:
 **Test Account Details:**
 - First Name: Test
 - Last Name: User
-- Email: Use a unique email (e.g., test.nolimitsera+sandbox1@gmail.com)
+- Email: Use a unique email (e.g., test.fribee+sandbox1@gmail.com)
   - Note: Gmail allows + addresses (all go to same inbox)
 - Password: Create secure password
 - Country/Region: United States (or your test region)
@@ -118,7 +118,7 @@ Set `FORCE_DEV_MODE = false` and `USE_SANDBOX = true`:
 
 4. **Monitor Console Logs**
    ```
-   🔵 Initiating sandbox purchase for: com.nolimitsera.monthly.subscription.premium
+   🔵 Initiating sandbox purchase for: com.sera.fribee.monthly.subscription.premium
    🔵 Sandbox mode enabled: true
    ✅ Purchase request sent - waiting for App Store response
    📱 Make sure you're signed in with a sandbox test account
@@ -141,7 +141,7 @@ The app calls `POST /api/subscriptions/verify` with:
 {
   "platform": "ios",
   "purchaseToken": "1000000123456789",
-  "productId": "com.nolimitsera.monthly.subscription.premium",
+  "productId": "com.sera.fribee.monthly.subscription.premium",
   "transactionReceipt": "base64EncodedReceipt..."
 }
 ```
@@ -157,7 +157,7 @@ Ensure your backend:
 ### "Product Not Found" Error
 **Cause**: Product not created or not approved in App Store Connect
 **Solution**: 
-- Create product with exact ID: `com.nolimitsera.monthly.subscription.premium`
+- Create product with exact ID: `com.sera.fribee.monthly.subscription.premium`
 - Wait 15 minutes after creation
 - Product must be "Ready to Submit" or approved
 
@@ -191,7 +191,7 @@ The app includes extensive logging for debugging:
 
 **Success Path:**
 ```
-🔵 Initiating sandbox purchase for: com.nolimitsera.monthly.subscription.premium
+🔵 Initiating sandbox purchase for: com.sera.fribee.monthly.subscription.premium
 ✅ Purchase request sent - waiting for App Store response
 ✅ Purchase updated (sandbox): {...}
 📱 Transaction ID: 1000000123456789

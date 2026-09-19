@@ -5,7 +5,7 @@ import VersionFooter from '../../components/VersionFooter';
 const HomeScreen = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to NoLimitSera Deals!</Text>
+      <Text style={styles.title}>Welcome to Fribee Deals!</Text>
       <Text style={styles.subtitle}>Your one-stop shop for amazing offers.</Text>
       <Button title="View Deals" onPress={() => navigation?.navigate('Deals')} />
       <VersionFooter />

@@ -70,15 +70,15 @@ export function parseDeepLink(url: string): { screen: string; params: any } | nu
   
   try {
     // Handle both custom scheme and https URLs
-    // nolimitseradeals://deal/uuid
+    // fribee://deal/uuid
     // https://fribee.io/deal/uuid
     
     // Extract the path from the URL
     let path = url;
     
     // Remove scheme prefix
-    if (url.startsWith('nolimitseradeals://')) {
-      path = url.replace('nolimitseradeals://', '');
+    if (url.startsWith('fribee://')) {
+      path = url.replace('fribee://', '');
     } else if (url.startsWith('https://fribee.io/')) {
       path = url.replace('https://fribee.io/', '');
     } else if (url.startsWith('https://fribee.io')) {

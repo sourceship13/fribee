@@ -7,8 +7,8 @@ import { fromBase62 } from './deeplink.utils';
  */
 
 export class AppReturnUtils {
-  private static APP_SCHEME = 'nolimitseradeals://';
-  private static APP_NAME = 'NoLimit Sera';
+  private static APP_SCHEME = 'fribee://';
+  private static APP_NAME = 'Fribee';
 
   /**
    * Opens SMS app with "Return to App" breadcrumb support

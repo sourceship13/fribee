@@ -24,19 +24,19 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>org.sera.dev.nolimitsera.deeplink</string>
+			<string>com.sera.fribee.deeplink</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>nolimitseradeals</string>
-				<string>nolimitsera</string>
+				<string>fribee</string>
+				<string>fribee</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.nolimitseradeals.oauth</string>
+			<string>com.sera.fribee.oauth</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.nolimitseradeals</string>
+				<string>com.sera.fribee</string>
 			</array>
 		</dict>
 	</array>

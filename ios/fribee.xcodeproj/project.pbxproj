@@ -119,12 +119,12 @@
 		C132F8AE5F20423498687D96 /* Roboto_Condensed-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D94A191C578547DDB9487DFA /* Roboto_Condensed-MediumItalic.ttf */; };
 		C2AF9276981545B19E664097 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A6ADB7F299C04086AC359812 /* Roboto-Medium.ttf */; };
 		C4DF68774E154FF9BA786096 /* Barlow-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3E8A051BE734114B77ACB3E /* Barlow-ExtraLightItalic.ttf */; };
-		C5887FA1A48FE8FE664F702E /* libPods-nolimitseradeals-staging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC66C16020C7571DAB3B2E6 /* libPods-nolimitseradeals-staging.a */; };
+		C5887FA1A48FE8FE664F702E /* libPods-fribee-staging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FC66C16020C7571DAB3B2E6 /* libPods-fribee-staging.a */; };
 		C6120DB8EC9C434DB16D0F37 /* Montserrat-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9266DEDD5A25448D890898B9 /* Montserrat-VariableFont_wght.ttf */; };
 		C6969FD132FD42B987F78263 /* decline-butt.svg in Resources */ = {isa = PBXBuildFile; fileRef = D29B66436A3B4AE7AF0FF7DA /* decline-butt.svg */; };
 		C6E2B368152E42F6BC93E51C /* Roboto_Condensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8D47F575E866411DAD02652F /* Roboto_Condensed-Light.ttf */; };
 		C7C229FA88034C0986F5B47E /* OpenSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 58B24F27B5F240058A96D4A4 /* OpenSans-MediumItalic.ttf */; };
-		C83915ACB3D66C0637F668BF /* libPods-nolimitseradeals-prod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0F1A1BC41EF727D256116B2 /* libPods-nolimitseradeals-prod.a */; };
+		C83915ACB3D66C0637F668BF /* libPods-fribee-prod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0F1A1BC41EF727D256116B2 /* libPods-fribee-prod.a */; };
 		C8C4C133AC7A426CA787EF42 /* Roboto_SemiCondensed-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 421AEADE61B74BFBA08547F8 /* Roboto_SemiCondensed-BoldItalic.ttf */; };
 		CAA123FCCA0C416E9D480BE2 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CBE07BB9A2C2422C8480D4D2 /* BootSplash.storyboard */; };
 		CE17BC9D463343E486527AFE /* Roboto_Condensed-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 682C942878FF46A796128105 /* Roboto_Condensed-Regular.ttf */; };
@@ -188,30 +188,30 @@
 		07B152DBCBA345A7B25A71FC /* Barlow-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-SemiBold.ttf"; path = "../assets/fonts/Barlow/Barlow-SemiBold.ttf"; sourceTree = "<group>"; };
 		0806C57AFFC149228657E9A1 /* Montserrat-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraBold.ttf"; path = "../assets/fonts/Montserrat/static/Montserrat-ExtraBold.ttf"; sourceTree = "<group>"; };
 		09ADA8336D0D4C0FBEDE4673 /* Roboto_SemiCondensed-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_SemiCondensed-Medium.ttf"; path = "../assets/fonts/Roboto/static/Roboto_SemiCondensed-Medium.ttf"; sourceTree = "<group>"; };
-		0B4BDA190ABD7682AC932D96 /* Pods-nolimitseradeals-staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-staging.debug.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging.debug.xcconfig"; sourceTree = "<group>"; };
+		0B4BDA190ABD7682AC932D96 /* Pods-fribee-staging.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fribee-staging.debug.xcconfig"; path = "Target Support Files/Pods-fribee-staging/Pods-fribee-staging.debug.xcconfig"; sourceTree = "<group>"; };
 		0CB5DBA16847491A8E92BBEF /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		0DBF0F25D83849B88ED4421D /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BlackItalic.ttf"; path = "../assets/fonts/Roboto/Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
 		0F892CEC48604874B20A3A45 /* Montserrat-Italic-VariableFont_wght.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Italic-VariableFont_wght.ttf"; path = "../assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf"; sourceTree = "<group>"; };
-		0FC66C16020C7571DAB3B2E6 /* libPods-nolimitseradeals-staging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nolimitseradeals-staging.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0FC66C16020C7571DAB3B2E6 /* libPods-fribee-staging.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fribee-staging.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		11E148A441524C32BCBF84CB /* README.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = README.txt; path = ../assets/fonts/Roboto/README.txt; sourceTree = "<group>"; };
 		133C0A7F57ED435B9712B19F /* Roboto-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ExtraBold.ttf"; path = "../assets/fonts/Roboto/Roboto-ExtraBold.ttf"; sourceTree = "<group>"; };
-		133FB2E0B0E54A7A4876F5D8 /* Pods-nolimitseradeals-prod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-prod.debug.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod.debug.xcconfig"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* nolimitseradeals.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nolimitseradeals.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = nolimitseradeals/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = nolimitseradeals/Info.plist; sourceTree = "<group>"; };
-		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = nolimitseradeals/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		133FB2E0B0E54A7A4876F5D8 /* Pods-fribee-prod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fribee-prod.debug.xcconfig"; path = "Target Support Files/Pods-fribee-prod/Pods-fribee-prod.debug.xcconfig"; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* fribee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fribee.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = fribee/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = fribee/Info.plist; sourceTree = "<group>"; };
+		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = fribee/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		16637237347C4A548BF652BF /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		17D87EA500866772ACB50663 /* Pods-nolimitseradeals-staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-staging.release.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging.release.xcconfig"; sourceTree = "<group>"; };
+		17D87EA500866772ACB50663 /* Pods-fribee-staging.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fribee-staging.release.xcconfig"; path = "Target Support Files/Pods-fribee-staging/Pods-fribee-staging.release.xcconfig"; sourceTree = "<group>"; };
 		182C2E4E9C544E2EB5592D3D /* Barlow-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-MediumItalic.ttf"; path = "../assets/fonts/Barlow/Barlow-MediumItalic.ttf"; sourceTree = "<group>"; };
 		1B3D6824E47A4D3A88B34640 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		1E77B8C0525340BC8A0C90F4 /* OpenSans_SemiCondensed-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-Italic.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-Italic.ttf"; sourceTree = "<group>"; };
-		20EF7EBE1786EA5F7213018F /* Pods-nolimitseradeals-prod.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nolimitseradeals-prod.release.xcconfig"; path = "Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod.release.xcconfig"; sourceTree = "<group>"; };
+		20EF7EBE1786EA5F7213018F /* Pods-fribee-prod.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-fribee-prod.release.xcconfig"; path = "Target Support Files/Pods-fribee-prod/Pods-fribee-prod.release.xcconfig"; sourceTree = "<group>"; };
 		2200829E73034E5FB786E1A5 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../assets/fonts/Roboto/static/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		2247E96FF1664F24A9413FB2 /* FontAwesome6_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome6_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome6_Regular.ttf"; sourceTree = "<group>"; };
 		2417E14B15DE46D2B2B322C3 /* OpenSans_SemiCondensed-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-Light.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-Light.ttf"; sourceTree = "<group>"; };
 		25D562F0404B4B5CA89243A0 /* OpenSans_SemiCondensed-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-Medium.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-Medium.ttf"; sourceTree = "<group>"; };
 		26CAECC8F7E24F29A86403DF /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
-		296D291F28F344338CC539BC /* Colors.xcassets */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = nolimitseradeals/Colors.xcassets; sourceTree = "<group>"; };
+		296D291F28F344338CC539BC /* Colors.xcassets */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = fribee/Colors.xcassets; sourceTree = "<group>"; };
 		2BB7D4B24E164244B00F6269 /* Montserrat-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Thin.ttf"; path = "../assets/fonts/Montserrat/static/Montserrat-Thin.ttf"; sourceTree = "<group>"; };
 		3106951C10374A8EADBE9660 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Regular.ttf"; path = "../assets/fonts/Montserrat/static/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		31F126AA849A49018F41253A /* Roboto-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Thin.ttf"; path = "../assets/fonts/Roboto/Roboto-Thin.ttf"; sourceTree = "<group>"; };
@@ -259,7 +259,7 @@
 		6F02984D51E84935B5756434 /* discover.svg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = discover.svg; path = ../assets/imgs/nav/discover.svg; sourceTree = "<group>"; };
 		6F6BAE9A763F472D8DA59FD6 /* Barlow-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-ExtraBoldItalic.ttf"; path = "../assets/fonts/Barlow/Barlow-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		75FBA5E5A1F642F2A975BC55 /* Roboto_SemiCondensed-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_SemiCondensed-ExtraLight.ttf"; path = "../assets/fonts/Roboto/static/Roboto_SemiCondensed-ExtraLight.ttf"; sourceTree = "<group>"; };
-		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = nolimitseradeals/AppDelegate.swift; sourceTree = "<group>"; };
+		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = fribee/AppDelegate.swift; sourceTree = "<group>"; };
 		763B71DE77AB47CD9406B6C0 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		775AE820F9EF4F3A8F9B458D /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../assets/fonts/Roboto/Roboto-Bold.ttf"; sourceTree = "<group>"; };
 		788B1C5E44784AC589D8C942 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Italic.ttf"; path = "../assets/fonts/Roboto/Roboto-Italic.ttf"; sourceTree = "<group>"; };
@@ -272,7 +272,7 @@
 		7D633224FFAB4E978F313E29 /* Roboto_SemiCondensed-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_SemiCondensed-Regular.ttf"; path = "../assets/fonts/Roboto/Roboto_SemiCondensed-Regular.ttf"; sourceTree = "<group>"; };
 		7D7D36FF834E48119E23887C /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		7D9151DB1C714E3A925EA495 /* OFL.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = OFL.txt; path = ../assets/fonts/Inter/OFL.txt; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = nolimitseradeals/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = fribee/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8235AEEED61D465CB95AD554 /* OpenSans_SemiCondensed-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-SemiBold.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-SemiBold.ttf"; sourceTree = "<group>"; };
 		83FF7E1D421A4A948DE185BC /* OpenSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Medium.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans-Medium.ttf"; sourceTree = "<group>"; };
 		84D8BA29FE4B4F02A7C59756 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Bold.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans-Bold.ttf"; sourceTree = "<group>"; };
@@ -339,9 +339,9 @@
 		C5B62A95AA5743DD80E9EAA6 /* OpenSans_SemiCondensed-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-Bold.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-Bold.ttf"; sourceTree = "<group>"; };
 		C5F6D120DAD34EE0AD706AFA /* Roboto_Condensed-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_Condensed-ExtraLight.ttf"; path = "../assets/fonts/Roboto/Roboto_Condensed-ExtraLight.ttf"; sourceTree = "<group>"; };
 		C8354745181F46769FB8A27D /* OpenSans_SemiCondensed-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-Regular.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-Regular.ttf"; sourceTree = "<group>"; };
-		CBE07BB9A2C2422C8480D4D2 /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = nolimitseradeals/BootSplash.storyboard; sourceTree = "<group>"; };
+		CBE07BB9A2C2422C8480D4D2 /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = fribee/BootSplash.storyboard; sourceTree = "<group>"; };
 		CD9CFAC0541C46A5B6BCB1D8 /* OpenSans_SemiCondensed-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-SemiBoldItalic.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
-		D0F1A1BC41EF727D256116B2 /* libPods-nolimitseradeals-prod.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nolimitseradeals-prod.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0F1A1BC41EF727D256116B2 /* libPods-fribee-prod.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-fribee-prod.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1DBF42DE7444D30BEB4F348 /* Roboto_SemiCondensed-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_SemiCondensed-BlackItalic.ttf"; path = "../assets/fonts/Roboto/static/Roboto_SemiCondensed-BlackItalic.ttf"; sourceTree = "<group>"; };
 		D247F59B651C47EDAF00F695 /* Roboto-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-SemiBold.ttf"; path = "../assets/fonts/Roboto/Roboto-SemiBold.ttf"; sourceTree = "<group>"; };
 		D276AC6024084EBE98C7D9DF /* Roboto_SemiCondensed-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_SemiCondensed-Bold.ttf"; path = "../assets/fonts/Roboto/static/Roboto_SemiCondensed-Bold.ttf"; sourceTree = "<group>"; };
@@ -352,7 +352,7 @@
 		DE15BF6F2ECD9AC400704938 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		DE15BF722ECDDED300704938 /* IAP.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = IAP.storekit; sourceTree = "<group>"; };
 		DEAE9F632E9E27570041BB64 /* info-staging.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "info-staging.plist"; sourceTree = "<group>"; };
-		DEE363152E98730100B65285 /* nolimitseradeals-prod.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "nolimitseradeals-prod.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEE363152E98730100B65285 /* fribee-prod.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "fribee-prod.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0BD020738944023956E281F /* Barlow-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-Medium.ttf"; path = "../assets/fonts/Barlow/Barlow-Medium.ttf"; sourceTree = "<group>"; };
 		E0BFC27C8370494CA03E2FEA /* Barlow-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-SemiBoldItalic.ttf"; path = "../assets/fonts/Barlow/Barlow-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		E3E8A051BE734114B77ACB3E /* Barlow-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-ExtraLightItalic.ttf"; path = "../assets/fonts/Barlow/Barlow-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
@@ -388,7 +388,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE15BF702ECD9AC400704938 /* StoreKit.framework in Frameworks */,
-				C5887FA1A48FE8FE664F702E /* libPods-nolimitseradeals-staging.a in Frameworks */,
+				C5887FA1A48FE8FE664F702E /* libPods-fribee-staging.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -397,7 +397,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DECAADB12ED9793300B64A25 /* StoreKit.framework in Frameworks */,
-				C83915ACB3D66C0637F668BF /* libPods-nolimitseradeals-prod.a in Frameworks */,
+				C83915ACB3D66C0637F668BF /* libPods-fribee-prod.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -591,7 +591,7 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* nolimitseradeals */ = {
+		13B07FAE1A68108700A75B9A /* fribee */ = {
 			isa = PBXGroup;
 			children = (
 				DEAE9F632E9E27570041BB64 /* info-staging.plist */,
@@ -603,7 +603,7 @@
 				CBE07BB9A2C2422C8480D4D2 /* BootSplash.storyboard */,
 				296D291F28F344338CC539BC /* Colors.xcassets */,
 			);
-			name = nolimitseradeals;
+			name = fribee;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -611,8 +611,8 @@
 			children = (
 				DE15BF6F2ECD9AC400704938 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				D0F1A1BC41EF727D256116B2 /* libPods-nolimitseradeals-prod.a */,
-				0FC66C16020C7571DAB3B2E6 /* libPods-nolimitseradeals-staging.a */,
+				D0F1A1BC41EF727D256116B2 /* libPods-fribee-prod.a */,
+				0FC66C16020C7571DAB3B2E6 /* libPods-fribee-staging.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -628,7 +628,7 @@
 			isa = PBXGroup;
 			children = (
 				DE15BF722ECDDED300704938 /* IAP.storekit */,
-				13B07FAE1A68108700A75B9A /* nolimitseradeals */,
+				13B07FAE1A68108700A75B9A /* fribee */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
@@ -643,8 +643,8 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* nolimitseradeals.app */,
-				DEE363152E98730100B65285 /* nolimitseradeals-prod.app */,
+				13B07F961A680F5B00A75B9A /* fribee.app */,
+				DEE363152E98730100B65285 /* fribee-prod.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -652,10 +652,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				133FB2E0B0E54A7A4876F5D8 /* Pods-nolimitseradeals-prod.debug.xcconfig */,
-				20EF7EBE1786EA5F7213018F /* Pods-nolimitseradeals-prod.release.xcconfig */,
-				0B4BDA190ABD7682AC932D96 /* Pods-nolimitseradeals-staging.debug.xcconfig */,
-				17D87EA500866772ACB50663 /* Pods-nolimitseradeals-staging.release.xcconfig */,
+				133FB2E0B0E54A7A4876F5D8 /* Pods-fribee-prod.debug.xcconfig */,
+				20EF7EBE1786EA5F7213018F /* Pods-fribee-prod.release.xcconfig */,
+				0B4BDA190ABD7682AC932D96 /* Pods-fribee-staging.debug.xcconfig */,
+				17D87EA500866772ACB50663 /* Pods-fribee-staging.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -663,9 +663,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		13B07F861A680F5B00A75B9A /* nolimitseradeals-staging */ = {
+		13B07F861A680F5B00A75B9A /* fribee-staging */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "nolimitseradeals-staging" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "fribee-staging" */;
 			buildPhases = (
 				ADC94C6BAE1FF3FBD7799120 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
@@ -680,14 +680,14 @@
 			);
 			dependencies = (
 			);
-			name = "nolimitseradeals-staging";
-			productName = nolimitseradeals;
-			productReference = 13B07F961A680F5B00A75B9A /* nolimitseradeals.app */;
+			name = "fribee-staging";
+			productName = fribee;
+			productReference = 13B07F961A680F5B00A75B9A /* fribee.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DEE363032E98730100B65285 /* nolimitseradeals-prod */ = {
+		DEE363032E98730100B65285 /* fribee-prod */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DEE363122E98730100B65285 /* Build configuration list for PBXNativeTarget "nolimitseradeals-prod" */;
+			buildConfigurationList = DEE363122E98730100B65285 /* Build configuration list for PBXNativeTarget "fribee-prod" */;
 			buildPhases = (
 				BA226E492F816AA0162C29EC /* [CP] Check Pods Manifest.lock */,
 				DEE363052E98730100B65285 /* Sources */,
@@ -701,9 +701,9 @@
 			);
 			dependencies = (
 			);
-			name = "nolimitseradeals-prod";
-			productName = nolimitseradeals;
-			productReference = DEE363152E98730100B65285 /* nolimitseradeals-prod.app */;
+			name = "fribee-prod";
+			productName = fribee;
+			productReference = DEE363152E98730100B65285 /* fribee-prod.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -719,7 +719,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "nolimitseradeals" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "fribee" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -732,8 +732,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* nolimitseradeals-staging */,
-				DEE363032E98730100B65285 /* nolimitseradeals-prod */,
+				13B07F861A680F5B00A75B9A /* fribee-staging */,
+				DEE363032E98730100B65285 /* fribee-prod */,
 			);
 		};
 /* End PBXProject section */
@@ -957,15 +957,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-fribee-prod/Pods-fribee-prod-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-fribee-prod/Pods-fribee-prod-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-fribee-prod/Pods-fribee-prod-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		58197C5C9AB48974FD140FFC /* [CP] Embed Pods Frameworks */ = {
@@ -974,15 +974,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-fribee-prod/Pods-fribee-prod-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-fribee-prod/Pods-fribee-prod-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-prod/Pods-nolimitseradeals-prod-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-fribee-prod/Pods-fribee-prod-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7D0BDD87C571ECB844752989 /* [CP] Embed Pods Frameworks */ = {
@@ -991,15 +991,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-fribee-staging/Pods-fribee-staging-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-fribee-staging/Pods-fribee-staging-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-fribee-staging/Pods-fribee-staging-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9714CD6829FBB632F47BE918 /* [CP] Copy Pods Resources */ = {
@@ -1008,15 +1008,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-fribee-staging/Pods-fribee-staging-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-fribee-staging/Pods-fribee-staging-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nolimitseradeals-staging/Pods-nolimitseradeals-staging-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-fribee-staging/Pods-fribee-staging-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		ADC94C6BAE1FF3FBD7799120 /* [CP] Check Pods Manifest.lock */ = {
@@ -1034,7 +1034,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-nolimitseradeals-staging-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-fribee-staging-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1056,7 +1056,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-nolimitseradeals-prod-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-fribee-prod-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1103,19 +1103,19 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0B4BDA190ABD7682AC932D96 /* Pods-nolimitseradeals-staging.debug.xcconfig */;
+			baseConfigurationReference = 0B4BDA190ABD7682AC932D96 /* Pods-fribee-staging.debug.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = "FriBee Staging";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Staging";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION = YES;
-				CODE_SIGN_ENTITLEMENTS = "nolimitseradeals/nolimitseradeals-staging.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "fribee/fribee-staging.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CM52HNMXXW;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = "nolimitseradeals/info-staging.plist";
+				INFOPLIST_FILE = "fribee/info-staging.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1129,9 +1129,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.sera.dev.nolimitsera.staging;
-				PRODUCT_NAME = nolimitseradeals;
-				PROVISIONING_PROFILE_SPECIFIER = "match Development org.sera.dev.nolimitsera.staging";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sera.fribee.staging;
+				PRODUCT_NAME = fribee;
+				PROVISIONING_PROFILE_SPECIFIER = "match Development com.sera.fribee.staging";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1140,19 +1140,19 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 17D87EA500866772ACB50663 /* Pods-nolimitseradeals-staging.release.xcconfig */;
+			baseConfigurationReference = 17D87EA500866772ACB50663 /* Pods-fribee-staging.release.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = "FriBee Staging";
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Staging";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION = YES;
-				CODE_SIGN_ENTITLEMENTS = "nolimitseradeals/nolimitseradeals-staging.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "fribee/fribee-staging.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CM52HNMXXW;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = CM52HNMXXW;
-				INFOPLIST_FILE = "nolimitseradeals/info-staging.plist";
+				INFOPLIST_FILE = "fribee/info-staging.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1166,9 +1166,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.sera.dev.nolimitsera.staging;
-				PRODUCT_NAME = nolimitseradeals;
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore org.sera.dev.nolimitsera.staging";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sera.fribee.staging;
+				PRODUCT_NAME = fribee;
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.sera.fribee.staging";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1320,12 +1320,12 @@
 		};
 		DEE363132E98730100B65285 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 133FB2E0B0E54A7A4876F5D8 /* Pods-nolimitseradeals-prod.debug.xcconfig */;
+			baseConfigurationReference = 133FB2E0B0E54A7A4876F5D8 /* Pods-fribee-prod.debug.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = FriBee;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Prod";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "nolimitseradeals/nolimitseradeals-prod.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "fribee/fribee-prod.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Automatic;
@@ -1333,7 +1333,7 @@
 				DEVELOPMENT_TEAM = CM52HNMXXW;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = CM52HNMXXW;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = nolimitseradeals/Info.plist;
+				INFOPLIST_FILE = fribee/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1347,10 +1347,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.sera.dev.nolimitsera;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sera.fribee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore org.sera.dev.nolimitsera";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.sera.fribee";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1359,12 +1359,12 @@
 		};
 		DEE363142E98730100B65285 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 20EF7EBE1786EA5F7213018F /* Pods-nolimitseradeals-prod.release.xcconfig */;
+			baseConfigurationReference = 20EF7EBE1786EA5F7213018F /* Pods-fribee-prod.release.xcconfig */;
 			buildSettings = {
 				APP_DISPLAY_NAME = FriBee;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Prod";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "nolimitseradeals/nolimitseradeals-prod.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "fribee/fribee-prod.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
@@ -1375,7 +1375,7 @@
 					"COCOAPODS=1",
 					"PRODUCTION=1",
 				);
-				INFOPLIST_FILE = nolimitseradeals/Info.plist;
+				INFOPLIST_FILE = fribee/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1389,11 +1389,11 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.sera.dev.nolimitsera;
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = org.sera.dev.nolimitsera;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sera.fribee;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.sera.fribee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore org.sera.dev.nolimitsera";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.sera.fribee";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1402,7 +1402,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "nolimitseradeals-staging" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "fribee-staging" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -1411,7 +1411,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "nolimitseradeals" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "fribee" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
@@ -1420,7 +1420,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DEE363122E98730100B65285 /* Build configuration list for PBXNativeTarget "nolimitseradeals-prod" */ = {
+		DEE363122E98730100B65285 /* Build configuration list for PBXNativeTarget "fribee-prod" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DEE363132E98730100B65285 /* Debug */,

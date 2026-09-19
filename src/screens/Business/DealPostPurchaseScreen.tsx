@@ -9,8 +9,8 @@
  * - USE_SANDBOX: Set to true for App Store Connect sandbox testing
  *
  * PRODUCT IDs:
- * - iOS: com.nolimitsera.deal.post
- * - Android: com.nolimitsera.deal.post
+ * - iOS: com.sera.fribee.deal.post
+ * - Android: com.sera.fribee.deal.post
  */
 
 import React, { useState, useEffect } from 'react';
@@ -53,13 +53,13 @@ const IS_PRODUCTION = IAP_ENVIRONMENT === 'production';
 
 // Staging vs Production Product IDs
 const STAGING_SKUS = {
-  ios: 'com.nolimitsera.staging.deal.post',
-  android: 'com.nolimitsera.staging.deal.post',
+  ios: 'com.sera.fribee.staging.deal.post',
+  android: 'com.sera.fribee.staging.deal.post',
 };
 
 const PRODUCTION_SKUS = {
-  ios: 'com.nolimitsera.prod.deal.post',
-  android: 'com.nolimitsera.prod.deal.post',
+  ios: 'com.sera.fribee.prod.deal.post',
+  android: 'com.sera.fribee.prod.deal.post',
 };
 
 const ACTIVE_SKUS = IS_PRODUCTION ? PRODUCTION_SKUS : STAGING_SKUS;
@@ -136,7 +136,7 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
             productId: purchase.productId,
             GOOGLE_PACKAGE_NAME:
               Platform.OS === 'android'
-                ? 'com.nolimitseradeals.staging'
+                ? 'com.sera.fribee.staging'
                 : undefined,
             transactionReceipt: receiptData,
           });
@@ -343,7 +343,7 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
           purchaseTime: Date.now(),
           purchaseState: 'purchased',
           developerPayload: '',
-          packageName: 'com.nolimitseradeals.staging',
+          packageName: 'com.sera.fribee.staging',
           orderId: `GPA.${Math.random().toString(36).substring(2, 15)}`,
           acknowledged: false,
         });
@@ -357,7 +357,7 @@ const DealPostPurchaseScreen = ({ navigation }: any) => {
           platform: Platform.OS,
           purchaseToken: mockPurchaseToken,
           productId: DEAL_POST_SKUS[0],
-          GOOGLE_PACKAGE_NAME: 'com.nolimitseradeals.staging',
+          GOOGLE_PACKAGE_NAME: 'com.sera.fribee.staging',
           transactionReceipt: mockTransactionReceipt,
         });
 

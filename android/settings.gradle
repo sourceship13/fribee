@@ -13,7 +13,7 @@ if (!new File(nodeExecutable).exists()) {
 System.setProperty("NODE_BINARY", nodeExecutable)
 
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
-rootProject.name = 'nolimitseradeals'
+rootProject.name = 'fribee'
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
 include ':react-native-config'

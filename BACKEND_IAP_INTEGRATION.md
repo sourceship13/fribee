@@ -231,14 +231,14 @@ Create/update `.env` file:
 
 ```bash
 # Database
-DATABASE_URL=postgresql://user:password@localhost:5432/nolimitsera
+DATABASE_URL=postgresql://user:password@localhost:5432/fribee
 
 # iOS App Store
 APPLE_SHARED_SECRET=your_shared_secret_here
 
 # Android Google Play
 GOOGLE_SERVICE_ACCOUNT_KEY_PATH=/path/to/google-service-account.json
-GOOGLE_PACKAGE_NAME=com.nolimitsera
+GOOGLE_PACKAGE_NAME=com.sera.fribee
 
 # API
 PORT=3000
@@ -1073,7 +1073,7 @@ curl -X POST http://localhost:3000/api/subscriptions/verify \
   -d '{
     "platform": "ios",
     "purchaseToken": "1000000123456789",
-    "productId": "com.nolimitsera.monthly.subscription.premium.staging",
+    "productId": "com.sera.fribee.monthly.subscription.premium.staging",
     "transactionReceipt": "BASE64_RECEIPT_DATA_HERE"
   }'
 ```
@@ -1086,7 +1086,7 @@ curl -X POST http://localhost:3000/api/subscriptions/verify \
   -d '{
     "platform": "android",
     "purchaseToken": "abcdef123456.AO-J1OxXXXXX",
-    "productId": "com.nolimitsera.monthly.subscription.premium.staging"
+    "productId": "com.sera.fribee.monthly.subscription.premium.staging"
   }'
 ```
 
@@ -1098,7 +1098,7 @@ curl -X POST http://localhost:3000/api/subscriptions/verify \
     "subscriptionId": "uuid-here",
     "status": "active",
     "expiryDate": "2025-12-25T10:30:00.000Z",
-    "productId": "com.nolimitsera.monthly.subscription.premium.staging",
+    "productId": "com.sera.fribee.monthly.subscription.premium.staging",
     "autoRenewing": true
   }
 }
@@ -1137,10 +1137,10 @@ The app will automatically call `/api/subscriptions/verify` after a successful p
 
 ```bash
 # Production .env
-DATABASE_URL=postgresql://user:pass@production-db:5432/nolimitsera
+DATABASE_URL=postgresql://user:pass@production-db:5432/fribee
 APPLE_SHARED_SECRET=your_production_shared_secret
 GOOGLE_SERVICE_ACCOUNT_KEY_PATH=/etc/secrets/google-service-account.json
-GOOGLE_PACKAGE_NAME=com.nolimitsera
+GOOGLE_PACKAGE_NAME=com.sera.fribee
 PORT=3000
 JWT_SECRET=your_strong_jwt_secret
 NODE_ENV=production

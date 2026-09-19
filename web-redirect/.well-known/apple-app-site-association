@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appID": "TEAMID.com.nolimitseradeals",
+        "appID": "TEAMID.com.sera.fribee",
         "paths": [
           "/deal/*"
         ]
@@ -12,7 +12,7 @@
   },
   "webcredentials": {
     "apps": [
-      "TEAMID.com.nolimitseradeals"
+      "TEAMID.com.sera.fribee"
     ]
   }
 }

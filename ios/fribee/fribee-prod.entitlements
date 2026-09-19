@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.pass-type-identifiers</key>
 	<array>
-		<string>$(TeamIdentifierPrefix)pass.nolimitsera.deals</string>
+		<string>$(TeamIdentifierPrefix)pass.fribee.deals</string>
 	</array>
 </dict>
 </plist>

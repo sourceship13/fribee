@@ -19,7 +19,7 @@ Instagram login has been implemented using Instagram Basic Display API and OAuth
 2. Click "Create App" or select existing app
 3. Choose app type: "Consumer" or "Business"
 4. Fill in app details:
-   - App Name: "NoLimit Sera Deals"
+   - App Name: "Fribee Deals"
    - Contact Email: your@email.com
 
 ### 3. Add Instagram Basic Display Product
@@ -33,7 +33,7 @@ Instagram login has been implemented using Instagram Basic Display API and OAuth
 **Client OAuth Settings:**
 - Valid OAuth Redirect URIs:
   ```
-  com.nolimitseradeals://oauth
+  com.sera.fribee://oauth
   ```
 - Deauthorize Callback URL:
   ```
@@ -129,12 +129,12 @@ Your backend needs to handle Instagram authentication:
 - Verify credentials are correct in Facebook Developer Console
 
 **OAuth redirect fails:**
-- Android: Check `android/app/src/main/AndroidManifest.xml` has intent-filter for `com.nolimitseradeals://oauth`
-- iOS: Check `ios/nolimitseradeals/Info.plist` has URL scheme for `com.nolimitseradeals`
+- Android: Check `android/app/src/main/AndroidManifest.xml` has intent-filter for `com.sera.fribee://oauth`
+- iOS: Check `ios/fribee/Info.plist` has URL scheme for `com.sera.fribee`
 - Verify redirect URI in Facebook Developer Console matches exactly
 
 **"Invalid redirect_uri" error:**
-- Make sure redirect URI in Facebook Developer Console is: `com.nolimitseradeals://oauth`
+- Make sure redirect URI in Facebook Developer Console is: `com.sera.fribee://oauth`
 - No trailing slashes
 - Must match exactly
 
@@ -162,7 +162,7 @@ Instagram Basic Display is being deprecated. Consider migrating to:
 1. `src/services/instagram-auth.service.ts` - Instagram OAuth service
 2. `src/screens/SignIn/SignIn.tsx` - Added Instagram login handler
 3. `android/app/src/main/AndroidManifest.xml` - OAuth redirect for Android
-4. `ios/nolimitseradeals/Info.plist` - OAuth redirect for iOS
+4. `ios/fribee/Info.plist` - OAuth redirect for iOS
 5. `.env` - Add INSTAGRAM_APP_ID and INSTAGRAM_APP_SECRET
 
 ## Next Steps
