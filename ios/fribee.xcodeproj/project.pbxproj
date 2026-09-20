@@ -20,6 +20,7 @@
 		0CEA1E080FFF481596C84BFD /* OpenSans_SemiCondensed-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD9CFAC0541C46A5B6BCB1D8 /* OpenSans_SemiCondensed-SemiBoldItalic.ttf */; };
 		0D3131435FE24EE58613DA08 /* Montserrat-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E42CD381F9FF460FA2FB2269 /* Montserrat-Black.ttf */; };
 		0DE91EDECD8E4D05B4C636E5 /* OpenSans_SemiCondensed-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8235AEEED61D465CB95AD554 /* OpenSans_SemiCondensed-SemiBold.ttf */; };
+		105229D8E48975C86134373D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBA18CC3D9A3A2680B014FB /* SceneDelegate.swift */; };
 		1317CD46F3F44798ACBFDBA5 /* Roboto_SemiCondensed-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE64EFEB57214E5B86119CF3 /* Roboto_SemiCondensed-ExtraBold.ttf */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		163988E6859548DABCCE78D1 /* redeem-bg.svg in Resources */ = {isa = PBXBuildFile; fileRef = E7F227C04BD54F66AD1BE1BB /* redeem-bg.svg */; };
@@ -53,6 +54,7 @@
 		4EA273A6AA4E46E48BD0EFD2 /* Montserrat-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3243F350394C4F02B50A73AA /* Montserrat-ThinItalic.ttf */; };
 		515E6A6AD3AE4D56B20BE4FD /* Montserrat-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BD7FEA6B0D2492A8E188238 /* Montserrat-SemiBoldItalic.ttf */; };
 		51B34AF32D8A4BB9882A2B55 /* Roboto-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D247F59B651C47EDAF00F695 /* Roboto-SemiBold.ttf */; };
+		5312B70AB78A91A24A1B5A61 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBA18CC3D9A3A2680B014FB /* SceneDelegate.swift */; };
 		59451F93F540464B9359F24B /* OpenSans_Condensed-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9469931C329D42ADB0469CE0 /* OpenSans_Condensed-ExtraBold.ttf */; };
 		59BD38CAAEC24015B8BEA687 /* Barlow-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B5216995E0B04E678EDBECDE /* Barlow-ThinItalic.ttf */; };
 		5E252B2F89F64BD7BCD0E988 /* OpenSans_Condensed-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EF643F0A47564DD6916F7C06 /* OpenSans_Condensed-Light.ttf */; };
@@ -314,6 +316,7 @@
 		A84332DC32CF44C393E85A2F /* Barlow-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Barlow-Italic.ttf"; path = "../assets/fonts/Barlow/Barlow-Italic.ttf"; sourceTree = "<group>"; };
 		A86238E7B61749B0BE862EE9 /* OFL.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = OFL.txt; path = ../assets/fonts/Open_Sans/OFL.txt; sourceTree = "<group>"; };
 		A9846190B20B41D7BAA67CD7 /* OpenSans_SemiCondensed-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans_SemiCondensed-LightItalic.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans_SemiCondensed-LightItalic.ttf"; sourceTree = "<group>"; };
+		ADBA18CC3D9A3A2680B014FB /* SceneDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = fribee/SceneDelegate.swift; sourceTree = "<group>"; };
 		AE64EFEB57214E5B86119CF3 /* Roboto_SemiCondensed-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto_SemiCondensed-ExtraBold.ttf"; path = "../assets/fonts/Roboto/static/Roboto_SemiCondensed-ExtraBold.ttf"; sourceTree = "<group>"; };
 		AF2DA55659F04CE3A341B9CC /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "OpenSans-Regular.ttf"; path = "../assets/fonts/Open_Sans/static/OpenSans-Regular.ttf"; sourceTree = "<group>"; };
 		AF5D321A8D0A4BB9B0D49273 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
@@ -602,6 +605,7 @@
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 				CBE07BB9A2C2422C8480D4D2 /* BootSplash.storyboard */,
 				296D291F28F344338CC539BC /* Colors.xcassets */,
+				ADBA18CC3D9A3A2680B014FB /* SceneDelegate.swift */,
 			);
 			name = fribee;
 			sourceTree = "<group>";
@@ -1087,6 +1091,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
+				5312B70AB78A91A24A1B5A61 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1095,6 +1100,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DEE363062E98730100B65285 /* AppDelegate.swift in Sources */,
+				105229D8E48975C86134373D /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

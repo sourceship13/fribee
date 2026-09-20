@@ -25,41 +25,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     reactNativeDelegate = delegate
     reactNativeFactory = factory
 
-    window = UIWindow(frame: UIScreen.main.bounds)
-
-    factory.startReactNative(
-      withModuleName: "fribee",
-      in: window,
-      launchOptions: launchOptions
-    )
-
+    // Window is created by SceneDelegate now that the app adopts the UIScene life cycle
     return true
   }
-  
-  // Handle deep links when app is already running (custom URL scheme)
-  func application(
-    _ app: UIApplication,
-    open url: URL,
-    options: [UIApplication.OpenURLOptionsKey: Any] = [:]
-  ) -> Bool {
-    print("🔗 AppDelegate received URL: \(url)")
-    return RCTLinkingManager.application(app, open: url, options: options)
-  }
-  
-  // Handle Universal Links (https:// URLs)
+
+  // Vend a scene configuration so UIKit can hand connection to SceneDelegate
   func application(
     _ application: UIApplication,
-    continue userActivity: NSUserActivity,
-    restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
-  ) -> Bool {
-    if userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-       let url = userActivity.webpageURL {
-      print("🔗 AppDelegate received Universal Link: \(url)")
-      return RCTLinkingManager.application(application, open: url, options: [:])
-    }
-    return false
+    configurationForConnecting connectingSceneSession: UISceneSession,
+    options: UIScene.ConnectionOptions
+  ) -> UISceneConfiguration {
+    let configuration = UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    configuration.delegateClass = SceneDelegate.self
+    return configuration
   }
 }
+
 
 class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
   override func sourceURL(for bridge: RCTBridge) -> URL? {
