@@ -3156,7 +3156,7 @@ PODS:
     - SocketRocket
     - Yoga
   - Sentry/HybridSDK (8.58.0)
-  - ShareSms (0.1.4):
+  - ShareSms (0.1.6):
     - boost
     - DoubleConversion
     - fast_float
@@ -3615,10 +3615,10 @@ SPEC CHECKSUMS:
   RNSVG: d260beec1775108e1bd065a0ed666ff2c5565158
   RNWorklets: 5dd32e6d649594b9a938cdd75673dffb2266e119
   Sentry: d587a8fe91ca13503ecd69a1905f3e8a0fcf61be
-  ShareSms: 9c5d6b34eeb90d9e8079ee58b7aef17471a7d6ef
+  ShareSms: 40735cb9f783b9f9155ce4346ef12fcd087adea3
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 11c9686a21e2cd82a094a723649d9f4507200fb0
 
-PODFILE CHECKSUM: 63e83632223c2a4721588112826abf7b512899c3
+PODFILE CHECKSUM: dc23d719075f7278e1ecf197842fcda782a1ab21
 
 COCOAPODS: 1.16.2

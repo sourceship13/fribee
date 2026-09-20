@@ -57,6 +57,23 @@ post_install do |installer|
     :mac_catalyst_enabled => false
   )
   
+  # Workaround: newer Clang/Xcode betas have a broken FMT_USE_CONSTEVAL detection
+  # that makes fmt::format_to(FMT_STRING(...)) fail with "call to consteval
+  # function is not a constant expression" in format-inl.h. Force fmt to skip
+  # its consteval-based compile-time format string checks.
+  fmt_base_header = File.join(installer.sandbox.root, 'fmt/include/fmt/base.h')
+  if File.exist?(fmt_base_header)
+    contents = File.read(fmt_base_header)
+    patched = contents.sub(
+      "#if FMT_USE_CONSTEVAL\n#  define FMT_CONSTEVAL consteval",
+      "#if 0  // patched: FMT_USE_CONSTEVAL disabled, see Podfile post_install\n#  define FMT_CONSTEVAL consteval"
+    )
+    if patched != contents
+      File.chmod(0644, fmt_base_header) # CocoaPods installs pod sources as read-only
+      File.write(fmt_base_header, patched)
+    end
+  end
+  
   # Fix duplicate React-Core privacy bundle issue (React Native 0.81+)
   installer.aggregate_targets.each do |aggregate_target|
     aggregate_target.user_project.native_targets.each do |target|
@@ -86,6 +103,11 @@ post_install do |installer|
       
       # Exclude x86_64 for simulator builds to fix Xcode 26 beta issues
       config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'x86_64'
+      
+      # Force all pods (including resource bundle targets) to match the app's minimum deployment target
+      if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 15.1
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.1'
+      end
       
       if target.respond_to?(:product_type) && target.product_type == "com.apple.product-type.bundle"
         config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'

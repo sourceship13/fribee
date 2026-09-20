@@ -43,18 +43,25 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSContactsUsageDescription</key>
-	<string>We ask for your Contacts to help you find friends and family to share deals with so you can redeem the Freebies.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need access to your photo library to upload your business logo and cover photo.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>We need access to save photos to your library.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to take photos for your business profile.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>We ask for your Contacts to help you find friends and family to share deals with so you can redeem the Freebies.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to show you nearby deals and businesses.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need access to save photos to your library.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to upload your business logo and cover photo.</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
+	<key>SKAdNetworkItems</key>
+	<array>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>cstr6suwn9.skadnetwork</string>
+		</dict>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Barlow-Black.ttf</string>
@@ -212,12 +219,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>SKAdNetworkItems</key>
-	<array>
-		<dict>
-			<key>SKAdNetworkIdentifier</key>
-			<string>cstr6suwn9.skadnetwork</string>
-		</dict>
-	</array>
 </dict>
 </plist>
